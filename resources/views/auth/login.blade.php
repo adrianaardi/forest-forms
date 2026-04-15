@@ -9,7 +9,7 @@
 <body>
 
 <header>
-    <div class="logo">🌿</div>
+    <div class="logo"></div>
     <div>
         <h1>Jabatan Hutan Sarawak</h1>
         <p>Forest Department Sarawak — Sistem Perkhidmatan Dalaman</p>
