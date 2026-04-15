@@ -1,47 +1,72 @@
-<x-guest-layout>
-    <!-- Session Status -->
-    <x-auth-session-status class="mb-4" :status="session('status')" />
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login — Jabatan Hutan Sarawak</title>
+    <link rel="stylesheet" href="{{ asset('style.css') }}">
+</head>
+<body>
 
-    <form method="POST" action="{{ route('login') }}">
-        @csrf
+<header>
+    <div class="logo">🌿</div>
+    <div>
+        <h1>Jabatan Hutan Sarawak</h1>
+        <p>Forest Department Sarawak — Sistem Perkhidmatan Dalaman</p>
+    </div>
+</header>
 
-        <!-- Email Address -->
-        <div>
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autofocus autocomplete="username" />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
+<nav>
+    <a href="/">Laman Utama</a>
+    <a href="/login" class="active" style="margin-left: auto;">Admin</a>
+</nav>
+
+<div class="pg-body">
+    <div class="form-card">
+        <div class="form-card-header">
+            <h2>Log Masuk Admin</h2>
+            <p>Hanya untuk kakitangan yang diberi kuasa.</p>
         </div>
 
-        <!-- Password -->
-        <div class="mt-4">
-            <x-input-label for="password" :value="__('Password')" />
+        <form method="POST" action="{{ route('login') }}">
+            @csrf
 
-            <x-text-input id="password" class="block mt-1 w-full"
-                            type="password"
-                            name="password"
-                            required autocomplete="current-password" />
+            <div class="form-section">
+                @if(session('status'))
+                    <div style="background:#eaf3de; border:1px solid #c0dd97; color:#3b6d11; padding:0.75rem 1rem; border-radius:8px; margin-bottom:1rem; font-size:13px;">
+                        {{ session('status') }}
+                    </div>
+                @endif
 
-            <x-input-error :messages="$errors->get('password')" class="mt-2" />
-        </div>
+                <div class="field">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" value="{{ old('email') }}" placeholder="admin@jhs.gov.my" required autofocus>
+                    @error('email')
+                        <div style="color:#a32d2d; font-size:12px; margin-top:4px;">{{ $message }}</div>
+                    @enderror
+                </div>
 
-        <!-- Remember Me -->
-        <div class="block mt-4">
-            <label for="remember_me" class="inline-flex items-center">
-                <input id="remember_me" type="checkbox" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500" name="remember">
-                <span class="ms-2 text-sm text-gray-600">{{ __('Remember me') }}</span>
-            </label>
-        </div>
+                <div class="field">
+                    <label for="password">Kata Laluan</label>
+                    <input type="password" id="password" name="password" placeholder="••••••••" required>
+                    @error('password')
+                        <div style="color:#a32d2d; font-size:12px; margin-top:4px;">{{ $message }}</div>
+                    @enderror
+                </div>
+            </div>
 
-        <div class="flex items-center justify-end mt-4">
-            @if (Route::has('password.request'))
-                <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" href="{{ route('password.request') }}">
-                    {{ __('Forgot your password?') }}
-                </a>
-            @endif
+            <div class="form-footer">
+                <span></span>
+                <button type="submit" class="btn-submit">Log Masuk</button>
+            </div>
+        </form>
+    </div>
+</div>
 
-            <x-primary-button class="ms-3">
-                {{ __('Log in') }}
-            </x-primary-button>
-        </div>
-    </form>
-</x-guest-layout>
+<footer>
+    <div><strong>Jabatan Hutan Sarawak</strong> &nbsp;|&nbsp; Wisma Sumber Alam, Petra Jaya, 93660 Kuching, Sarawak</div>
+    <div>© 2025 Jabatan Hutan Sarawak. Hak Cipta Terpelihara.</div>
+</footer>
+
+</body>
+</html>

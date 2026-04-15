@@ -6,20 +6,24 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('borang_aduan_kerosakan', function (Blueprint $table) {
             $table->id();
+            $table->string('nama');
+            $table->string('jawatan')->nullable();
+            $table->string('bahagian')->nullable();
+            $table->string('telefon')->nullable();
+            $table->date('tarikh_aduan');
+            $table->time('masa_aduan');
+            $table->string('kategori_masalah');
+            $table->string('masalah_lain')->nullable();
+            $table->text('keterangan_kerosakan')->nullable();
+            $table->enum('status', ['Belum Selesai', 'Dalam Tindakan', 'Selesai'])->default('Belum Selesai');
             $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('borang_aduan_kerosakan');
