@@ -17,9 +17,24 @@
 </header>
 
 <nav>
-    <a href="/">Laman Utama</a>
-    <a href="/login" style="margin-left:auto;">Admin</a>
+    <a href="/" class="{{ request()->is('/') ? 'active' : '' }}">Laman Utama</a>
+
+    @auth
+        <a href="/admin/dashboard" class="{{ request()->is('admin/dashboard') ? 'active' : '' }}">Dashboard</a>
+        
+        <form method="POST" action="{{ route('logout') }}" style="margin-left:auto; display:flex; align-items:center;">
+            @csrf
+            <button type="submit" style="background:none; border:none; cursor:pointer; font-size:13px; color:rgba(255,255,255,0.7); padding:0;">
+                Log Keluar
+            </button>
+        </form>
+    @endauth
+
+    @guest
+        <a href="/login" style="margin-left: auto;">Admin</a>
+    @endguest
 </nav>
+
 
 <div class="pg-body">
     <div class="form-card">
