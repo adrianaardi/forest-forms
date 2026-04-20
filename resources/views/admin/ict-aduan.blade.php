@@ -66,6 +66,7 @@
     <table class="data-table">
         <tr>
             <th style="width:36px;"><input type="checkbox" id="checkAll" onclick="toggleAll(this)"></th>
+            <th>No. Tiket</th>
             <th>Nama</th>
             <th>Bahagian</th>
             <th>Kategori</th>
@@ -76,6 +77,7 @@
         @forelse($complaints as $item)
         <tr>
             <td><input type="checkbox" class="row-check" value="{{ $item->id }}" onchange="updateDelete()"></td>
+            <td>{{ $item->no_tiket }}</td>
             <td>{{ $item->nama }}</td>
             <td>{{ $item->bahagian ?? '-' }}</td>
             <td>{{ $item->kategori_masalah }}</td>

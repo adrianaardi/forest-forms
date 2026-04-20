@@ -6,6 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class BorangMuatNaikBahan extends Model
 {
+    public function getNoTiketAttribute()
+    {
+        return 'JHS/MNB/A/' . date('Y') . $this->id;
+    }
     protected $table = 'borang_muat_naik_bahan';
 
     protected $fillable = [

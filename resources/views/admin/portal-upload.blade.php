@@ -66,6 +66,7 @@
     <table class="data-table">
         <tr>
             <th style="width:36px;"><input type="checkbox" id="checkAll" onclick="toggleAll(this)"></th>
+            <th>No. Tiket</th>
             <th>Nama</th>
             <th>Tajuk</th>
             <th>Jenis Kandungan</th>
@@ -77,6 +78,7 @@
         @forelse($requests as $item)
         <tr>
             <td><input type="checkbox" class="row-check" value="{{ $item->id }}" onchange="updateDelete()"></td>
+            <td>{{ $item->no_tiket }}</td>
             <td>{{ $item->nama }}</td>
             <td class="td-truncate">{{ $item->tajuk_maklumat }}</td>
             <td>{{ $item->jenis_kandungan }}</td>

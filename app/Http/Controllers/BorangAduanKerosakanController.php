@@ -28,8 +28,7 @@ class BorangAduanKerosakanController extends Controller
         $validated['tarikh_aduan'] = now()->toDateString();
         $validated['masa_aduan']   = now()->toTimeString();
 
-        BorangAduanKerosakan::create($validated);
+$complaint = BorangAduanKerosakan::create($validated);
 
-        return redirect('/')->with('success', 'Aduan ICT anda telah berjaya dihantar!');
-    }
+return redirect('/')->with('success', 'Aduan ICT anda telah berjaya dihantar! No. Tiket anda: ' . $complaint->no_tiket);    }
 }

@@ -58,6 +58,7 @@
     </div>
     <table class="data-table">
         <tr>
+            <th>No. Tiket</th>
             <th>Nama</th>
             <th>Kategori</th>
             <th>Tarikh</th>
@@ -65,6 +66,7 @@
         </tr>
         @forelse($recentIct as $item)
         <tr>
+            <td>{{ $item->no_tiket }}</td>
             <td>{{ $item->nama }}</td>
             <td>{{ $item->kategori_masalah }}</td>
             <td>{{ \Carbon\Carbon::parse($item->tarikh_aduan)->format('d/m/Y') }}</td>
@@ -89,6 +91,7 @@
     </div>
     <table class="data-table">
         <tr>
+            <th>No. Tiket</th>
             <th>Nama</th>
             <th>Tajuk</th>
             <th>Tarikh</th>
@@ -96,6 +99,7 @@
         </tr>
         @forelse($recentUpload as $item)
         <tr>
+            <td>{{ $item->no_tiket }}</td>
             <td>{{ $item->nama }}</td>
             <td>{{ $item->tajuk_maklumat }}</td>
             <td>{{ \Carbon\Carbon::parse($item->created_at)->format('d/m/Y') }}</td>

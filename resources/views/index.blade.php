@@ -63,6 +63,12 @@
             <p>Hantar permohonan untuk memuat naik kandungan baharu ke portal rasmi jabatan.</p>
             <span class="card-link">Hantar permohonan →</span>
         </a>
+        <a href="/semak-tiket" class="card">
+            <div class="card-icon icon-track">🔍</div>
+            <h3>Semak Status Tiket</h3>
+            <p>Semak status aduan atau permohonan anda menggunakan nombor tiket.</p>
+            <span class="card-link">Semak sekarang →</span>
+        </a>
     </div>
 </div>
 

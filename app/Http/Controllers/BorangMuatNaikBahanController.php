@@ -37,7 +37,7 @@ class BorangMuatNaikBahanController extends Controller
             $failPath = $request->file('fail')->store('uploads', 'public');
         }
 
-        BorangMuatNaikBahan::create([
+        $upload = BorangMuatNaikBahan::create([
             'nama'                 => $request->nama,
             'jawatan'              => $request->jawatan,
             'bahagian'             => $request->bahagian,
@@ -53,6 +53,7 @@ class BorangMuatNaikBahanController extends Controller
             'tarikh_akhir'         => $request->tarikh_akhir,
         ]);
 
-        return redirect('/')->with('success', 'Permohonan muat naik telah berjaya dihantar!');
+
+return redirect('/')->with('success', 'Permohonan muat naik telah berjaya dihantar! No. Tiket anda: ' . $upload->no_tiket);
     }
 }

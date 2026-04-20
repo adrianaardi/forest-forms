@@ -30,4 +30,32 @@ Route::post('/forms/ict-aduan', [BorangAduanKerosakanController::class, 'store']
 Route::get('/forms/portal-upload', [BorangMuatNaikBahanController::class, 'create'])->name('portal-upload');
 Route::post('/forms/portal-upload', [BorangMuatNaikBahanController::class, 'store']);
 
+//ticket checking
+Route::get('/semak-tiket', function() {
+    return view('track');
+})->name('track');
+
+Route::post('/semak-tiket', function(\Illuminate\Http\Request $request) {
+    $tiket = strtoupper(trim($request->no_tiket));
+    $result = null;
+    $type = null;
+
+    if (str_contains($tiket, '/ICT/')) {
+        $id = (int) substr($tiket, strrpos($tiket, '2026') + 4);
+        $record = \App\Models\BorangAduanKerosakan::find($id);
+        if ($record && $record->no_tiket === $tiket) {
+            $result = $record;
+            $type = 'ict';
+        }
+    } elseif (str_contains($tiket, '/MNB/')) {
+        $id = (int) substr($tiket, strrpos($tiket, '2026') + 4);
+        $record = \App\Models\BorangMuatNaikBahan::find($id);
+        if ($record && $record->no_tiket === $tiket) {
+            $result = $record;
+            $type = 'mnb';
+        }
+    }
+
+    return view('track', compact('result', 'type', 'tiket'));
+})->name('track.search');
 require __DIR__.'/auth.php';
