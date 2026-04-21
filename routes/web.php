@@ -40,22 +40,29 @@ Route::post('/semak-tiket', function(\Illuminate\Http\Request $request) {
     $result = null;
     $type = null;
 
-    if (str_contains($tiket, '/ICT/')) {
-        $id = (int) substr($tiket, strrpos($tiket, '2026') + 4);
-        $record = \App\Models\BorangAduanKerosakan::find($id);
-        if ($record && $record->no_tiket === $tiket) {
-            $result = $record;
-            $type = 'ict';
-        }
-    } elseif (str_contains($tiket, '/MNB/')) {
-        $id = (int) substr($tiket, strrpos($tiket, '2026') + 4);
-        $record = \App\Models\BorangMuatNaikBahan::find($id);
-        if ($record && $record->no_tiket === $tiket) {
-            $result = $record;
-            $type = 'mnb';
+    // Use RegEx to extract only the numbers inside the brackets at the end
+    // This turns "JHS/MNB/A/2026(012)" into "012", and (int) makes it 12
+    preg_match('/\((0*)(\d+)\)$/', $tiket, $matches);
+    $id = isset($matches[2]) ? (int)$matches[2] : null;
+
+    if ($id) {
+        if (str_contains($tiket, '/ICT/')) {
+            $record = \App\Models\BorangAduanKerosakan::find($id);
+            // Verify if the formatted ticket matches what the user typed
+            if ($record && $record->no_tiket === $tiket) {
+                $result = $record;
+                $type = 'ict';
+            }
+        } elseif (str_contains($tiket, '/MNB/')) {
+            $record = \App\Models\BorangMuatNaikBahan::find($id);
+            if ($record && $record->no_tiket === $tiket) {
+                $result = $record;
+                $type = 'mnb';
+            }
         }
     }
 
     return view('track', compact('result', 'type', 'tiket'));
 })->name('track.search');
+
 require __DIR__.'/auth.php';

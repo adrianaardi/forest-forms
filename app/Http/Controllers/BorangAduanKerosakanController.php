@@ -30,5 +30,5 @@ class BorangAduanKerosakanController extends Controller
 
 $complaint = BorangAduanKerosakan::create($validated);
 
-return redirect('/')->with('success', 'Aduan ICT anda telah berjaya dihantar! No. Tiket anda: ' . $complaint->no_tiket);    }
+return redirect('/')->with('success', 'Aduan ICT anda telah berjaya dihantar! Anda akan menerima e-mel dengan No. tiket: ' . $complaint->no_tiket);    }
 }

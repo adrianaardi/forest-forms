@@ -48,7 +48,7 @@
                 @csrf
                 <div class="field">
                     <label>Nombor Tiket</label>
-                    <input type="text" name="no_tiket" value="{{ old('no_tiket', $tiket ?? '') }}" placeholder="Cth: JHS/ICT/A/20261" required>
+                    <input type="text" name="no_tiket" value="{{ old('no_tiket', $tiket ?? '') }}" placeholder="Cth: JHS/ICT/A/2026(1)" required>
                 </div>
                 <div style="margin-top: 0.75rem;">
                     <button type="submit" class="btn-submit">Semak</button>

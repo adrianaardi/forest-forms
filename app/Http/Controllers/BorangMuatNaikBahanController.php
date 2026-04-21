@@ -54,6 +54,6 @@ class BorangMuatNaikBahanController extends Controller
         ]);
 
 
-return redirect('/')->with('success', 'Permohonan muat naik telah berjaya dihantar! No. Tiket anda: ' . $upload->no_tiket);
+return redirect('/')->with('success', 'Permohonan muat naik telah berjaya dihantar! Anda akan menerima e-mel dengan No. Tiket: ' . $upload->no_tiket);
     }
 }
