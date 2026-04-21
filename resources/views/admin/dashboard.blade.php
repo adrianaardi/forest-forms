@@ -21,8 +21,14 @@
 
     @auth
         <a href="/admin/dashboard" class="{{ request()->is('admin/dashboard') ? 'active' : '' }}">Dashboard</a>
-        
-        <form method="POST" action="{{ route('logout') }}" style="margin-left:auto; display:flex; align-items:center;">
+        <a href="/admin/ict-aduan" class="{{ request()->is('admin/ict-aduan') ? 'active' : '' }}">Aduan ICT</a>
+        <a href="/admin/portal-upload" class="{{ request()->is('admin/portal-upload') ? 'active' : '' }}">Muat Naik</a>
+
+        <a href="/admin/profile" class="{{ request()->is('admin/profile', 'admin/accounts') ? 'active' : '' }}" style="margin-left:auto;">
+            👤 {{ Auth::user()->name }}
+        </a>
+
+        <form method="POST" action="{{ route('logout') }}" style="display:flex; align-items:center; margin-left:1rem;">
             @csrf
             <button type="submit" style="background:none; border:none; cursor:pointer; font-size:13px; color:rgba(255,255,255,0.7); padding:0;">
                 Log Keluar
@@ -31,7 +37,7 @@
     @endauth
 
     @guest
-        <a href="/login" style="margin-left: auto;">Admin</a>
+        <a href="/login" style="margin-left:auto;">Admin</a>
     @endguest
 </nav>
 

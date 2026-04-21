@@ -4,6 +4,8 @@ use App\Http\Controllers\BorangAduanKerosakanController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BorangMuatNaikBahanController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\AccountController;
+use App\Http\Controllers\Admin\ProfileController;
 
 Route::get('/', function () {
     return view('index');
@@ -19,6 +21,15 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::post('/ict-aduan/delete', [DashboardController::class, 'deleteIct'])->name('ict-aduan.delete');
     Route::post('/portal-upload/{id}/status', [DashboardController::class, 'updateUploadStatus'])->name('portal-upload.status');
     Route::post('/portal-upload/delete', [DashboardController::class, 'deleteUpload'])->name('portal-upload.delete');
+
+    //profiles
+    //profile 
+    Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
+    Route::post('/profile/password', [ProfileController::class, 'updatePassword'])->name('profile.password');
+
+    Route::get('/accounts', [AccountController::class, 'index'])->name('accounts');
+    Route::post('/accounts', [AccountController::class, 'store'])->name('accounts.store');
+    Route::delete('/accounts/{id}', [AccountController::class, 'destroy'])->name('accounts.destroy');
 
 });
 

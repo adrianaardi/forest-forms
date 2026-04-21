@@ -25,7 +25,7 @@
     <div class="form-card">
         <div class="form-card-header">
             <h2>Log Masuk Admin</h2>
-            <p>Hanya untuk kakitangan yang diberi kuasa.</p>
+            <p>Hanya untuk kakitangan yang diberi kuasa. testing testing</p>
         </div>
 
         <form method="POST" action="{{ route('login') }}">
