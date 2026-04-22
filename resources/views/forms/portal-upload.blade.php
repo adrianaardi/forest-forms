@@ -16,30 +16,7 @@
     </div>
 </header>
 
-<nav>
-    <a href="/" class="{{ request()->is('/') ? 'active' : '' }}">Laman Utama</a>
-
-    @auth
-        <a href="/admin/dashboard" class="{{ request()->is('admin/dashboard') ? 'active' : '' }}">Dashboard</a>
-        <a href="/admin/ict-aduan" class="{{ request()->is('admin/ict-aduan') ? 'active' : '' }}">Aduan ICT</a>
-        <a href="/admin/portal-upload" class="{{ request()->is('admin/portal-upload') ? 'active' : '' }}">Muat Naik</a>
-
-        <a href="/admin/profile" class="{{ request()->is('admin/profile', 'admin/accounts') ? 'active' : '' }}" style="margin-left:auto;">
-            👤 {{ Auth::user()->name }}
-        </a>
-
-        <form method="POST" action="{{ route('logout') }}" style="display:flex; align-items:center; margin-left:1rem;">
-            @csrf
-            <button type="submit" style="background:none; border:none; cursor:pointer; font-size:13px; color:rgba(255,255,255,0.7); padding:0;">
-                Log Keluar
-            </button>
-        </form>
-    @endauth
-
-    @guest
-        <a href="/login" style="margin-left:auto;">Admin</a>
-    @endguest
-</nav>
+<x-navbar />
 
 <div class="pg-body">
 
@@ -76,8 +53,18 @@
                 </div>
                 <div class="field-row">
                     <div class="field">
-                        <label>Bahagian / Unit</label>
-                        <input type="text" name="bahagian" value="{{ old('bahagian') }}" placeholder="Cth: Bahagian ICT">
+                        <label>Bahagian / Unit <span class="required">*</span></label>
+                        <select name="bahagian_id" required>
+                            <option value="">-- Pilih bahagian --</option>
+                            @foreach($bahagian as $b)
+                                <option value="{{ $b->id }}" {{ old('bahagian_id') == $b->id ? 'selected' : '' }}>
+                                    {{ $b->nama_bahagian }}
+                                </option>
+                            @endforeach
+                        </select>
+                        @error('bahagian_id')
+                            <div style="color:#a32d2d; font-size:12px; margin-top:4px;">{{ $message }}</div>
+                        @enderror
                     </div>
                     <div class="field">
                         <label>No Telefon / Email</label>
@@ -133,9 +120,15 @@
                 </div>
 
                 <div class="field">
-                    <label>Upload Bahan</label>
-                    <input type="file" name="fail">
-                </div>
+                    <label>Upload Bahan <span style="font-size:11px; color:#777;">(Maks 5 fail, 500MB setiap satu. Tiada video.)</span></label>
+                    <input type="file" name="fail[]" multiple accept=".jpg,.jpeg,.png,.gif,.pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.zip">
+                    @error('fail')
+                        <div style="color:#a32d2d; font-size:12px; margin-top:4px;">{{ $message }}</div>
+                    @enderror
+                    @error('fail.*')
+                        <div style="color:#a32d2d; font-size:12px; margin-top:4px;">{{ $message }}</div>
+                    @enderror
+                /div>
 
                 <div class="field-row">
                     <div class="field">

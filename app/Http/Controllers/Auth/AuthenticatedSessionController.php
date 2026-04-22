@@ -28,7 +28,13 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        return redirect('/admin/dashboard');    
+        $user = Auth::user();
+
+        if ($user->email === 'admin.aduan@sarawak.gov.my') {
+            return redirect('/admin/ict-aduan');
+        }
+
+        return redirect('/admin/portal-upload'); 
     }
 
     /**
