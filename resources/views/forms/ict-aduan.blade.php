@@ -37,8 +37,7 @@
             <p>Sila isi semua maklumat yang diperlukan dengan tepat.</p>
         </div>
 
-        <form method="POST" action="/forms/ict-aduan" enctype="multipart/form-data">
-            @csrf
+        <form method="POST" action="/forms/ict-aduan" enctype="multipart/form-data" onsubmit="attachFilesToForm()">            @csrf
 
             <!-- SECTION A -->
             <div class="form-section">
@@ -136,10 +135,14 @@
                 <div class="section-label">Bahagian C — Lampiran</div>
 
                 <div class="field">
+
                     <label>Attachment (maksimum 5 fail)</label>
-                    <input type="file" name="attachments[]" multiple onchange="previewFiles(this)">
-                    <div id="file-preview" style="margin-top:10px; font-size:13px; color:#444;"></div>
-                    <small style="color:gray;">Anda boleh muat naik sehingga 5 fail sahaja</small>
+                    <input type="file" id="fileInput" multiple name="attachments[]" onchange="handleFiles(this)">                    <div id="file-preview" style="margin-top:10px;"></div>
+
+                    <small style="color:gray;">
+                        Anda boleh pilih banyak fail sekaligus atau satu per satu
+                    </small>
+
                 </div>
             </div>
 
@@ -152,6 +155,36 @@
         </form>
     </div>
 </div>
+
+<div id="imageModal" style="
+    display:none;
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:rgba(0,0,0,0.85);
+    justify-content:center;
+    align-items:center;
+    z-index:9999;
+">
+
+    <span onclick="closeModal()" style="
+        position:absolute;
+        top:20px;
+        right:30px;
+        color:white;
+        font-size:35px;
+        cursor:pointer;
+    ">×</span>
+
+    <img id="modalImg" style="
+        max-width:90%;
+        max-height:90%;
+        border-radius:10px;
+    ">
+</div>
+
 
 <script>
 function toggleLain() {
@@ -168,71 +201,75 @@ document.addEventListener("DOMContentLoaded", function () {
     toggleBahagianLain();
 });
 
-function previewFiles(input) {
-    const preview = document.getElementById('file-preview');
+let selectedFiles = [];
+const maxFiles = 5;
+
+function handleFiles(input) {
+
+    let newFiles = Array.from(input.files);
+
+    // add new files (hybrid upload)
+    selectedFiles = selectedFiles.concat(newFiles);
+
+    // enforce max 5 files
+    if (selectedFiles.length > maxFiles) {
+        alert("Maksimum 5 fail sahaja dibenarkan");
+        selectedFiles = selectedFiles.slice(0, maxFiles);
+    }
+
+    renderPreview();
+
+    // reset input so same file can be re-selected if needed
+    input.value = '';
+}
+
+function renderPreview() {
+
+    let preview = document.getElementById('file-preview');
     preview.innerHTML = '';
 
-    const files = input.files;
-
-    if (files.length > 5) {
-        alert('Maksimum 5 fail sahaja dibenarkan');
-        input.value = '';
-        return;
-    }
-
-    if (!files.length) {
-        preview.innerHTML = '<small>Tiada fail dipilih</small>';
-        return;
-    }
-
-    Array.from(files).forEach((file) => {
-
-        const wrapper = document.createElement('div');
-        wrapper.style.width = '100px';
-        wrapper.style.textAlign = 'center';
-        wrapper.style.fontSize = '12px';
+    selectedFiles.forEach((file, index) => {
 
         if (file.type.startsWith('image/')) {
 
-            const reader = new FileReader();
+            let reader = new FileReader();
 
             reader.onload = function(e) {
-
-                const img = document.createElement('img');
-                img.src = e.target.result;
-
-                img.style.width = '100px';
-                img.style.height = '100px';
-                img.style.objectFit = 'cover';
-                img.style.borderRadius = '8px';
-                img.style.border = '1px solid #ddd';
-                img.style.cursor = 'pointer';
-
-                img.onclick = function () {
-                    openModal(e.target.result);
-                };
-
-                wrapper.appendChild(img);
+                preview.innerHTML += `
+                    <div style="display:inline-block;margin:5px;text-align:center;">
+                        <img src="${e.target.result}"
+                            style="width:100px;height:100px;object-fit:cover;border-radius:8px;cursor:pointer"
+                            onclick="openModal('${e.target.result}')">
+                        <div style="font-size:12px;">${file.name}</div>
+                    </div>
+                `;
             };
 
             reader.readAsDataURL(file);
 
         } else {
-            // non-image file
-            const icon = document.createElement('div');
-            icon.textContent = '📎';
-            icon.style.fontSize = '30px';
-
-            const name = document.createElement('div');
-            name.textContent = file.name;
-
-            wrapper.appendChild(icon);
-            wrapper.appendChild(name);
+            preview.innerHTML += `
+                <div style="margin:5px;">
+                    📄 ${file.name}
+                </div>
+            `;
         }
-
-        preview.appendChild(wrapper);
     });
 }
+
+function attachFilesToForm() {
+
+    let input = document.getElementById('fileInput');
+
+    let dataTransfer = new DataTransfer();
+
+    selectedFiles.forEach(file => {
+        dataTransfer.items.add(file);
+    });
+
+    input.files = dataTransfer.files;
+}
+
 function openModal(src) {
     document.getElementById('modalImg').src = src;
     document.getElementById('imageModal').style.display = 'flex';
@@ -242,32 +279,5 @@ function closeModal() {
     document.getElementById('imageModal').style.display = 'none';
 }
 </script>
-<div id="imageModal" style="
-    display:none;
-    position:fixed;
-    top:0;
-    left:0;
-    width:100%;
-    height:100%;
-    background:rgba(0,0,0,0.8);
-    justify-content:center;
-    align-items:center;
-    z-index:9999;
-">
-    <span onclick="closeModal()" style="
-        position:absolute;
-        top:20px;
-        right:30px;
-        color:white;
-        font-size:30px;
-        cursor:pointer;
-    ">×</span>
-
-    <img id="modalImg" style="
-        max-width:90%;
-        max-height:90%;
-        border-radius:8px;
-    ">
-</div>
 </body>
 </html>
