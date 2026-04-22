@@ -138,6 +138,7 @@
                 <div class="field">
                     <label>Attachment (maksimum 5 fail)</label>
                     <input type="file" name="attachments[]" multiple onchange="previewFiles(this)">
+                    <div id="file-preview" style="margin-top:10px; font-size:13px; color:#444;"></div>
                     <small style="color:gray;">Anda boleh muat naik sehingga 5 fail sahaja</small>
                 </div>
             </div>
@@ -166,7 +167,107 @@ function toggleBahagianLain() {
 document.addEventListener("DOMContentLoaded", function () {
     toggleBahagianLain();
 });
-</script>
 
+function previewFiles(input) {
+    const preview = document.getElementById('file-preview');
+    preview.innerHTML = '';
+
+    const files = input.files;
+
+    if (files.length > 5) {
+        alert('Maksimum 5 fail sahaja dibenarkan');
+        input.value = '';
+        return;
+    }
+
+    if (!files.length) {
+        preview.innerHTML = '<small>Tiada fail dipilih</small>';
+        return;
+    }
+
+    Array.from(files).forEach((file) => {
+
+        const wrapper = document.createElement('div');
+        wrapper.style.width = '100px';
+        wrapper.style.textAlign = 'center';
+        wrapper.style.fontSize = '12px';
+
+        if (file.type.startsWith('image/')) {
+
+            const reader = new FileReader();
+
+            reader.onload = function(e) {
+
+                const img = document.createElement('img');
+                img.src = e.target.result;
+
+                img.style.width = '100px';
+                img.style.height = '100px';
+                img.style.objectFit = 'cover';
+                img.style.borderRadius = '8px';
+                img.style.border = '1px solid #ddd';
+                img.style.cursor = 'pointer';
+
+                img.onclick = function () {
+                    openModal(e.target.result);
+                };
+
+                wrapper.appendChild(img);
+            };
+
+            reader.readAsDataURL(file);
+
+        } else {
+            // non-image file
+            const icon = document.createElement('div');
+            icon.textContent = '📎';
+            icon.style.fontSize = '30px';
+
+            const name = document.createElement('div');
+            name.textContent = file.name;
+
+            wrapper.appendChild(icon);
+            wrapper.appendChild(name);
+        }
+
+        preview.appendChild(wrapper);
+    });
+}
+function openModal(src) {
+    document.getElementById('modalImg').src = src;
+    document.getElementById('imageModal').style.display = 'flex';
+}
+
+function closeModal() {
+    document.getElementById('imageModal').style.display = 'none';
+}
+</script>
+<div id="imageModal" style="
+    display:none;
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:rgba(0,0,0,0.8);
+    justify-content:center;
+    align-items:center;
+    z-index:9999;
+">
+    <span onclick="closeModal()" style="
+        position:absolute;
+        top:20px;
+        right:30px;
+        color:white;
+        font-size:30px;
+        cursor:pointer;
+    ">×</span>
+
+    <img id="modalImg" style="
+        max-width:90%;
+        max-height:90%;
+        border-radius:8px;
+    ">
+</div>
 </body>
 </html>
