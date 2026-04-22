@@ -17,6 +17,10 @@ class BorangAduanKerosakan extends Model
         'nama', 'jawatan', 'bahagian', 'telefon',
         'tarikh_aduan', 'masa_aduan',
         'kategori_masalah', 'masalah_lain',
-        'keterangan_kerosakan', 'status',
+        'keterangan_kerosakan', 'status', 'attachments'
+    ];
+
+    protected $casts = [
+        'attachments' => 'array',
     ];
 }
