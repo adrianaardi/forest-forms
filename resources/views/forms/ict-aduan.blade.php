@@ -16,7 +16,30 @@
     </div>
 </header>
 
-<x-navbar />
+<nav>
+    <a href="/" class="{{ request()->is('/') ? 'active' : '' }}">Laman Utama</a>
+
+    @auth
+        <a href="/admin/dashboard" class="{{ request()->is('admin/dashboard') ? 'active' : '' }}">Dashboard</a>
+        <a href="/admin/ict-aduan" class="{{ request()->is('admin/ict-aduan') ? 'active' : '' }}">Aduan ICT</a>
+        <a href="/admin/portal-upload" class="{{ request()->is('admin/portal-upload') ? 'active' : '' }}">Muat Naik</a>
+
+        <a href="/admin/profile" class="{{ request()->is('admin/profile', 'admin/accounts') ? 'active' : '' }}" style="margin-left:auto;">
+            👤 {{ Auth::user()->name }}
+        </a>
+
+        <form method="POST" action="{{ route('logout') }}" style="display:flex; align-items:center; margin-left:1rem;">
+            @csrf
+            <button type="submit" style="background:none; border:none; cursor:pointer; font-size:13px; color:rgba(255,255,255,0.7); padding:0;">
+                Log Keluar
+            </button>
+        </form>
+    @endauth
+
+    @guest
+        <a href="/login" style="margin-left:auto;">Admin</a>
+    @endguest
+</nav>
 
 <div class="pg-body">
 
@@ -51,11 +74,40 @@
                         <input type="text" name="jawatan" value="{{ old('jawatan') }}" placeholder="Jawatan anda">
                     </div>
                 </div>
-                <div class="field-row">
-                    <div class="field">
-                        <label>Bahagian / Unit</label>
-                        <input type="text" name="bahagian" value="{{ old('bahagian') }}" placeholder="Cth: Bahagian ICT">
+                   <div class="field">
+                    <label>Bahagian / Unit</label>
+                    <select name="bahagian" id="bahagian" onchange="toggleBahagianLain()">
+                        <option value="">-- Pilih Bahagian --</option>
+
+                        <option value="Director Office" {{ old('bahagian') == 'Director Office' ? 'selected' : '' }}>Director Office</option>
+                        <option value="Deputy Director (Development & Forest Conservation) Office" {{ old('bahagian') == 'Deputy Director (Development & Forest Conservation) Office' ? 'selected' : '' }}>Deputy Director (Development & Forest Conservation) Office</option>
+                        <option value="Deputy Director (Forest Management) Office" {{ old('bahagian') == 'Deputy Director (Forest Management) Office' ? 'selected' : '' }}>Deputy Director (Forest Management) Office</option>
+                        <option value="Integrity & Internal Audit Unit" {{ old('bahagian') == 'Integrity & Internal Audit Unit' ? 'selected' : '' }}>Integrity & Internal Audit Unit</option>
+                        <option value="Strategic Planning Unit" {{ old('bahagian') == 'Strategic Planning Unit' ? 'selected' : '' }}>Strategic Planning Unit</option>
+                        <option value="Corporate & Service Modernization Unit" {{ old('bahagian') == 'Corporate & Service Modernization Unit' ? 'selected' : '' }}>Corporate & Service Modernization Unit</option>
+                        <option value="Geopark Management Unit" {{ old('bahagian') == 'Geopark Management Unit' ? 'selected' : '' }}>Geopark Management Unit</option>
+                        <option value="Legal & Advisory Unit" {{ old('bahagian') == 'Legal & Advisory Unit' ? 'selected' : '' }}>Legal & Advisory Unit</option>
+                        <option value="Management Services Division" {{ old('bahagian') == 'Management Services Division' ? 'selected' : '' }}>Management Services Division</option>
+                        <option value="Project Development Division" {{ old('bahagian') == 'Project Development Division' ? 'selected' : '' }}>Project Development Division</option>
+                        <option value="Revenue & Data Management Division" {{ old('bahagian') == 'Revenue & Data Management Division' ? 'selected' : '' }}>Revenue & Data Management Division</option>
+                        <option value="Social Forestry Division" {{ old('bahagian') == 'Social Forestry Division' ? 'selected' : '' }}>Social Forestry Division</option>
+                        <option value="International Affairs Division" {{ old('bahagian') == 'International Affairs Division' ? 'selected' : '' }}>International Affairs Division</option>
+                        <option value="Planning & Management Division" {{ old('bahagian') == 'Planning & Management Division' ? 'selected' : '' }}>Planning & Management Division</option>
+                        <option value="Licensing Division" {{ old('bahagian') == 'Licensing Division' ? 'selected' : '' }}>Licensing Division</option>
+                        <option value="Forest Technology & Geospatial Division" {{ old('bahagian') == 'Forest Technology & Geospatial Division' ? 'selected' : '' }}>Forest Technology & Geospatial Division</option>
+                        <option value="Restoration & Industrial Forest Division" {{ old('bahagian') == 'Restoration & Industrial Forest Division' ? 'selected' : '' }}>Restoration & Industrial Forest Division</option>
+                        <option value="Industrial Forest Research Centre (IFRC)" {{ old('bahagian') == 'Industrial Forest Research Centre (IFRC)' ? 'selected' : '' }}>Industrial Forest Research Centre (IFRC)</option>
+                        <option value="Constitution and Conservation Division" {{ old('bahagian') == 'Constitution and Conservation Division' ? 'selected' : '' }}>Constitution and Conservation Division</option>
+                        <option value="Preventive & Enforcement Division" {{ old('bahagian') == 'Preventive & Enforcement Division' ? 'selected' : '' }}>Preventive & Enforcement Division</option>
+                        <option value="Research & Development Division" {{ old('bahagian') == 'Research & Development Division' ? 'selected' : '' }}>Research & Development Division</option>
+
+                        <option value="lain" {{ old('bahagian') == 'lain' ? 'selected' : '' }}>Lain-lain (Sila nyatakan)</option>
+                    </select>
+
+                    <div id="bahagian-lain-box" style="display: none; margin-top: 8px;">
+                        <input type="text" name="bahagian_lain" value="{{ old('bahagian_lain') }}" placeholder="Sila nyatakan bahagian">
                     </div>
+                </div>
                     <div class="field">
                         <label>No Telefon</label>
                         <input type="text" name="telefon" value="{{ old('telefon') }}" placeholder="Cth: 082-XXXXXX">
@@ -75,7 +127,7 @@
                         <option {{ old('kategori_masalah') == 'Scanner' ? 'selected' : '' }}>Scanner</option>
                         <option {{ old('kategori_masalah') == 'Perisian' ? 'selected' : '' }}>Perisian</option>
                         <option {{ old('kategori_masalah') == 'Internet' ? 'selected' : '' }}>Internet</option>
-                        <option value="lain" {{ old('kategori_masalah') == 'lain' ? 'selected' : '' }}>Lain-lain</option>
+                        <option value="lain" {{ old('kategori_masalah') == 'lain' ? 'selected' : '' }}>Lain-lain(Nyatakan)</option>
                     </select>
                     <div class="lain-box" id="lain-box">
                         <input type="text" name="masalah_lain" value="{{ old('masalah_lain') }}" placeholder="Sila nyatakan masalah">
@@ -100,6 +152,15 @@ function toggleLain() {
     var v = document.getElementById('kategori').value;
     document.getElementById('lain-box').style.display = v === 'lain' ? 'block' : 'none';
 }
+
+function toggleBahagianLain() {
+    var v = document.getElementById('bahagian').value;
+    document.getElementById('bahagian-lain-box').style.display = v === 'lain' ? 'block' : 'none';
+}
+
+document.addEventListener("DOMContentLoaded", function() {
+    toggleBahagianLain();
+});
 </script>
 
 </body>
