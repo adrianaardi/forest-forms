@@ -8,6 +8,7 @@ use App\Models\BorangMuatNaikBahan;
 use Illuminate\Http\Request;
 use App\Mail\SupervisorApprovalMail;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller
 {
@@ -49,13 +50,15 @@ class DashboardController extends Controller
 
     public function portalUpload(Request $request)
     {
+        if (Auth::user()->email !== 'admin.mohon@sarawak.gov.my') abort(403);
+
         $query = BorangMuatNaikBahan::query();
 
         if ($request->filled('search')) {
             $query->where(function($q) use ($request) {
                 $q->where('nama', 'like', '%' . $request->search . '%')
-                  ->orWhere('tajuk_maklumat', 'like', '%' . $request->search . '%')
-                  ->orWhere('jenis_kandungan', 'like', '%' . $request->search . '%');
+                ->orWhere('tajuk_maklumat', 'like', '%' . $request->search . '%')
+                ->orWhere('bahagian_nama', 'like', '%' . $request->search . '%');
             });
         }
 
@@ -65,7 +68,13 @@ class DashboardController extends Controller
 
         $requests = $query->latest()->paginate(15)->withQueryString();
 
-        return view('admin.portal-upload', compact('requests'));
+        $stats = [
+            'total'   => BorangMuatNaikBahan::count(),
+            'pending' => BorangMuatNaikBahan::where('status', 'Pending')->count(),
+            'semakan' => BorangMuatNaikBahan::where('status', 'Dalam Semakan')->count(),
+        ];
+
+        return view('admin.portal-upload', compact('requests', 'stats'));
     }
     public function ictAduanDetail($id)
     {
@@ -105,12 +114,21 @@ class DashboardController extends Controller
         return back();
     }
 
-    public function resendSupervisorEmail($id)
+    public function resendSupervisorEmail(Request $request)
     {
         if (Auth::user()->email !== 'admin.mohon@sarawak.gov.my') abort(403);
 
-        $item = \App\Models\BorangMuatNaikBahan::findOrFail($id);
-        Mail::to($item->supervisor_email)->send(new SupervisorApprovalMail($item));
+        $ids = $request->ids ?? [];
+        if (empty($ids)) return back()->with('error', 'Tiada rekod dipilih.');
+
+        foreach ($ids as $id) {
+            $item = \App\Models\BorangMuatNaikBahan::find($id);
+            if ($item && $item->status === 'Dalam Semakan') {
+                Mail::to($item->supervisor_email)->send(new SupervisorApprovalMail($item));
+                $item->last_resent_at = now();
+                $item->save();
+            }
+        }
 
         return back()->with('success', 'Emel telah dihantar semula kepada penyelia.');
     }

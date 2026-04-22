@@ -14,7 +14,7 @@ class BorangMuatNaikBahan extends Model
         'jenis_kandungan', 'kandungan_lain',
         'jenis_pengemaskinian', 'pengemaskinian_lain',
         'fail_paths', 'tarikh_mula', 'tarikh_akhir', 'status',
-        'supervisor_email', 'token', 'catatan_semakan',
+        'supervisor_email', 'token', 'catatan_semakan','last_resent_at',
     ];
 
     protected $casts = [

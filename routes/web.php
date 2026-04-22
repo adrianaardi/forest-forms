@@ -23,8 +23,7 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::post('/ict-aduan/delete', [DashboardController::class, 'deleteIct'])->name('ict-aduan.delete');
     Route::post('/portal-upload/{id}/status', [DashboardController::class, 'updateUploadStatus'])->name('portal-upload.status');
     Route::post('/portal-upload/delete', [DashboardController::class, 'deleteUpload'])->name('portal-upload.delete');
-    Route::post('/portal-upload/{id}/resend', [DashboardController::class, 'resendSupervisorEmail'])->name('portal-upload.resend');
-    
+Route::post('/portal-upload/resend', [DashboardController::class, 'resendSupervisorEmail'])->name('portal-upload.resend');    
     //profiles
     Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
     Route::post('/profile/password', [ProfileController::class, 'updatePassword'])->name('profile.password');

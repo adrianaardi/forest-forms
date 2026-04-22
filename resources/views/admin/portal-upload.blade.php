@@ -20,6 +20,28 @@
 
 <div class="dashboard-body">
 
+    @if(session('success'))
+        <div style="background:#eaf3de; border:1px solid #c0dd97; color:#3b6d11; padding:0.75rem 1rem; border-radius:8px; margin-bottom:1rem; font-size:13px;">
+            {{ session('success') }}
+        </div>
+    @endif
+
+    {{-- Stats --}}
+    <div class="stats-grid" style="margin-bottom:1.5rem;">
+        <div class="stat-card sc-blue">
+            <h2>{{ $stats['total'] }}</h2>
+            <p>Jumlah Permohonan</p>
+        </div>
+        <div class="stat-card sc-orange">
+            <h2>{{ $stats['pending'] }}</h2>
+            <p>Menunggu Kelulusan</p>
+        </div>
+        <div class="stat-card sc-blue" style="background:#5c7a9e;">
+            <h2>{{ $stats['semakan'] }}</h2>
+            <p>Sedang Disemak</p>
+        </div>
+    </div>
+
     <p class="section-heading">Senarai Permohonan Muat Naik Portal</p>
 
     <form method="GET" action="/admin/portal-upload">
@@ -34,6 +56,10 @@
             <button type="submit">Tapis</button>
             <a href="/admin/portal-upload" class="btn-reset">Set Semula</a>
             <button type="button" class="btn-delete" id="deleteBtn" onclick="submitDelete()" disabled>Padam</button>
+            <button type="button" id="resendBtn" onclick="submitResend()" disabled
+                style="padding:7px 16px; background:#faeeda; color:#854f0b; border:1px solid #f5d5a0; border-radius:6px; font-size:13px; cursor:pointer;">
+                Hantar Semula
+            </button>
         </div>
     </form>
 
@@ -42,25 +68,32 @@
         <div id="deleteInputs"></div>
     </form>
 
+    <form id="resendForm" method="POST" action="{{ route('admin.portal-upload.resend') }}">
+        @csrf
+        <div id="resendInputs"></div>
+    </form>
+
     <table class="data-table">
         <tr>
             <th style="width:36px;"><input type="checkbox" id="checkAll" onclick="toggleAll(this)"></th>
             <th>No. Tiket</th>
             <th>Nama</th>
             <th>Bahagian</th>
-            <th>Tajuk</th>
             <th>Tarikh Hantar</th>
+            <th>Terakhir Dihantar</th>
             <th>Status</th>
             <th>Tindakan</th>
         </tr>
         @forelse($requests as $item)
         <tr>
-            <td><input type="checkbox" class="row-check" value="{{ $item->id }}" onchange="updateDelete()"></td>
+            <td><input type="checkbox" class="row-check" value="{{ $item->id }}" data-status="{{ $item->status }}" onchange="updateButtons()"></td>
             <td style="font-size:11px; color:#666;">{{ $item->no_tiket }}</td>
             <td>{{ $item->nama }}</td>
             <td>{{ $item->bahagian_nama ?? '-' }}</td>
-            <td class="td-truncate">{{ $item->tajuk_maklumat }}</td>
             <td>{{ \Carbon\Carbon::parse($item->created_at)->format('d/m/Y') }}</td>
+            <td style="font-size:12px; color:#777;">
+                {{ $item->last_resent_at ? \Carbon\Carbon::parse($item->last_resent_at)->format('d/m/Y H:i') : '-' }}
+            </td>
             <td>
                 @if($item->status === 'Pending')
                     <span class="badge badge-pending">Pending</span>
@@ -70,7 +103,7 @@
                     <span class="badge badge-done">Diluluskan</span>
                 @endif
             </td>
-            <td style="display:flex; gap:6px; flex-wrap:wrap;">
+            <td>
                 <button class="btn-view" onclick="openModal(
                     {{ $item->id }},
                     '{{ addslashes($item->nama) }}',
@@ -88,17 +121,10 @@
                     {{ json_encode($item->status) }},
                     {{ json_encode($item->fail_paths ?? []) }}
                 )">Lihat</button>
-
-                @if($item->status === 'Dalam Semakan')
-                    <form method="POST" action="{{ route('admin.portal-upload.resend', $item->id) }}" style="display:inline;">
-                        @csrf
-                        <button type="submit" class="btn-view" style="background:#faeeda; color:#854f0b; border-color:#f5d5a0;" onclick="return confirm('Hantar semula emel kepada penyelia?')">Hantar Semula</button>
-                    </form>
-                @endif
             </td>
         </tr>
         @empty
-        <tr><td colspan="8" style="text-align:center; color:#999; padding:1.5rem;">Tiada rekod ditemui.</td></tr>
+        <tr><td colspan="9" style="text-align:center; color:#999; padding:1.5rem;">Tiada rekod ditemui.</td></tr>
         @endforelse
     </table>
 
@@ -166,11 +192,6 @@
     </div>
 </div>
 
-<form id="statusForm" method="POST" style="display:none;">
-    @csrf
-    <input type="hidden" name="status" id="statusInput">
-</form>
-
 <script>
 var currentId = null;
 
@@ -189,7 +210,6 @@ function openModal(id, nama, jawatan, bahagian, telefon, tajuk, isi, jenis, klai
     document.getElementById('d-mula').textContent = mula;
     document.getElementById('d-akhir').textContent = akhir;
 
-    // handle multiple files
     var container = document.getElementById('file-preview-container');
     container.innerHTML = '';
     if (failPaths && failPaths.length > 0) {
@@ -198,7 +218,6 @@ function openModal(id, nama, jawatan, bahagian, telefon, tajuk, isi, jenis, klai
             var ext = path.split('.').pop().toLowerCase();
             var wrapper = document.createElement('div');
             wrapper.style.marginBottom = '8px';
-
             if (['jpg','jpeg','png','gif','webp'].includes(ext)) {
                 wrapper.innerHTML = '<img src="' + url + '" style="max-width:100%; border-radius:5px; border:1px solid #ddd;">';
             } else if (ext === 'pdf') {
@@ -220,34 +239,7 @@ function openModal(id, nama, jawatan, bahagian, telefon, tajuk, isi, jenis, klai
     };
     document.getElementById('d-status').innerHTML = badges[status] || status;
 
-    var actions = document.getElementById('d-actions');
-    actions.innerHTML = '';
-    if (status !== 'Diluluskan') {
-        actions.innerHTML =
-            '<button class="btn-lulus" onclick="updateStatus(\'Diluluskan\')">Luluskan</button>' +
-            '<button class="btn-tolak" onclick="updateStatus(\'Pending\')">Tolak</button>';
-    }
-
     document.getElementById('modalOverlay').classList.add('active');
-
-    if (status === 'Pending') {
-        updateStatus('Dalam Semakan', false);
-    }
-}
-
-function updateStatus(newStatus, reload = true) {
-    var form = document.getElementById('statusForm');
-    form.action = '/admin/portal-upload/' + currentId + '/status';
-    document.getElementById('statusInput').value = newStatus;
-    if (reload) {
-        form.submit();
-    } else {
-        fetch(form.action, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'X-CSRF-TOKEN': '{{ csrf_token() }}' },
-            body: '_token={{ csrf_token() }}&status=' + newStatus
-        });
-    }
 }
 
 function closeModal() {
@@ -270,14 +262,22 @@ function toggleAll(source) {
     document.querySelectorAll('.row-check').forEach(function(cb) {
         cb.checked = source.checked;
     });
-    updateDelete();
+    updateButtons();
 }
 
-function updateDelete() {
-    var checked = document.querySelectorAll('.row-check:checked').length;
-    document.getElementById('deleteBtn').disabled = checked === 0;
+function updateButtons() {
+    var checked = document.querySelectorAll('.row-check:checked');
     var allChecks = document.querySelectorAll('.row-check');
-    document.getElementById('checkAll').checked = checked === allChecks.length && allChecks.length > 0;
+
+    document.getElementById('deleteBtn').disabled = checked.length === 0;
+    document.getElementById('checkAll').checked = checked.length === allChecks.length && allChecks.length > 0;
+
+    // resend only enabled if at least one checked item is Dalam Semakan
+    var hasSemakan = false;
+    checked.forEach(function(cb) {
+        if (cb.dataset.status === 'Dalam Semakan') hasSemakan = true;
+    });
+    document.getElementById('resendBtn').disabled = !hasSemakan;
 }
 
 function submitDelete() {
@@ -292,6 +292,22 @@ function submitDelete() {
         container.appendChild(input);
     });
     document.getElementById('deleteForm').submit();
+}
+
+function submitResend() {
+    if (!confirm('Hantar semula emel kepada penyelia yang dipilih?')) return;
+    var container = document.getElementById('resendInputs');
+    container.innerHTML = '';
+    document.querySelectorAll('.row-check:checked').forEach(function(cb) {
+        if (cb.dataset.status === 'Dalam Semakan') {
+            var input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'ids[]';
+            input.value = cb.value;
+            container.appendChild(input);
+        }
+    });
+    document.getElementById('resendForm').submit();
 }
 </script>
 
