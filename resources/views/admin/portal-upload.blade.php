@@ -9,7 +9,7 @@
 <body>
 
 <header>
-    <div class="logo"></div>
+    <div class="logo">🌿</div>
     <div>
         <h1>Jabatan Hutan Sarawak</h1>
         <p>Forest Department Sarawak — Sistem Perkhidmatan Dalaman</p>
@@ -20,15 +20,11 @@
 
 <div class="dashboard-body">
 
-    <div style="margin-bottom: 1rem;">
-        <a href="/admin/dashboard" class="btn-back">← Kembali ke Dashboard</a>
-    </div>
-
     <p class="section-heading">Senarai Permohonan Muat Naik Portal</p>
 
     <form method="GET" action="/admin/portal-upload">
         <div class="toolbar">
-            <input type="text" name="search" placeholder="Cari nama, tajuk, jenis kandungan..." value="{{ request('search') }}">
+            <input type="text" name="search" placeholder="Cari nama, tajuk, bahagian..." value="{{ request('search') }}">
             <select name="status">
                 <option value="">-- Semua Status --</option>
                 <option value="Pending" {{ request('status') == 'Pending' ? 'selected' : '' }}>Pending</option>
@@ -51,9 +47,8 @@
             <th style="width:36px;"><input type="checkbox" id="checkAll" onclick="toggleAll(this)"></th>
             <th>No. Tiket</th>
             <th>Nama</th>
+            <th>Bahagian</th>
             <th>Tajuk</th>
-            <th>Jenis Kandungan</th>
-            <th>Pengemaskinian</th>
             <th>Tarikh Hantar</th>
             <th>Status</th>
             <th>Tindakan</th>
@@ -61,11 +56,10 @@
         @forelse($requests as $item)
         <tr>
             <td><input type="checkbox" class="row-check" value="{{ $item->id }}" onchange="updateDelete()"></td>
-            <td>{{ $item->no_tiket }}</td>
+            <td style="font-size:11px; color:#666;">{{ $item->no_tiket }}</td>
             <td>{{ $item->nama }}</td>
+            <td>{{ $item->bahagian_nama ?? '-' }}</td>
             <td class="td-truncate">{{ $item->tajuk_maklumat }}</td>
-            <td>{{ $item->jenis_kandungan }}</td>
-            <td>{{ $item->jenis_pengemaskinian }}</td>
             <td>{{ \Carbon\Carbon::parse($item->created_at)->format('d/m/Y') }}</td>
             <td>
                 @if($item->status === 'Pending')
@@ -76,12 +70,12 @@
                     <span class="badge badge-done">Diluluskan</span>
                 @endif
             </td>
-            <td>
+            <td style="display:flex; gap:6px; flex-wrap:wrap;">
                 <button class="btn-view" onclick="openModal(
                     {{ $item->id }},
                     '{{ addslashes($item->nama) }}',
                     '{{ addslashes($item->jawatan ?? '-') }}',
-                    '{{ addslashes($item->bahagian ?? '-') }}',
+                    '{{ addslashes($item->bahagian_nama ?? '-') }}',
                     '{{ addslashes($item->telefon_email ?? '-') }}',
                     '{{ addslashes($item->tajuk_maklumat) }}',
                     '{{ addslashes($item->isi_kandungan ?? '-') }}',
@@ -92,7 +86,15 @@
                     '{{ $item->tarikh_mula ? \Carbon\Carbon::parse($item->tarikh_mula)->format('d/m/Y') : '-' }}',
                     '{{ $item->tarikh_akhir ? \Carbon\Carbon::parse($item->tarikh_akhir)->format('d/m/Y') : '-' }}',
                     {{ json_encode($item->status) }},
-                    {{ json_encode($item->fail_path ? asset('storage/' . $item->fail_path) : '') }}                 )">Lihat</button>
+                    {{ json_encode($item->fail_paths ?? []) }}
+                )">Lihat</button>
+
+                @if($item->status === 'Dalam Semakan')
+                    <form method="POST" action="{{ route('admin.portal-upload.resend', $item->id) }}" style="display:inline;">
+                        @csrf
+                        <button type="submit" class="btn-view" style="background:#faeeda; color:#854f0b; border-color:#f5d5a0;" onclick="return confirm('Hantar semula emel kepada penyelia?')">Hantar Semula</button>
+                    </form>
+                @endif
             </td>
         </tr>
         @empty
@@ -152,9 +154,8 @@
                 </div>
             </div>
             <div class="detail-group">
-                <div class="detail-section-label">Bahagian C — Lampiran (Fail/Media)</div>
-                <div id="file-preview-container" style="margin-top:10px; border:1px dashed #ccc; padding:10px; border-radius:8px; text-align:center;">
-                    </div>
+                <div class="detail-section-label">Lampiran</div>
+                <div id="file-preview-container" style="margin-top:8px;"></div>
             </div>
             <div class="detail-group">
                 <div class="detail-section-label">Status</div>
@@ -173,7 +174,7 @@
 <script>
 var currentId = null;
 
-function openModal(id, nama, jawatan, bahagian, telefon, tajuk, isi, jenis, klain, pengemaskinian, plain, mula, akhir, status, fileUrl) {
+function openModal(id, nama, jawatan, bahagian, telefon, tajuk, isi, jenis, klain, pengemaskinian, plain, mula, akhir, status, failPaths) {
     currentId = id;
     document.getElementById('d-nama').textContent = nama;
     document.getElementById('d-jawatan').textContent = jawatan;
@@ -188,50 +189,29 @@ function openModal(id, nama, jawatan, bahagian, telefon, tajuk, isi, jenis, klai
     document.getElementById('d-mula').textContent = mula;
     document.getElementById('d-akhir').textContent = akhir;
 
-    const container = document.getElementById('file-preview-container');
-        if (container) {
-            container.innerHTML = ''; // Clear old preview
+    // handle multiple files
+    var container = document.getElementById('file-preview-container');
+    container.innerHTML = '';
+    if (failPaths && failPaths.length > 0) {
+        failPaths.forEach(function(path) {
+            var url = '/storage/' + path;
+            var ext = path.split('.').pop().toLowerCase();
+            var wrapper = document.createElement('div');
+            wrapper.style.marginBottom = '8px';
 
-            // Check if fileUrl actually exists and isn't just a blank string
-            if (fileUrl && fileUrl.trim().length > 10) { 
-                // Get extension and make it lowercase to be safe
-                const ext = fileUrl.split('.').pop().toLowerCase().split(/\?|#/)[0];
-
-                // 1. IMAGES
-                if (['jpg', 'jpeg', 'png', 'gif', 'webp'].includes(ext)) {
-                    container.innerHTML = `<img src="${fileUrl}" style="max-width:100%; border-radius:5px; border: 1px solid #ddd;">`;
-                } 
-                // 2. VIDEOS
-                else if (['mp4', 'webm', 'mov'].includes(ext)) {
-                    container.innerHTML = `<video controls style="width:100%; max-height:300px;"><source src="${fileUrl}"></video>`;
-                }
-                // 3. PDF
-                else if (ext === 'pdf') {
-                    container.innerHTML = `
-                        <div style="width:100%;">
-                            <iframe src="${fileUrl}" style="width:100%; height:450px; border:1px solid #ddd;"></iframe>
-                            <div style="margin-top:10px;">
-                                <a href="${fileUrl}" target="_blank" class="btn-view" style="text-decoration:none; display:inline-block;">
-                                    ↗️ Buka PDF (Tab Baru)
-                                </a>
-                            </div>
-                        </div>`;
-                } 
-                // 4. DOCS/OTHER
-                else {
-                    container.innerHTML = `
-                        <div style="padding:20px; background:#f4f4f4; border-radius:8px;">
-                            <p>Fail <strong>.${ext.toUpperCase()}</strong> telah dimuat naik.</p>
-                            <a href="${fileUrl}" download class="btn-view" style="text-decoration:none; display:inline-block;">
-                                Muat Turun Fail
-                            </a>
-                        </div>`;
-                }
+            if (['jpg','jpeg','png','gif','webp'].includes(ext)) {
+                wrapper.innerHTML = '<img src="' + url + '" style="max-width:100%; border-radius:5px; border:1px solid #ddd;">';
+            } else if (ext === 'pdf') {
+                wrapper.innerHTML = '<a href="' + url + '" target="_blank" class="btn-view" style="display:inline-block; text-decoration:none;">↗ Buka PDF</a>';
             } else {
-                // This only shows if the link is truly empty
-                container.innerHTML = '<p style="color:#999; padding: 20px;">Tiada lampiran disediakan.</p>';
+                var name = path.split('/').pop();
+                wrapper.innerHTML = '<a href="' + url + '" download class="btn-view" style="display:inline-block; text-decoration:none;">⬇ ' + name + '</a>';
             }
-        }
+            container.appendChild(wrapper);
+        });
+    } else {
+        container.innerHTML = '<p style="color:#999; font-size:13px;">Tiada lampiran.</p>';
+    }
 
     var badges = {
         'Pending':       '<span class="badge badge-pending">Pending</span>',

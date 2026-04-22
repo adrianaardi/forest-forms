@@ -9,6 +9,7 @@ use App\Models\BorangMuatNaikBahan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
+use App\Mail\UserSubmissionMail;
 
 class BorangMuatNaikBahanController extends Controller
 {
@@ -69,8 +70,12 @@ class BorangMuatNaikBahanController extends Controller
         // send email to supervisor
         Mail::to($bahagian->email_supervisor)->send(new SupervisorApprovalMail($upload));
 
-        return redirect('/')->with('success', 'Permohonan muat naik telah berjaya dihantar! No. Tiket anda: ' . $upload->no_tiket);
-    }
+        // send confirmation email to user if they provided an email
+        if ($upload->telefon_email && str_contains($upload->telefon_email, '@')) {
+            Mail::to($upload->telefon_email)->send(new UserSubmissionMail($upload));
+        }
+
+        return redirect('/')->with('success', 'Permohonan muat naik telah berjaya dihantar! No. Tiket anda: ' . $upload->no_tiket);    }
 
     public function supervisorView($token)
     {
@@ -94,6 +99,8 @@ class BorangMuatNaikBahanController extends Controller
         ]);
 
         if ($newStatus === 'Diluluskan' && $permohonan->telefon_email && str_contains($permohonan->telefon_email, '@')) {
+            Mail::to($permohonan->telefon_email)->send(new UserStatusMail($permohonan));
+        } elseif ($newStatus === 'Dalam Semakan' && $permohonan->telefon_email && str_contains($permohonan->telefon_email, '@')) {
             Mail::to($permohonan->telefon_email)->send(new UserStatusMail($permohonan));
         }
 

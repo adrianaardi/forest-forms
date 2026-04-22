@@ -115,9 +115,12 @@
                         <label>Catatan (optional)</label>
                         <textarea name="catatan_semakan" rows="3" placeholder="Tambah catatan jika perlu..."></textarea>
                     </div>
-                    <div class="modal-actions" style="margin-top: 0.75rem;">
+                    <div id="approve-actions" class="modal-actions" style="margin-top: 0.75rem;">
                         <button type="submit" class="btn-lulus">Luluskan Permohonan</button>
-                        <button type="button" class="btn-tolak" onclick="document.getElementById('semakan-form').style.display='block'; this.parentElement.style.display='none'">Dalam Semakan</button>
+                        <button type="button" class="btn-tolak" onclick="
+                            document.getElementById('semakan-form').style.display='block';
+                            document.getElementById('approve-actions').style.display='none';
+                        ">Dalam Semakan</button>
                     </div>
                 </form>
 
@@ -130,7 +133,10 @@
                     </div>
                     <div class="modal-actions" style="margin-top:0.75rem;">
                         <button type="submit" class="btn-submit">Hantar</button>
-                        <button type="button" class="btn-reset" onclick="this.closest('form').style.display='none'">Batal</button>
+                        <button type="button" class="btn-reset" onclick="
+                            this.closest('form').style.display='none';
+                            document.getElementById('approve-actions').style.display='flex';
+                        ">Batal</button>
                     </div>
                 </form>
             @endif

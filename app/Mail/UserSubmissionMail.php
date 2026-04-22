@@ -9,7 +9,7 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class UserStatusMail extends Mailable
+class UserSubmissionMail extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -23,14 +23,14 @@ class UserStatusMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Status Permohonan Muat Naik Portal — ' . $this->permohonan->no_tiket,
+            subject: 'Pengesahan Permohonan — ' . $this->permohonan->no_tiket,
         );
     }
 
     public function content(): Content
     {
         return new Content(
-            view: 'emails.user-status',
+            view: 'emails.user-submission',
         );
     }
 }

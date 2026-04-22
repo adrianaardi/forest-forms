@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\BorangAduanKerosakan;
 use App\Models\BorangMuatNaikBahan;
 use Illuminate\Http\Request;
+use App\Mail\SupervisorApprovalMail;
+use Illuminate\Support\Facades\Mail;
 
 class DashboardController extends Controller
 {
@@ -101,5 +103,15 @@ class DashboardController extends Controller
     {
         BorangMuatNaikBahan::whereIn('id', $request->ids)->delete();
         return back();
+    }
+
+    public function resendSupervisorEmail($id)
+    {
+        if (Auth::user()->email !== 'admin.mohon@sarawak.gov.my') abort(403);
+
+        $item = \App\Models\BorangMuatNaikBahan::findOrFail($id);
+        Mail::to($item->supervisor_email)->send(new SupervisorApprovalMail($item));
+
+        return back()->with('success', 'Emel telah dihantar semula kepada penyelia.');
     }
 }

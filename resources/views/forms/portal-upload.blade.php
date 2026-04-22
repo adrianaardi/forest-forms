@@ -128,7 +128,7 @@
                     @error('fail.*')
                         <div style="color:#a32d2d; font-size:12px; margin-top:4px;">{{ $message }}</div>
                     @enderror
-                /div>
+                </div>
 
                 <div class="field-row">
                     <div class="field">
