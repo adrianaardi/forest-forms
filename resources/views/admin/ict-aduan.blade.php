@@ -52,6 +52,7 @@
             <th>No. Tiket</th>
             <th>Nama</th>
             <th>Bahagian</th>
+            <th>Wilayah</th>
             <th>Kategori</th>
             <th>Tarikh</th>
             <th>Status</th>
@@ -64,6 +65,7 @@
             <td>{{ $item->no_tiket }}</td>
             <td>{{ $item->nama }}</td>
             <td>{{ $item->bahagian ?? '-' }}</td>
+            <td>{{ $item->wilayah ?? '-' }}</td>
             <td>{{ $item->kategori_masalah }}</td>
             <td>{{ \Carbon\Carbon::parse($item->tarikh_aduan)->format('d/m/Y') }}</td>
             <td>
@@ -82,6 +84,7 @@
                     data-nama="{{ $item->nama }}"
                     data-jawatan="{{ $item->jawatan ?? '-' }}"
                     data-bahagian="{{ $item->bahagian ?? '-' }}"
+                    data-wilayah="{{ $item->wilayah ?? '-' }}"
                     data-telefon="{{ $item->telefon ?? '-' }}"
                     data-tarikh="{{ \Carbon\Carbon::parse($item->tarikh_aduan)->format('d/m/Y') }}"
                     data-masa="{{ $item->masa_aduan }}"
@@ -135,6 +138,10 @@
 
                 <div class="detail-row">
                     <div class="detail-field"><label>Bahagian / Unit</label><p id="d-bahagian"></p></div>
+                    <div class="detail-field"><label>Wilayah</label><p id="d-wilayah"></p></div>
+                </div>
+
+                <div class="detail-row">
                     <div class="detail-field"><label>No Telefon</label><p id="d-telefon"></p></div>
                 </div>
 
@@ -189,6 +196,7 @@ function openModalFromButton(btn) {
     document.getElementById('d-nama').textContent = btn.dataset.nama;
     document.getElementById('d-jawatan').textContent = btn.dataset.jawatan;
     document.getElementById('d-bahagian').textContent = btn.dataset.bahagian;
+    document.getElementById('d-wilayah').textContent = btn.dataset.wilayah;
     document.getElementById('d-telefon').textContent = btn.dataset.telefon;
     document.getElementById('d-tarikh').textContent = btn.dataset.tarikh;
     document.getElementById('d-masa').textContent = btn.dataset.masa;

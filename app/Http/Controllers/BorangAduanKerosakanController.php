@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\BorangAduanKerosakan;
 use Illuminate\Http\Request;
 
-//good for straightforward forms
 class BorangAduanKerosakanController extends Controller
 {
     public function create()
@@ -18,11 +17,20 @@ class BorangAduanKerosakanController extends Controller
         $validated = $request->validate([
             'nama'                 => 'required|string|max:255',
             'jawatan'              => 'nullable|string|max:255',
+
+            // EXISTING
             'bahagian'             => 'nullable|string|max:255',
+            'bahagian_lain'       => 'nullable|string|max:255',
+
+            // 🆕 WILAYAH ADDED
+            'wilayah'              => 'nullable|string|max:255',
+            'wilayah_lain'         => 'nullable|string|max:255',
+
             'telefon'              => 'nullable|string|max:50',
             'kategori_masalah'     => 'required|string',
             'masalah_lain'         => 'nullable|string|max:255',
             'keterangan_kerosakan' => 'nullable|string',
+
             'attachments'          => 'nullable|array|max:5',
             'attachments.*'        => 'file|max:5120|mimes:jpg,jpeg,png,gif,pdf,doc,docx,xls,xlsx,zip',
         ]);
@@ -30,11 +38,20 @@ class BorangAduanKerosakanController extends Controller
         $validated['tarikh_aduan'] = now()->toDateString();
         $validated['masa_aduan']   = now()->toTimeString();
 
+        // ✅ CLEAN LOGIC FOR BAHAGIAN
+        $validated['bahagian'] = $request->bahagian == 'lain'
+            ? $request->bahagian_lain
+            : $request->bahagian;
+
+        // 🆕 CLEAN LOGIC FOR WILAYAH
+        $validated['wilayah'] = $request->wilayah == 'lain'
+            ? $request->wilayah_lain
+            : $request->wilayah;
+
         $files = [];
 
         if ($request->hasFile('attachments')) {
 
-            // hard safety check (backend protection)
             if (count($request->file('attachments')) > 5) {
                 return back()
                     ->withErrors(['attachments' => 'Maksimum 5 fail sahaja dibenarkan.'])
