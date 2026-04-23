@@ -92,6 +92,7 @@
                     data-lain="{{ $item->masalah_lain ?? '-' }}"
                     data-keterangan="{{ $item->keterangan_kerosakan ?? '-' }}"
                     data-status="{{ $item->status }}"
+                    data-remarks="{{ $item->remarks ?? '' }}"
                     data-attachments='@json($item->attachments ? json_decode($item->attachments, true) : [])'
                     onclick="openModalFromButton(this)">
                     Lihat
@@ -171,11 +172,92 @@
             </div>
 
             <div class="detail-group">
-                <div class="detail-section-label">Status</div>
-                <div id="d-status" style="margin-bottom: 1rem;"></div>
-                <div class="modal-actions" id="d-actions"></div>
-            </div>
+                <div class="detail-section-label">Bahagian C — Tindakan / Penyelesaian</div>
 
+                <!-- CURRENT STATUS -->
+                <div id="d-status" style="margin-bottom: 1rem;"></div>
+
+                <!-- FORM -->
+                <form id="updateStatusForm" method="POST">
+                    @csrf
+
+                    <input type="hidden" name="id" id="complaintId">
+
+                    <!-- STATUS -->
+                    <div class="detail-row">
+                        <div class="detail-field">
+                            <label>Status Tindakan</label>
+                            <select name="status" id="statusSelect" onchange="toggleSupplierSection()" required>
+                                <option value="">-- Pilih Status --</option>
+                                <option value="Dalam Tindakan">Dalam Tindakan</option>
+                                <option value="Selesai">Selesai</option>
+                                <option value="Tindakan Pembekal SAINS/Luar">Tindakan Pembekal SAINS/Luar</option>
+                                <option value="Tangguh/KIV">Tangguh/KIV</option>
+                            </select>
+                        </div>
+                    </div>
+                    <!-- PREVIOUS REMARKS -->
+                    <div class="detail-field">
+                        <label>Catatan Sebelumnya</label>
+                        <p id="d-remarks">-</p>
+                    </div>
+                    
+                    <!-- REMARKS -->
+                    <div class="detail-row">
+                        <div class="detail-field" style="width:100%;">
+                            <label>Catatan / Remarks</label>
+                            <textarea name="remarks" rows="3" placeholder="Masukkan catatan..."></textarea>
+                        </div>
+                    </div>
+
+                    <!-- SUPPLIER SECTION -->
+                    <div id="supplierSection" style="display:none; margin-top:10px;">
+
+                        <div class="detail-section-label">Maklumat Pembekal</div>
+
+                        <!-- ROW 1 -->
+                        <div class="detail-row">
+                            <div class="detail-field">
+                                <label>Nama Syarikat</label>
+                                <input type="text" name="nama_syarikat">
+                            </div>
+
+                            <div class="detail-field">
+                                <label>No Telefon</label>
+                                <input type="text" name="no_tel_syarikat">
+                            </div>
+                        </div>
+
+                        <!-- ROW 2 -->
+                        <div class="detail-row">
+                            <div class="detail-field">
+                                <label>Tarikh Tindakan</label>
+                                <input type="date" name="tarikh_tindakan">
+                            </div>
+
+                            <div class="detail-field">
+                                <label>Tarikh Selesai</label>
+                                <input type="date" name="tarikh_selesai">
+                            </div>
+                        </div>
+
+                        <!-- ROW 3 -->
+                        <div class="detail-row">
+                            <div class="detail-field" style="width:100%;">
+                                <label>Catatan Pembekal</label>
+                                <input type="text" name="catatan_pembekal">
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- SUBMIT -->
+                    <div class="modal-actions" style="margin-top:15px;">
+                        <button type="submit" class="btn-submit">Simpan Status</button>
+                    </div>
+
+                </form>
+            </div>
         </div>
     </div>
 </div>
@@ -203,6 +285,15 @@ function openModalFromButton(btn) {
     document.getElementById('d-kategori').textContent = btn.dataset.kategori;
     document.getElementById('d-lain').textContent = btn.dataset.lain;
     document.getElementById('d-keterangan').textContent = btn.dataset.keterangan;
+    // SET FORM ACTION + ID
+    document.getElementById('updateStatusForm').action = `/admin/ict-aduan/${currentId}/status`;
+    document.getElementById('complaintId').value = currentId;
+    document.querySelector('textarea[name="remarks"]').value = btn.dataset.remarks || '';
+    document.getElementById('d-remarks').textContent = btn.dataset.remarks || '-';
+
+    // reset form
+    document.getElementById('statusSelect').value = '';
+    document.getElementById('supplierSection').style.display = 'none';
 
     // SAFE attachments parsing
     let attachments = [];
@@ -237,6 +328,17 @@ function openModalFromButton(btn) {
     document.getElementById('modalOverlay').classList.add('active');
 }
 
+function toggleSupplierSection() {
+    const status = document.getElementById('statusSelect').value;
+    const section = document.getElementById('supplierSection');
+
+    if (status === 'Tindakan Pembekal SAINS/Luar') {
+        section.style.display = 'block';
+    } else {
+        section.style.display = 'none';
+    }
+}
+
 function closeModal() {
     document.getElementById('modalOverlay').classList.remove('active');
 }
@@ -244,6 +346,7 @@ function closeModal() {
 function closeOnOverlay(e) {
     if (e.target === document.getElementById('modalOverlay')) closeModal();
 }
+
 </script>
 
 </body>

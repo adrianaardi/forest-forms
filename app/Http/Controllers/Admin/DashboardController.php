@@ -90,9 +90,22 @@ class DashboardController extends Controller
 
     public function updateIctStatus(Request $request, $id)
     {
-        $item = BorangAduanKerosakan::findOrFail($id);
-        $item->update(['status' => $request->status]);
-        return back();
+        $aduan = \App\Models\BorangAduanKerosakan::findOrFail($id);
+
+        $aduan->status = $request->status;
+        $aduan->remarks = $request->remarks;
+
+        if ($request->status === 'Tindakan Pembekal SAINS/Luar') {
+            $aduan->nama_syarikat = $request->nama_syarikat;
+            $aduan->no_tel_syarikat = $request->no_tel_syarikat;
+            $aduan->tarikh_tindakan = $request->tarikh_tindakan;
+            $aduan->tarikh_selesai = $request->tarikh_selesai;
+            $aduan->catatan_pembekal = $request->catatan_pembekal;
+        }
+
+        $aduan->save();
+
+        return back()->with('success', 'Status berjaya dikemaskini');
     }
 
     public function deleteIct(Request $request)
