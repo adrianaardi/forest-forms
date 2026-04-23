@@ -236,10 +236,28 @@ function renderPreview() {
 
             reader.onload = function(e) {
                 preview.innerHTML += `
-                    <div style="display:inline-block;margin:5px;text-align:center;">
+                    <div style="display:inline-block;margin:5px;text-align:center;position:relative;">
+                        
                         <img src="${e.target.result}"
                             style="width:100px;height:100px;object-fit:cover;border-radius:8px;cursor:pointer"
                             onclick="openModal('${e.target.result}')">
+
+                        <!-- DELETE BUTTON -->
+                        <button type="button" onclick="removeFile(${index})"
+                            style="
+                                position:absolute;
+                                top:-5px;
+                                right:-5px;
+                                background:red;
+                                color:white;
+                                border:none;
+                                border-radius:50%;
+                                width:20px;
+                                height:20px;
+                                cursor:pointer;
+                                font-size:12px;
+                            ">×</button>
+
                         <div style="font-size:12px;">${file.name}</div>
                     </div>
                 `;
@@ -249,12 +267,28 @@ function renderPreview() {
 
         } else {
             preview.innerHTML += `
-                <div style="margin:5px;">
+                <div style="margin:5px; position:relative; display:inline-block;">
                     📄 ${file.name}
+
+                    <!-- DELETE BUTTON -->
+                    <button type="button" onclick="removeFile(${index})"
+                        style="
+                            margin-left:10px;
+                            background:red;
+                            color:white;
+                            border:none;
+                            border-radius:5px;
+                            cursor:pointer;
+                        ">Remove</button>
                 </div>
             `;
         }
     });
+}
+
+function removeFile(index) {
+    selectedFiles.splice(index, 1);
+    renderPreview();
 }
 
 function attachFilesToForm() {
