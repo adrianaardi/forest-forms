@@ -108,6 +108,10 @@
                             <option value="Sibu" {{ old('wilayah') == 'Sibu' ? 'selected' : '' }}>Sibu</option>
                             <option value="Bintulu" {{ old('wilayah') == 'Bintulu' ? 'selected' : '' }}>Bintulu</option>
                             <option value="Miri" {{ old('wilayah') == 'Miri' ? 'selected' : '' }}>Miri</option>
+                            <option value="Sri Aman" {{ old('wilayah') == 'Sri Aman' ? 'selected' : '' }}>Sri Aman</option>
+                            <option value="Sarikei" {{ old('wilayah') == 'Sarikei' ? 'selected' : '' }}>Sarikei</option>
+                            <option value="Kapit" {{ old('wilayah') == 'Kapit' ? 'selected' : '' }}>Kapit</option>
+                            <option value="Limbang" {{ old('wilayah') == 'Limbang' ? 'selected' : '' }}>Limbang</option>
                             <option value="lain" {{ old('wilayah') == 'lain' ? 'selected' : '' }}>Lain-lain (Nyatakan)</option>
                         </select>
 
