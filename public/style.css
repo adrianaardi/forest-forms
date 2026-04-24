@@ -732,6 +732,16 @@ footer strong {
     cursor: not-allowed;
 }
 
+#resendBtn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+#resendBtn:not(:disabled) {
+    opacity: 1;
+    cursor: pointer;
+}
+
 /* ── MODAL ACTION BUTTONS ── */
 .modal-actions {
     display: flex;

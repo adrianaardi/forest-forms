@@ -32,7 +32,10 @@
 
         <div class="ticket-box">
             <p>Nombor Tiket Anda</p>
-            <h2>{{ $permohonan->no_tiket }}</h2>
+            <h2 id="tiket-no" onclick="this.focus(); document.execCommand('selectAll')" 
+                style="cursor:pointer; user-select:all; -webkit-user-select:all;"
+                title="Klik untuk pilih">{{ $permohonan->no_tiket }}</h2>
+            <p style="font-size:11px; color:#777; margin-top:4px;">Klik nombor tiket untuk memilih, kemudian Ctrl+C untuk salin.</p>
         </div>
 
         <div class="detail-row">

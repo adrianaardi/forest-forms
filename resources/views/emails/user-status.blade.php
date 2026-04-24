@@ -37,7 +37,10 @@
 
         <div class="detail-row">
             <span class="detail-label">No. Tiket</span>
-            <span class="detail-value">{{ $permohonan->no_tiket }}</span>
+            <span class="detail-value">
+                <span style="user-select:all; -webkit-user-select:all; cursor:pointer;" title="Klik untuk pilih">{{ $permohonan->no_tiket }}</span>
+                <span style="font-size:11px; color:#777;"> — klik untuk pilih</span>
+            </span>
         </div>
         <div class="detail-row">
             <span class="detail-label">Tajuk Maklumat</span>

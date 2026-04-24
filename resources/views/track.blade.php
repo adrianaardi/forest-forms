@@ -92,6 +92,15 @@
                             @endif
                         </div>
                     </div>
+
+                    @if($type === 'mnb' && $result->catatan_semakan)
+                    <div class="field" style="margin-top:0.75rem;">
+                        <label>Catatan Penyelia</label>
+                        <div style="background:#f9fafb; border:1px solid #dde8e1; border-radius:8px; padding:0.75rem 1rem; font-size:13px; color:#333; line-height:1.6; margin-top:4px;">
+                            {{ $result->catatan_semakan }}
+                        </div>
+                    </div>
+                    @endif
                 </div>
             @else
                 <div class="form-section">

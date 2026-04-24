@@ -9,7 +9,7 @@
 <body>
 
 <header>
-    <div class="logo">🌿</div>
+    <div class="logo"></div>
     <div>
         <h1>Jabatan Hutan Sarawak</h1>
         <p>Forest Department Sarawak — Sistem Perkhidmatan Dalaman</p>
@@ -21,7 +21,7 @@
 <div class="dashboard-body">
 
     @if(session('success'))
-        <div style="background:#eaf3de; border:1px solid #c0dd97; color:#3b6d11; padding:0.75rem 1rem; border-radius:8px; margin-bottom:1rem; font-size:13px;">
+        <div style="background:#eaf3de; border:1px solid #c0dd97; color:#3b6d11; padding:0.75rem 1rem; border-radius:8px; margin-bottom:1.25rem; font-size:13px;">
             {{ session('success') }}
         </div>
     @endif
@@ -36,32 +36,47 @@
             <h2>{{ $stats['pending'] }}</h2>
             <p>Menunggu Kelulusan</p>
         </div>
-        <div class="stat-card sc-blue" style="background:#5c7a9e;">
-            <h2>{{ $stats['semakan'] }}</h2>
-            <p>Sedang Disemak</p>
+        <div class="stat-card" style="background:#4a7a8a; color:#fff; border-radius:10px; padding:1rem 1.25rem; text-align:center;">
+            <h2 style="font-size:32px; font-weight:500; margin-bottom:4px;">{{ $stats['semakan'] }}</h2>
+            <p style="font-size:12px; opacity:0.85;">Sedang Disemak</p>
         </div>
     </div>
 
     <p class="section-heading">Senarai Permohonan Muat Naik Portal</p>
 
-    <form method="GET" action="/admin/portal-upload">
+    {{-- Filters --}}
+    <form method="GET" action="/admin/portal-upload" style="margin-bottom:0.75rem;">
         <div class="toolbar">
-            <input type="text" name="search" placeholder="Cari nama, tajuk, bahagian..." value="{{ request('search') }}">
+            <input type="text" name="search" placeholder="Cari nama atau tajuk..." value="{{ request('search') }}">
             <select name="status">
                 <option value="">-- Semua Status --</option>
                 <option value="Pending" {{ request('status') == 'Pending' ? 'selected' : '' }}>Pending</option>
                 <option value="Dalam Semakan" {{ request('status') == 'Dalam Semakan' ? 'selected' : '' }}>Dalam Semakan</option>
                 <option value="Diluluskan" {{ request('status') == 'Diluluskan' ? 'selected' : '' }}>Diluluskan</option>
             </select>
-            <button type="submit">Tapis</button>
-            <a href="/admin/portal-upload" class="btn-reset">Set Semula</a>
-            <button type="button" class="btn-delete" id="deleteBtn" onclick="submitDelete()" disabled>Padam</button>
-            <button type="button" id="resendBtn" onclick="submitResend()" disabled
-                style="padding:7px 16px; background:#faeeda; color:#854f0b; border:1px solid #f5d5a0; border-radius:6px; font-size:13px; cursor:pointer;">
-                Hantar Semula
-            </button>
+            <select name="bahagian">
+                <option value="">-- Semua Bahagian --</option>
+                @foreach($bahagianList as $b)
+                    <option value="{{ $b->nama_bahagian }}" {{ request('bahagian') == $b->nama_bahagian ? 'selected' : '' }}>
+                        {{ $b->nama_bahagian }}
+                    </option>
+                @endforeach
+            </select>
+            <button type="submit" style="padding:7px 16px; background:#1a4731; color:#fff; border:none; border-radius:6px; font-size:13px; cursor:pointer;">Tapis</button>
+            <a href="/admin/portal-upload" style="padding:7px 16px; background:#f0f0f0; color:#444; border-radius:6px; font-size:13px; text-decoration:none;">Set Semula</a>
         </div>
     </form>
+
+    {{-- Action buttons --}}
+    <div style="display:flex; gap:8px; margin-bottom:1rem; flex-wrap:wrap;">
+        <button type="button" id="resendBtn" onclick="submitResend()" disabled
+            style="padding:7px 16px; background:#e8f3fb; color:#185fa5; border:1px solid #b5d4f4; border-radius:6px; font-size:13px; transition:background 0.15s;">
+            📨 Hantar Semula
+        </button>
+        <button type="button" class="btn-delete" id="deleteBtn" onclick="submitDelete()" disabled>
+            🗑 Padam
+        </button>
+    </div>
 
     <form id="deleteForm" method="POST" action="{{ route('admin.portal-upload.delete') }}">
         @csrf
@@ -79,6 +94,7 @@
             <th>No. Tiket</th>
             <th>Nama</th>
             <th>Bahagian</th>
+            <th>Tajuk</th>
             <th>Tarikh Hantar</th>
             <th>Terakhir Dihantar</th>
             <th>Status</th>
@@ -90,9 +106,14 @@
             <td style="font-size:11px; color:#666;">{{ $item->no_tiket }}</td>
             <td>{{ $item->nama }}</td>
             <td>{{ $item->bahagian_nama ?? '-' }}</td>
+            <td class="td-truncate">{{ $item->tajuk_maklumat }}</td>
             <td>{{ \Carbon\Carbon::parse($item->created_at)->format('d/m/Y') }}</td>
             <td style="font-size:12px; color:#777;">
-                {{ $item->last_resent_at ? \Carbon\Carbon::parse($item->last_resent_at)->format('d/m/Y H:i') : '-' }}
+                @if($item->last_resent_at)
+                    {{ \Carbon\Carbon::parse($item->last_resent_at)->diffForHumans() }}
+                @else
+                    -
+                @endif
             </td>
             <td>
                 @if($item->status === 'Pending')
@@ -116,6 +137,7 @@
                     '{{ addslashes($item->kandungan_lain ?? '-') }}',
                     '{{ addslashes($item->jenis_pengemaskinian) }}',
                     '{{ addslashes($item->pengemaskinian_lain ?? '-') }}',
+                    '{{ addslashes($item->catatan_semakan ?? '') }}',
                     '{{ $item->tarikh_mula ? \Carbon\Carbon::parse($item->tarikh_mula)->format('d/m/Y') : '-' }}',
                     '{{ $item->tarikh_akhir ? \Carbon\Carbon::parse($item->tarikh_akhir)->format('d/m/Y') : '-' }}',
                     {{ json_encode($item->status) }},
@@ -185,8 +207,11 @@
             </div>
             <div class="detail-group">
                 <div class="detail-section-label">Status</div>
-                <div id="d-status" style="margin-bottom:1rem;"></div>
-                <div class="modal-actions" id="d-actions"></div>
+                <div id="d-status" style="margin-bottom:0.75rem;"></div>
+                <div id="d-catatan-wrap" style="display:none;">
+                    <label style="font-size:11px; color:#777; display:block; margin-bottom:4px;">Catatan Penyelia</label>
+                    <div id="d-catatan" style="background:#f9fafb; border:1px solid #dde8e1; border-radius:8px; padding:0.75rem 1rem; font-size:13px; color:#333; line-height:1.6;"></div>
+                </div>
             </div>
         </div>
     </div>
@@ -195,7 +220,7 @@
 <script>
 var currentId = null;
 
-function openModal(id, nama, jawatan, bahagian, telefon, tajuk, isi, jenis, klain, pengemaskinian, plain, mula, akhir, status, failPaths) {
+function openModal(id, nama, jawatan, bahagian, telefon, tajuk, isi, jenis, klain, pengemaskinian, plain, catatan, mula, akhir, status, failPaths) {
     currentId = id;
     document.getElementById('d-nama').textContent = nama;
     document.getElementById('d-jawatan').textContent = jawatan;
@@ -239,6 +264,14 @@ function openModal(id, nama, jawatan, bahagian, telefon, tajuk, isi, jenis, klai
     };
     document.getElementById('d-status').innerHTML = badges[status] || status;
 
+    var catatanWrap = document.getElementById('d-catatan-wrap');
+    if (catatan && catatan.trim().length > 0) {
+        document.getElementById('d-catatan').textContent = catatan;
+        catatanWrap.style.display = 'block';
+    } else {
+        catatanWrap.style.display = 'none';
+    }
+
     document.getElementById('modalOverlay').classList.add('active');
 }
 
@@ -268,17 +301,14 @@ function toggleAll(source) {
 function updateButtons() {
     var checked = document.querySelectorAll('.row-check:checked');
     var allChecks = document.querySelectorAll('.row-check');
-
     document.getElementById('deleteBtn').disabled = checked.length === 0;
     document.getElementById('checkAll').checked = checked.length === allChecks.length && allChecks.length > 0;
 
-    // resend only enabled if at least one checked item is Dalam Semakan
-    var hasSemakan = false;
+    var canResend = false;
     checked.forEach(function(cb) {
-        if (cb.dataset.status === 'Dalam Semakan') hasSemakan = true;
+        if (cb.dataset.status === 'Dalam Semakan' || cb.dataset.status === 'Pending') canResend = true;
     });
-    document.getElementById('resendBtn').disabled = !hasSemakan;
-}
+    document.getElementById('resendBtn').disabled = !canResend;}
 
 function submitDelete() {
     if (!confirm('Padam rekod yang dipilih?')) return;
@@ -299,7 +329,7 @@ function submitResend() {
     var container = document.getElementById('resendInputs');
     container.innerHTML = '';
     document.querySelectorAll('.row-check:checked').forEach(function(cb) {
-        if (cb.dataset.status === 'Dalam Semakan') {
+        if (cb.dataset.status === 'Dalam Semakan' || cb.dataset.status === 'Pending') {
             var input = document.createElement('input');
             input.type = 'hidden';
             input.name = 'ids[]';

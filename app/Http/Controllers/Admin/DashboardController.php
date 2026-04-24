@@ -57,13 +57,16 @@ class DashboardController extends Controller
         if ($request->filled('search')) {
             $query->where(function($q) use ($request) {
                 $q->where('nama', 'like', '%' . $request->search . '%')
-                ->orWhere('tajuk_maklumat', 'like', '%' . $request->search . '%')
-                ->orWhere('bahagian_nama', 'like', '%' . $request->search . '%');
+                ->orWhere('tajuk_maklumat', 'like', '%' . $request->search . '%');
             });
         }
 
         if ($request->filled('status')) {
             $query->where('status', $request->status);
+        }
+
+        if ($request->filled('bahagian')) {
+            $query->where('bahagian_nama', $request->bahagian);
         }
 
         $requests = $query->latest()->paginate(15)->withQueryString();
@@ -74,8 +77,11 @@ class DashboardController extends Controller
             'semakan' => BorangMuatNaikBahan::where('status', 'Dalam Semakan')->count(),
         ];
 
-        return view('admin.portal-upload', compact('requests', 'stats'));
+        $bahagianList = \App\Models\BahagianSupervisor::orderBy('nama_bahagian')->get();
+
+        return view('admin.portal-upload', compact('requests', 'stats', 'bahagianList'));
     }
+    
     public function ictAduanDetail($id)
     {
         $item = BorangAduanKerosakan::findOrFail($id);
@@ -136,7 +142,7 @@ class DashboardController extends Controller
 
         foreach ($ids as $id) {
             $item = \App\Models\BorangMuatNaikBahan::find($id);
-            if ($item && $item->status === 'Dalam Semakan') {
+            if ($item && ($item->status === 'Dalam Semakan' || $item->status === 'Pending')) {
                 Mail::to($item->supervisor_email)->send(new SupervisorApprovalMail($item));
                 $item->last_resent_at = now();
                 $item->save();
