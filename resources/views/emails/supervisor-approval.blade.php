@@ -16,6 +16,8 @@
         .btn { display: inline-block; margin-top: 1.5rem; padding: 12px 28px; background: #1a4731; color: #fff; text-decoration: none; border-radius: 8px; font-size: 14px; }
         .footer { background: #f9fafb; padding: 1rem 1.5rem; font-size: 11px; color: #999; border-top: 1px solid #eee; }
     </style>
+        <link rel="icon" href="{{ asset('images/logo-icon.png')}}">
+
 </head>
 <body>
 <div class="container">

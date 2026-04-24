@@ -6,6 +6,7 @@
     <title>Jabatan Hutan Sarawak — Portal Perkhidmatan</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500&display=swap"/>
+    <link rel="icon" href="{{ asset('images/logo-icon.png')}}">
     <link rel="stylesheet" href="{{ asset('style.css') }}">
 </head>
 <body>
