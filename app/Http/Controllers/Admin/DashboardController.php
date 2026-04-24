@@ -43,6 +43,11 @@ class DashboardController extends Controller
             $query->where('status', $request->status);
         }
 
+        if ($request->filled('wilayah')) {
+        $query->where('wilayah', $request->wilayah);
+        }
+
+
         $complaints = $query->latest()->paginate(15)->withQueryString();
 
         return view('admin.ict-aduan', compact('complaints'));
