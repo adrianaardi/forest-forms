@@ -32,9 +32,26 @@
             <input type="text" name="search" placeholder="Cari nama, bahagian, kategori..." value="{{ request('search') }}">
             <select name="status">
                 <option value="">-- Semua Status --</option>
-                <option value="Belum Selesai" {{ request('status') == 'Belum Selesai' ? 'selected' : '' }}>Belum Selesai</option>
-                <option value="Dalam Tindakan" {{ request('status') == 'Dalam Tindakan' ? 'selected' : '' }}>Dalam Tindakan</option>
-                <option value="Selesai" {{ request('status') == 'Selesai' ? 'selected' : '' }}>Selesai</option>
+
+                <option value="Belum Selesai" {{ request('status') == 'Belum Selesai' ? 'selected' : '' }}>
+                    Belum Selesai
+                </option>
+
+                <option value="Dalam Tindakan" {{ request('status') == 'Dalam Tindakan' ? 'selected' : '' }}>
+                    Dalam Tindakan
+                </option>
+
+                <option value="Selesai" {{ request('status') == 'Selesai' ? 'selected' : '' }}>
+                    Selesai
+                </option>
+
+                <option value="Tindakan Pembekal SAINS/Luar" {{ request('status') == 'Tindakan Pembekal SAINS/Luar' ? 'selected' : '' }}>
+                    Tindakan Pembekal SAINS/Luar
+                </option>
+
+                <option value="Tangguh/KIV" {{ request('status') == 'Tangguh/KIV' ? 'selected' : '' }}>
+                    Tangguh / KIV
+                </option>
             </select>
             <select name="wilayah">
                 <option value="">-- Semua Wilayah --</option>
@@ -79,15 +96,26 @@
             <td>{{ $item->wilayah ?? '-' }}</td>
             <td>{{ $item->kategori_masalah }}</td>
             <td>{{ \Carbon\Carbon::parse($item->tarikh_aduan)->format('d/m/Y') }}</td>
-            <td>
-                @if($item->status === 'Belum Selesai')
-                    <span class="badge badge-pending">Belum Selesai</span>
-                @elseif($item->status === 'Dalam Tindakan')
-                    <span class="badge badge-progress">Dalam Tindakan</span>
-                @else
-                    <span class="badge badge-done">Selesai</span>
-                @endif
-            </td>
+                <td>
+                    @if($item->status === 'Belum Selesai')
+                        <span class="badge badge-pending">Belum Selesai</span>
+
+                    @elseif($item->status === 'Dalam Tindakan')
+                        <span class="badge badge-progress">Dalam Tindakan</span>
+
+                    @elseif($item->status === 'Tindakan Pembekal SAINS/Luar')
+                        <span class="badge badge-warning">Tindakan Pembekal SAINS/Luar</span>
+
+                    @elseif($item->status === 'Tangguh/KIV')
+                        <span class="badge badge-kiv">Tangguh / KIV</span>
+
+                    @elseif($item->status === 'Selesai')
+                        <span class="badge badge-done">Selesai</span>
+
+                    @else
+                        <span class="badge">{{ $item->status }}</span>
+                    @endif
+                </td>
 
             <td>
                 <button class="btn-view"
@@ -103,6 +131,11 @@
                     data-lain="{{ $item->masalah_lain ?? '-' }}"
                     data-keterangan="{{ $item->keterangan_kerosakan ?? '-' }}"
                     data-status="{{ $item->status }}"
+                    data-nama_syarikat="{{ $item->nama_syarikat ?? '' }}"
+                    data-no_tel_syarikat="{{ $item->no_tel_syarikat ?? '' }}"
+                    data-tarikh_tindakan="{{ $item->tarikh_tindakan ?? '' }}"
+                    data-tarikh_selesai="{{ $item->tarikh_selesai ?? '' }}"
+                    data-catatan_pembekal="{{ $item->catatan_pembekal ?? '' }}"
                     data-remarks="{{ $item->remarks ?? '' }}"
                     data-attachments='@json($item->attachments ? json_decode($item->attachments, true) : [])'
                     onclick="openModalFromButton(this)">
@@ -299,12 +332,26 @@ function openModalFromButton(btn) {
     // SET FORM ACTION + ID
     document.getElementById('updateStatusForm').action = `/admin/ict-aduan/${currentId}/status`;
     document.getElementById('complaintId').value = currentId;
+    document.querySelector('input[name="nama_syarikat"]').value = btn.dataset.nama_syarikat || '';
+    document.querySelector('input[name="no_tel_syarikat"]').value = btn.dataset.no_tel_syarikat || '';
+    document.querySelector('input[name="tarikh_tindakan"]').value = btn.dataset.tarikh_tindakan || '';
+    document.querySelector('input[name="tarikh_selesai"]').value = btn.dataset.tarikh_selesai || '';
+    document.querySelector('input[name="catatan_pembekal"]').value = btn.dataset.catatan_pembekal || '';document.querySelector('input[name="nama_syarikat"]').value = btn.dataset.nama_syarikat || '';
+    document.querySelector('input[name="no_tel_syarikat"]').value = btn.dataset.no_tel_syarikat || '';
+    document.querySelector('input[name="tarikh_tindakan"]').value = btn.dataset.tarikh_tindakan || '';
+    document.querySelector('input[name="tarikh_selesai"]').value = btn.dataset.tarikh_selesai || '';
+    document.querySelector('input[name="catatan_pembekal"]').value = btn.dataset.catatan_pembekal || '';
     document.querySelector('textarea[name="remarks"]').value = btn.dataset.remarks || '';
     document.getElementById('d-remarks').textContent = btn.dataset.remarks || '-';
 
     // reset form
     document.getElementById('statusSelect').value = '';
     document.getElementById('supplierSection').style.display = 'none';
+
+    if (btn.dataset.status === 'Tindakan Pembekal SAINS/Luar') {
+        document.getElementById('supplierSection').style.display = 'block';
+        document.getElementById('statusSelect').value = 'Tindakan Pembekal SAINS/Luar';
+    }
 
     // SAFE attachments parsing
     let attachments = [];
