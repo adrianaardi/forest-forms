@@ -88,7 +88,7 @@ class BorangMuatNaikBahanController extends Controller
         $permohonan = BorangMuatNaikBahan::where('token', $token)->firstOrFail();
 
         $request->validate([
-            'catatan_semakan' => 'nullable|string|max:500',
+            'catatan_semakan' => 'required|string|max:500',
         ]);
 
         $newStatus = $request->status_override === 'Dalam Semakan' ? 'Dalam Semakan' : 'Diluluskan';
@@ -98,10 +98,12 @@ class BorangMuatNaikBahanController extends Controller
             'catatan_semakan' => $request->catatan_semakan,
         ]);
 
-        if ($newStatus === 'Diluluskan' && $permohonan->telefon_email && str_contains($permohonan->telefon_email, '@')) {
+        if ($permohonan->telefon_email && str_contains($permohonan->telefon_email, '@')) {
             Mail::to($permohonan->telefon_email)->send(new UserStatusMail($permohonan));
-        } elseif ($newStatus === 'Dalam Semakan' && $permohonan->telefon_email && str_contains($permohonan->telefon_email, '@')) {
-            Mail::to($permohonan->telefon_email)->send(new UserStatusMail($permohonan));
+        }
+
+        if ($newStatus === 'Dalam Semakan') {
+            return view('supervisor.semakan', compact('permohonan'));
         }
 
         return view('supervisor.done', compact('permohonan'));

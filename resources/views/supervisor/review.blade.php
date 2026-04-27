@@ -109,36 +109,23 @@
             @if($permohonan->status === 'Diluluskan')
                 <div style="background:#eaf3de; border:1px solid #c0dd97; color:#3b6d11; padding:0.75rem 1rem; border-radius:8px; font-size:13px;">
                     Permohonan ini telah pun diluluskan.
+                    @if($permohonan->catatan_semakan)
+                        <div style="margin-top:0.5rem; padding-top:0.5rem; border-top:1px solid #c0dd97;">
+                            <strong style="font-size:11px;">CATATAN:</strong> {{ $permohonan->catatan_semakan }}
+                        </div>
+                    @endif
                 </div>
             @else
                 <form method="POST" action="{{ route('supervisor.approve', $permohonan->token) }}">
                     @csrf
+                    <input type="hidden" name="status_override" id="status_override" value="Diluluskan">
                     <div class="field">
-                        <label>Catatan (optional)</label>
-                        <textarea name="catatan_semakan" rows="3" placeholder="Tambah catatan jika perlu..."></textarea>
-                    </div>
-                    <div id="approve-actions" class="modal-actions" style="margin-top: 0.75rem;">
-                        <button type="submit" class="btn-lulus">Luluskan Permohonan</button>
-                        <button type="button" class="btn-tolak" onclick="
-                            document.getElementById('semakan-form').style.display='block';
-                            document.getElementById('approve-actions').style.display='none';
-                        ">Dalam Semakan</button>
-                    </div>
-                </form>
-
-                <form id="semakan-form" method="POST" action="{{ route('supervisor.approve', $permohonan->token) }}" style="display:none; margin-top:0.75rem;">
-                    @csrf
-                    <input type="hidden" name="status_override" value="Dalam Semakan">
-                    <div class="field">
-                        <label>Catatan Semakan <span class="required">*</span></label>
-                        <textarea name="catatan_semakan" rows="3" placeholder="Nyatakan sebab dalam semakan..." required></textarea>
+                        <label>Catatan <span class="required">*</span></label>
+                        <textarea name="catatan_semakan" rows="3" placeholder="Tambah atau kemaskini catatan..." required>{{ $permohonan->catatan_semakan }}</textarea>
                     </div>
                     <div class="modal-actions" style="margin-top:0.75rem;">
-                        <button type="submit" class="btn-submit">Hantar</button>
-                        <button type="button" class="btn-reset" onclick="
-                            this.closest('form').style.display='none';
-                            document.getElementById('approve-actions').style.display='flex';
-                        ">Batal</button>
+                        <button type="submit" class="btn-lulus" onclick="document.getElementById('status_override').value='Diluluskan'">Luluskan</button>
+                        <button type="submit" class="btn-tolak" onclick="document.getElementById('status_override').value='Dalam Semakan'">Dalam Semakan</button>
                     </div>
                 </form>
             @endif
