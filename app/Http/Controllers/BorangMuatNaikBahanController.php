@@ -99,9 +99,9 @@ class BorangMuatNaikBahanController extends Controller
         ]);
 
         if ($newStatus === 'Diluluskan' && $permohonan->telefon_email && str_contains($permohonan->telefon_email, '@')) {
-            Mail::to($permohonan->telefon_email)->queue(new UserStatusMail($permohonan));
+            Mail::to($permohonan->telefon_email)->send(new UserStatusMail($permohonan));
         } elseif ($newStatus === 'Dalam Semakan' && $permohonan->telefon_email && str_contains($permohonan->telefon_email, '@')) {
-            Mail::to($permohonan->telefon_email)->queue(new UserStatusMail($permohonan));
+            Mail::to($permohonan->telefon_email)->send(new UserStatusMail($permohonan));
         }
 
         return view('supervisor.done', compact('permohonan'));
