@@ -53,7 +53,7 @@
                     <input type="text" value="{{ $permohonan->bahagian_nama }}" disabled>
                 </div>
                 <div class="field">
-                    <label>No Telefon / Email</label>
+                    <label>Email</label>
                     <input type="text" value="{{ $permohonan->telefon_email ?? '-' }}" disabled>
                 </div>
             </div>

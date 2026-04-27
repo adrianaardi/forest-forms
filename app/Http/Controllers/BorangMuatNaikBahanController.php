@@ -75,7 +75,7 @@ class BorangMuatNaikBahanController extends Controller
             Mail::to($upload->telefon_email)->send(new UserSubmissionMail($upload));
         }
 
-        return redirect('/')->with('success', 'Permohonan muat naik telah berjaya dihantar! No. Tiket anda: ' . $upload->no_tiket);    }
+        return redirect('/')->with('success', 'Permohonan muat naik telah berjaya dihantar! Sila semak emel anda. No. Tiket anda: ' . $upload->no_tiket);    }
 
     public function supervisorView($token)
     {

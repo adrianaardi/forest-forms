@@ -28,7 +28,7 @@
                 Permohonan {{ $permohonan->no_tiket }} sedang dalam semakan.
             </p>
             <p style="font-size:13px; color:#666; margin-bottom:1rem;">
-                Pemohon telah dimaklumkan melalui emel sekiranya mereka menyertakan alamat emel.
+                Pemohon telah dimaklumkan melalui emel sekiranya mereka menyertakan alamat emel yang betul.
             </p>
             @if($permohonan->catatan_semakan)
             <div style="background:#f9fafb; border:1px solid #dde8e1; border-radius:8px; padding:0.75rem 1rem; font-size:13px; color:#333; text-align:left; max-width:400px; margin:0 auto;">

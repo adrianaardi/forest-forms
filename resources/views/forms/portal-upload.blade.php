@@ -49,8 +49,8 @@
                         <input type="text" name="nama" value="{{ old('nama') }}" placeholder="Nama penuh" required>
                     </div>
                     <div class="field">
-                        <label>Jawatan</label>
-                        <input type="text" name="jawatan" value="{{ old('jawatan') }}" placeholder="Jawatan anda">
+                        <label>Jawatan <span class="required">*</span></label></label>
+                        <input type="text" name="jawatan" value="{{ old('jawatan') }}" placeholder="Jawatan anda" required>
                     </div>
                 </div>
                 <div class="field-row">
@@ -69,8 +69,8 @@
                         @enderror
                     </div>
                     <div class="field">
-                        <label>No Telefon / Email</label>
-                        <input type="text" name="telefon_email" value="{{ old('telefon_email') }}" placeholder="Cth: 082-XXXXXX">
+                        <label>Email <span class="required">*</span></label></label>
+                        <input type="text" name="telefon_email" value="{{ old('telefon_email') }}" placeholder="Email anda" required>
                     </div>
                 </div>
             </div>
@@ -95,7 +95,6 @@
                             <option value="">-- Pilih jenis --</option>
                             <option {{ old('jenis_kandungan') == 'Pengumuman' ? 'selected' : '' }}>Pengumuman</option>
                             <option {{ old('jenis_kandungan') == 'Foto' ? 'selected' : '' }}>Foto</option>
-                            <option {{ old('jenis_kandungan') == 'Video' ? 'selected' : '' }}>Video</option>
                             <option {{ old('jenis_kandungan') == 'Event' ? 'selected' : '' }}>Event</option>
                             <option {{ old('jenis_kandungan') == 'Tender' ? 'selected' : '' }}>Tender</option>
                             <option {{ old('jenis_kandungan') == 'Banner/Poster' ? 'selected' : '' }}>Banner/Poster</option>
@@ -122,7 +121,7 @@
                 </div>
 
                 <div class="field">
-                    <label>Upload Bahan <span style="font-size:11px; color:#777;">(Maks 5 fail, 500MB setiap satu. Tiada video.)</span></label>
+                    <label>Upload Bahan <span style="font-size:11px; color:#777;">(Maks 5 fail, video tidak dibenarkan.)</span></label>
                     <input type="file" name="fail[]" multiple accept=".jpg,.jpeg,.png,.gif,.pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.zip">
                     @error('fail')
                         <div style="color:#a32d2d; font-size:12px; margin-top:4px;">{{ $message }}</div>
