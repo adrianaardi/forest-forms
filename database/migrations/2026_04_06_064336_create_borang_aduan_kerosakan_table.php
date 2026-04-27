@@ -14,6 +14,7 @@ return new class extends Migration
             $table->string('jawatan')->nullable();
             $table->string('bahagian')->nullable();
             $table->string('telefon')->nullable();
+            $table->string('emel');
             $table->date('tarikh_aduan');
             $table->time('masa_aduan');
             $table->string('kategori_masalah');

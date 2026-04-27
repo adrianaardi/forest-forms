@@ -27,6 +27,7 @@ class BorangAduanKerosakanController extends Controller
             'wilayah_lain'         => 'nullable|string|max:255',
 
             'telefon'              => 'nullable|string|max:50',
+            'emel'                 => 'nullable|string|max:255',
             'kategori_masalah'     => 'required|string',
             'masalah_lain'         => 'nullable|string|max:255',
             'keterangan_kerosakan' => 'nullable|string',
