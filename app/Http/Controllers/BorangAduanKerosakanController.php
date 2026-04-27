@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\BorangAduanKerosakan;
 use Illuminate\Http\Request;
+use App\Mail\ICTStatusMail;
+use App\Mail\ICTSubmissionMail;
+use Illuminate\Support\Facades\Mail;
 
 class BorangAduanKerosakanController extends Controller
 {
@@ -65,12 +68,48 @@ class BorangAduanKerosakanController extends Controller
         }
 
         $validated['attachments'] = json_encode($files);
+        $validated['status']= 'Belum Selesai';
 
         $complaint = BorangAduanKerosakan::create($validated);
+
+        Mail::to($complaint->emel)
+            ->send(new ICTSubmissionMail($complaint));
 
         return redirect('/')->with(
             'success',
             'Aduan ICT anda telah berjaya dihantar! Anda akan menerima e-mel dengan No. tiket: ' . $complaint->no_tiket
         );
+
+    }
+
+    public function updateStatus(Request $request, $id)
+    {
+        $aduan = BorangAduanKerosakan::findOrFail($id);
+
+        $request->validate([
+            'status' => 'required|string',
+            'remarks' => 'nullable|string'
+        ]);
+
+        $oldStatus = $aduan->status;
+
+        $aduan->status = $request->status;
+        $aduan->remarks = $request->remarks;
+        $aduan->nama_syarikat = $request->nama_syarikat;
+        $aduan->no_tel_syarikat = $request->no_tel_syarikat;
+        $aduan->tarikh_tindakan = $request->tarikh_tindakan;
+        $aduan->tarikh_selesai = $request->tarikh_selesai;
+        $aduan->catatan_pembekal = $request->catatan_pembekal;
+
+        $aduan->save();
+
+        // send email ONLY if status changed
+        if ($oldStatus !== $request->status || $request->remarks) {
+            Mail::to($aduan->emel)
+                ->send(new ICTStatusMail($aduan));
+        }
+        
+
+        return back()->with('success', 'Status berjaya dikemaskini');
     }
 }

@@ -9,6 +9,8 @@ use Illuminate\Http\Request;
 use App\Mail\SupervisorApprovalMail;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Auth;
+use App\Mail\ICTStatusMail;
+
 
 class DashboardController extends Controller
 {
@@ -114,7 +116,15 @@ class DashboardController extends Controller
             $aduan->catatan_pembekal = $request->catatan_pembekal;
         }
 
+        $oldStatus = $aduan->getOriginal('status');
+
         $aduan->save();
+
+        // send email if status changed
+        if ($oldStatus !== $aduan->status && $aduan->emel) {
+            Mail::to($aduan->emel)
+                ->send(new ICTStatusMail($aduan));
+        }
 
         return back()->with('success', 'Status berjaya dikemaskini');
     }

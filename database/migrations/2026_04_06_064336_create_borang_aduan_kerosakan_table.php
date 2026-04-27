@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('kategori_masalah');
             $table->string('masalah_lain')->nullable();
             $table->text('keterangan_kerosakan')->nullable();
-            $table->enum('status', ['Belum Selesai', 'Dalam Tindakan', 'Selesai'])->default('Belum Selesai');
+            $table->enum('status', ['Belum Selesai', 'Dalam Tindakan','Tindakan Pembekal SAINS/Luar', 'Tangguh/KIV', 'Selesai'])->default('Belum Selesai');
             $table->timestamps();
         });
     }
