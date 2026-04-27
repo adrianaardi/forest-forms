@@ -68,11 +68,11 @@ class BorangMuatNaikBahanController extends Controller
         ]);
 
         // send email to supervisor
-        Mail::to($bahagian->email_supervisor)->queue(new SupervisorApprovalMail($upload));
+        Mail::to($bahagian->email_supervisor)->send(new SupervisorApprovalMail($upload));
 
         // send confirmation email to user if they provided an email
         if ($upload->telefon_email && str_contains($upload->telefon_email, '@')) {
-            Mail::to($upload->telefon_email)->queue(new UserSubmissionMail($upload));
+            Mail::to($upload->telefon_email)->send(new UserSubmissionMail($upload));
         }
 
         return redirect('/')->with('success', 'Permohonan muat naik telah berjaya dihantar! No. Tiket anda: ' . $upload->no_tiket);    }
