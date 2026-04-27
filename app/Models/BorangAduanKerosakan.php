@@ -14,7 +14,7 @@ class BorangAduanKerosakan extends Model
     protected $table='borang_aduan_kerosakan';
 
     protected $fillable = [
-        'nama', 'jawatan', 'bahagian','wilayah', 'telefon',
+        'nama', 'jawatan', 'bahagian','wilayah', 'telefon', 'emel',
         'tarikh_aduan', 'masa_aduan',
         'kategori_masalah', 'masalah_lain',
         'keterangan_kerosakan', 'status', 'attachments'

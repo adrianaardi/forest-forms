@@ -123,9 +123,16 @@
                     </div>
 
                 </div>
-                <div class="field">
-                    <label>No Telefon</label>
-                    <input type="text" name="telefon" value="{{ old('telefon') }}" placeholder="Cth: 082-XXXXXX">
+                <div class="field-row">
+                    <div class="field">
+                        <label>No Telefon</label>
+                        <input type="text" name="telefon" value="{{ old('telefon') }}" placeholder="Cth: 082-XXXXXX">
+                    </div>
+
+                    <div class="field">
+                        <label>Emel</label>
+                        <input type="email" name="emel" value="{{ old('emel') }}" placeholder="contoh@emel.com" required>
+                    </div>
                 </div>
             </div>
 
