@@ -125,6 +125,7 @@
                     data-bahagian="{{ $item->bahagian ?? '-' }}"
                     data-wilayah="{{ $item->wilayah ?? '-' }}"
                     data-telefon="{{ $item->telefon ?? '-' }}"
+                    data-emel="{{ $item->emel ?? '-' }}"
                     data-tarikh="{{ \Carbon\Carbon::parse($item->tarikh_aduan)->format('d/m/Y') }}"
                     data-masa="{{ $item->masa_aduan }}"
                     data-kategori="{{ $item->kategori_masalah }}"
@@ -188,6 +189,7 @@
 
                 <div class="detail-row">
                     <div class="detail-field"><label>No Telefon</label><p id="d-telefon"></p></div>
+                    <div class="detail-field"><label>Email</label><p id="d-emel"></p></div>
                 </div>
 
                 <div class="detail-row">
@@ -324,6 +326,7 @@ function openModalFromButton(btn) {
     document.getElementById('d-bahagian').textContent = btn.dataset.bahagian;
     document.getElementById('d-wilayah').textContent = btn.dataset.wilayah;
     document.getElementById('d-telefon').textContent = btn.dataset.telefon;
+    document.getElementById('d-emel').textContent = btn.dataset.emel;
     document.getElementById('d-tarikh').textContent = btn.dataset.tarikh;
     document.getElementById('d-masa').textContent = btn.dataset.masa;
     document.getElementById('d-kategori').textContent = btn.dataset.kategori;
