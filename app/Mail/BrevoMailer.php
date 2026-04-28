@@ -3,6 +3,7 @@
 namespace App\Mail;
 
 use GuzzleHttp\Client;
+use Illuminate\Support\Facades\Log;
 
 class BrevoMailer
 {
@@ -28,8 +29,9 @@ class BrevoMailer
             ]);
 
             return $response->getStatusCode() === 201;
-        } catch (\Exception $e) {
-            \Log::error('Brevo mail error: ' . $e->getMessage());
+
+        } catch (\Throwable $e) {
+            Log::error('Brevo mail error: ' . $e->getMessage());
             return false;
         }
     }
