@@ -122,7 +122,7 @@
 
                 <div class="field">
                     <label>Upload Bahan <span style="font-size:11px; color:#777;">(Maks 5 fail, video tidak dibenarkan.)</span></label>
-                    <input type="file" name="fail[]" multiple accept=".jpg,.jpeg,.png,.gif,.pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.zip">
+                    <input type="file" id="fileInput" name="fail[]" multiple accept=".jpg,.jpeg,.png,.gif,.pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.zip">
                     @error('fail')
                         <div style="color:#a32d2d; font-size:12px; margin-top:4px;">{{ $message }}</div>
                     @enderror

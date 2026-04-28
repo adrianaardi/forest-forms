@@ -86,4 +86,11 @@ Route::post('/semak-tiket', function(\Illuminate\Http\Request $request) {
 Route::get('/semak/{token}', [BorangMuatNaikBahanController::class, 'supervisorView'])->name('supervisor.view');
 Route::post('/semak/{token}', [BorangMuatNaikBahanController::class, 'supervisorApprove'])->name('supervisor.approve');
 
+//testing email
+Route::get('/test-mail', function() {
+    \Illuminate\Support\Facades\Mail::raw('Test emel dari Railway', function($msg) {
+        $msg->to('vienneblue@email.com')->subject('Test');
+    });
+    return 'Sent!';
+});
 require __DIR__.'/auth.php';
