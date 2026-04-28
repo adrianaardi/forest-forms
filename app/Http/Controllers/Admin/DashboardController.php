@@ -156,9 +156,9 @@ class DashboardController extends Controller
         if (empty($ids)) return back()->with('error', 'Tiada rekod dipilih.');
 
         foreach ($ids as $id) {
-            $item = \App\Models\BorangMuatNaikBahan::find($id);
+            $item = BorangMuatNaikBahan::find($id);
             if ($item && ($item->status === 'Dalam Semakan' || $item->status === 'Pending')) {
-                Mail::to($item->supervisor_email)->send(new SupervisorApprovalMail($item));
+                app(\App\Http\Controllers\BorangMuatNaikBahanController::class)->sendSupervisorEmail($item);
                 $item->last_resent_at = now();
                 $item->save();
             }

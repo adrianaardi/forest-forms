@@ -2,14 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Mail\SupervisorApprovalMail;
-use App\Mail\UserStatusMail;
+use App\Mail\BrevoMailer;
 use App\Models\BahagianSupervisor;
 use App\Models\BorangMuatNaikBahan;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
-use App\Mail\UserSubmissionMail;
 
 class BorangMuatNaikBahanController extends Controller
 {
@@ -32,15 +29,14 @@ class BorangMuatNaikBahanController extends Controller
             'kandungan_lain'       => 'nullable|string|max:255',
             'jenis_pengemaskinian' => 'required|string',
             'pengemaskinian_lain'  => 'nullable|string|max:255',
-            'fail.*'               => 'nullable|file|max:512000|mimes:jpg,jpeg,png,gif,pdf,doc,docx,xls,xlsx,ppt,pptx,zip',
             'fail'                 => 'nullable|array|max:5',
+            'fail.*'               => 'nullable|file|max:512000|mimes:jpg,jpeg,png,gif,pdf,doc,docx,xls,xlsx,ppt,pptx,zip',
             'tarikh_mula'          => 'nullable|date',
             'tarikh_akhir'         => 'nullable|date|after_or_equal:tarikh_mula',
         ]);
 
         $bahagian = BahagianSupervisor::findOrFail($request->bahagian_id);
 
-        // handle multiple files
         $failPaths = [];
         if ($request->hasFile('fail')) {
             foreach ($request->file('fail') as $file) {
@@ -67,15 +63,19 @@ class BorangMuatNaikBahanController extends Controller
             'token'                => Str::random(40),
         ]);
 
-        // send email to supervisor
-        Mail::to($bahagian->email_supervisor)->send(new SupervisorApprovalMail($upload));
+        $this->sendSupervisorEmail($upload);
 
-        // send confirmation email to user if they provided an email
-        if ($upload->telefon_email && str_contains($upload->telefon_email, '@')) {
-            Mail::to($upload->telefon_email)->send(new UserSubmissionMail($upload));
+        if ($this->hasEmail($upload->telefon_email)) {
+            BrevoMailer::send(
+                $upload->telefon_email,
+                $upload->nama,
+                'Pengesahan Permohonan — ' . $upload->no_tiket,
+                view('emails.user-submission', ['permohonan' => $upload])->render()
+            );
         }
 
-        return redirect('/')->with('success', 'Permohonan muat naik telah berjaya dihantar! Sila semak emel anda. No. Tiket anda: ' . $upload->no_tiket);    }
+        return redirect('/')->with('success', 'Permohonan berjaya dihantar! Sila semak emel anda. No. Tiket: ' . $upload->no_tiket);
+    }
 
     public function supervisorView($token)
     {
@@ -98,14 +98,37 @@ class BorangMuatNaikBahanController extends Controller
             'catatan_semakan' => $request->catatan_semakan,
         ]);
 
-        if ($permohonan->telefon_email && str_contains($permohonan->telefon_email, '@')) {
-            Mail::to($permohonan->telefon_email)->send(new UserStatusMail($permohonan));
+        if ($this->hasEmail($permohonan->telefon_email)) {
+            BrevoMailer::send(
+                $permohonan->telefon_email,
+                $permohonan->nama,
+                'Status Permohonan — ' . $permohonan->no_tiket,
+                view('emails.user-status', ['permohonan' => $permohonan])->render()
+            );
         }
 
-        if ($newStatus === 'Dalam Semakan') {
-            return view('supervisor.semakan', compact('permohonan'));
-        }
+        return $newStatus === 'Dalam Semakan'
+            ? view('supervisor.semakan', compact('permohonan'))
+            : view('supervisor.done', compact('permohonan'));
+    }
 
-        return view('supervisor.done', compact('permohonan'));
+    // ── helpers ──────────────────────────────────────────
+
+    public function sendSupervisorEmail(BorangMuatNaikBahan $upload): void
+    {
+        BrevoMailer::send(
+            $upload->supervisor_email,
+            $upload->bahagian_nama,
+            'Permohonan Muat Naik Portal — Kelulusan Diperlukan',
+            view('emails.supervisor-approval', [
+                'permohonan'  => $upload,
+                'approvalUrl' => url('/semak/' . $upload->token),
+            ])->render()
+        );
+    }
+
+    private function hasEmail(?string $value): bool
+    {
+        return $value && str_contains($value, '@');
     }
 }
