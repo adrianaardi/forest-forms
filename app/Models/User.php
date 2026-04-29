@@ -46,4 +46,9 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function wilayah()
+    {
+        return $this->belongsTo(\App\Models\Wilayah::class);
+    }
 }

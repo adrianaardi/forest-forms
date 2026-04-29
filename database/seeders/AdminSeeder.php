@@ -17,6 +17,8 @@ class AdminSeeder extends Seeder
                 'name'     => 'Admin Aduan',
                 'email'    => 'admin.aduan@sarawak.gov.my',
                 'password' => Hash::make('password123'),
+                'role'     => 'admin',
+                'wilayah_id' => null,
             ]
         );
 
@@ -26,6 +28,8 @@ class AdminSeeder extends Seeder
                 'name'     => 'Admin Mohon',
                 'email'    => 'admin.mohon@sarawak.gov.my',
                 'password' => Hash::make('password123'),
+                'role'     => 'admin',
+                'wilayah_id' => null,
             ]
         );
     }

@@ -5,6 +5,12 @@
         @if(Auth::user()->email === 'admin.aduan@sarawak.gov.my')
             <a href="/admin/ict-aduan" class="{{ request()->is('admin/ict-aduan*') ? 'active' : '' }}">Aduan ICT</a>
         @endif
+        
+        @if(Auth::user()->role === 'admin')
+            <a href="/admin/accounts" class="{{ request()->is('admin/accounts*') ? 'active' : '' }}">
+                Urus Akaun Sub-Admin
+            </a>
+        @endif
 
         @if(Auth::user()->email === 'admin.mohon@sarawak.gov.my')
             <a href="/admin/portal-upload" class="{{ request()->is('admin/portal-upload*') ? 'active' : '' }}">Muat Naik</a>

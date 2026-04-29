@@ -55,10 +55,21 @@
                 </div>
                 <div class="field">
                     <label>Email</label>
-                    <input type="email" name="email" value="{{ old('email') }}" placeholder="email@jhs.gov.my" required>
+                    <input type="email" name="email" value="{{ old('email') }}" placeholder="subadmin.wilayahname.aduan@sarawak.gov.my" required>
                     @error('email')
                         <div style="color:#a32d2d; font-size:12px; margin-top:4px;">{{ $message }}</div>
                     @enderror
+                </div>
+                <div class="field">
+                    <label>Wilayah</label>
+                    <select name="wilayah_id" required>
+                        <option value="">-- Pilih Wilayah --</option>
+                        @foreach($wilayahs as $wilayah)
+                            <option value="{{ $wilayah->id }}">
+                                {{ $wilayah->nama_wilayah }}
+                            </option>
+                        @endforeach
+                    </select>
                 </div>
                 <div class="field-row">
                     <div class="field">
@@ -92,6 +103,7 @@
                 <tr>
                     <th>Nama</th>
                     <th>Email</th>
+                    <th>Wilayah</th>
                     <th>Tarikh Daftar</th>
                     <th>Tindakan</th>
                 </tr>
@@ -104,6 +116,9 @@
                         @endif
                     </td>
                     <td>{{ $account->email }}</td>
+                    <td>
+                        {{ $account->wilayah->nama_wilayah ?? '-' }}
+                    </td>
                     <td>{{ \Carbon\Carbon::parse($account->created_at)->format('d/m/Y') }}</td>
                     <td>
                         @if($account->id !== Auth::id())
