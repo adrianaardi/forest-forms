@@ -38,7 +38,7 @@ class AuthenticatedSessionController extends Controller
         }
 
         if ($user->role === 'sub_admin') {
-            return redirect('/wilayah/dashboard');
+            return redirect('/admin/ict-aduan');
         }
 
         return redirect('/admin/portal-upload'); 

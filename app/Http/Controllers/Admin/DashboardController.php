@@ -31,24 +31,39 @@ class DashboardController extends Controller
 
     public function ictAduan(Request $request)
     {
+
+        $user = Auth::user();
+
         $query = BorangAduanKerosakan::query();
 
-        if ($request->filled('search')) {
-            $query->where(function($q) use ($request) {
-                $q->where('nama', 'like', '%' . $request->search . '%')
-                  ->orWhere('bahagian', 'like', '%' . $request->search . '%')
-                  ->orWhere('kategori_masalah', 'like', '%' . $request->search . '%');
-            });
+        if ($user->role === 'sub_admin') {
+
+            $wilayah = \App\Models\Wilayah::find($user->wilayah_id);
+
+            if ($wilayah) {
+                $query->where('wilayah', $wilayah->nama_wilayah);
+            }
         }
 
-        if ($request->filled('status')) {
-            $query->where('status', $request->status);
-        }
+        // Admin can filter freely
+        if ($user->role === 'admin') {
 
-        if ($request->filled('wilayah')) {
-        $query->where('wilayah', $request->wilayah);
-        }
+            if ($request->filled('search')) {
+                $query->where(function ($q) use ($request) {
+                    $q->where('nama', 'like', '%' . $request->search . '%')
+                    ->orWhere('bahagian', 'like', '%' . $request->search . '%')
+                    ->orWhere('kategori_masalah', 'like', '%' . $request->search . '%');
+                });
+            }
 
+            if ($request->filled('status')) {
+                $query->where('status', $request->status);
+            }
+
+            if ($request->filled('wilayah')) {
+                $query->where('wilayah', $request->wilayah);
+            }
+        }
 
         $complaints = $query->latest()->paginate(15)->withQueryString();
 
