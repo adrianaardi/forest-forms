@@ -14,7 +14,7 @@
 
         @if(Auth::user()->role === 'sub_admin')
             <a href="/admin/ict-aduan" class="{{ request()->is('admin/ict-aduan*') ? 'active' : '' }}">
-                ICT Aduan (Wilayah)
+                ICT Aduan ({{ Auth::user()->wilayah->nama_wilayah ?? '' }})
             </a>
         @endif
 
