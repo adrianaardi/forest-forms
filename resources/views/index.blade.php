@@ -53,6 +53,12 @@
             <p>Semak status aduan atau permohonan anda menggunakan nombor tiket.</p>
             <span class="card-link">Semak sekarang →</span>
         </a>
+        <a href="/" class="card">
+            <div class="card-icon icon-track">📅</div>
+            <h3>Tempah Bilik Mesyuarat</h3>
+            <p>Lihat kekosongan dan tempah bilik mesyuarat di sini.</p>
+            <span class="card-link">Tempah sekarang →</span>
+        </a>
     </div>
 </div>
 
