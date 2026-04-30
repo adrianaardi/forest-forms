@@ -33,6 +33,13 @@ class AuthenticatedSessionController extends Controller
         if ($user->email === 'admin.aduan@sarawak.gov.my') {
             return redirect('/admin/ict-aduan');
         }
+        if ($user->role === 'admin') {
+            return redirect('/admin/dashboard');
+        }
+
+        if ($user->role === 'sub_admin') {
+            return redirect('/admin/ict-aduan');
+        }
 
         return redirect('/admin/portal-upload'); 
     }

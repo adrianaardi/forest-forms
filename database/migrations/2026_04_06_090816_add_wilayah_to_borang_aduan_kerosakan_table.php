@@ -10,6 +10,7 @@ return new class extends Migration
     {
         Schema::table('borang_aduan_kerosakan', function (Blueprint $table) {
             $table->string('wilayah')->nullable();
+            $table->foreignId('wilayah_id')->nullable();
         });
     }
 

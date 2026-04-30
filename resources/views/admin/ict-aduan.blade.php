@@ -53,16 +53,18 @@
                     Tangguh / KIV
                 </option>
             </select>
-            <select name="wilayah">
-                <option value="">-- Semua Wilayah --</option>
-                <option value="Kuching" {{ request('wilayah') == 'Kuching' ? 'selected' : '' }}>Kuching</option>
-                <option value="Sibu" {{ request('wilayah') == 'Sibu' ? 'selected' : '' }}>Sibu</option>
-                <option value="Miri" {{ request('wilayah') == 'Miri' ? 'selected' : '' }}>Miri</option>
-                <option value="Bintulu" {{ request('wilayah') == 'Bintulu' ? 'selected' : '' }}>Bintulu</option>
-                <option value="Limbang" {{ request('wilayah') == 'Limbang' ? 'selected' : '' }}>Limbang</option>
-                <option value="Sri Aman" {{ request('wilayah') == 'Sri Aman' ? 'selected' : '' }}>Sri Aman</option>
-                <option value="Kapit" {{ request('wilayah') == 'Kapit' ? 'selected' : '' }}>Kapit</option>
-            </select>
+            @if(Auth::user()->role === 'admin')
+                <select name="wilayah">
+                    <option value="">-- Semua Wilayah --</option>
+                    <option value="Kuching" {{ request('wilayah') == 'Kuching' ? 'selected' : '' }}>Kuching</option>
+                    <option value="Sibu" {{ request('wilayah') == 'Sibu' ? 'selected' : '' }}>Sibu</option>
+                    <option value="Miri" {{ request('wilayah') == 'Miri' ? 'selected' : '' }}>Miri</option>
+                    <option value="Bintulu" {{ request('wilayah') == 'Bintulu' ? 'selected' : '' }}>Bintulu</option>
+                    <option value="Limbang" {{ request('wilayah') == 'Limbang' ? 'selected' : '' }}>Limbang</option>
+                    <option value="Sri Aman" {{ request('wilayah') == 'Sri Aman' ? 'selected' : '' }}>Sri Aman</option>
+                    <option value="Kapit" {{ request('wilayah') == 'Kapit' ? 'selected' : '' }}>Kapit</option>
+                </select>
+            @endif
             <button type="submit">Tapis</button>
             <a href="/admin/ict-aduan" class="btn-reset">Set Semula</a>
             <button type="button" class="btn-delete" id="deleteBtn" onclick="submitDelete()" disabled>Padam</button>

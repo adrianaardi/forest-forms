@@ -6,6 +6,18 @@
             <a href="/admin/ict-aduan" class="{{ request()->is('admin/ict-aduan*') ? 'active' : '' }}">Aduan ICT</a>
         @endif
 
+        @if(Auth::user()->role === 'admin')
+            <a href="/admin/accounts" class="{{ request()->is('admin/accounts*') ? 'active' : '' }}">
+                Urus Akaun Sub-Admin
+            </a>
+        @endif
+
+        @if(Auth::user()->role === 'sub_admin')
+            <a href="/admin/ict-aduan" class="{{ request()->is('admin/ict-aduan*') ? 'active' : '' }}">
+                ICT Aduan ({{ Auth::user()->wilayah->nama_wilayah ?? '' }})
+            </a>
+        @endif
+
         @if(Auth::user()->email === 'admin.mohon@sarawak.gov.my')
             <a href="/admin/portal-upload" class="{{ request()->is('admin/portal-upload*') ? 'active' : '' }}">Muat Naik</a>
             <a href="/admin/bahagian" class="{{ request()->is('admin/bahagian') ? 'active' : '' }}">Bahagian</a>

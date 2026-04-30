@@ -13,7 +13,8 @@ class AccountController extends Controller
     public function index()
     {
         $accounts = User::latest()->get();
-        return view('admin.accounts', compact('accounts'));
+        $wilayahs = \App\Models\Wilayah::all();
+        return view('admin.accounts', compact('accounts','wilayahs'));
     }
 
     public function store(Request $request)
@@ -22,12 +23,15 @@ class AccountController extends Controller
             'name'     => 'required|string|max:255',
             'email'    => 'required|email|unique:users,email',
             'password' => 'required|min:8|confirmed',
+            'wilayah_id' => 'required|exists:wilayahs,id',
         ]);
 
         User::create([
             'name'     => $request->name,
             'email'    => $request->email,
             'password' => Hash::make($request->password),
+            'role' => 'sub_admin',
+            'wilayah_id' => $request->wilayah_id,
         ]);
 
         return back()->with('success', 'Akaun berjaya ditambah.');
