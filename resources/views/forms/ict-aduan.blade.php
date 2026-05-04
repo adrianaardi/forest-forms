@@ -35,7 +35,7 @@
 
     <div class="form-card">
         <div class="form-card-header">
-            <h2>Borang Aduan Baikpulih ICT / Digital</h2>
+            <h2>Aduan Baikpulih ICT / Digital</h2>
             <p>Sila isi semua maklumat yang diperlukan dengan tepat.</p>
         </div>
 
@@ -116,7 +116,7 @@
                             <option value="Kapit" {{ old('wilayah') == 'Kapit' ? 'selected' : '' }}>Kapit</option>
                             <option value="Limbang" {{ old('wilayah') == 'Limbang' ? 'selected' : '' }}>Limbang</option>
                         </select>
-
+                    </div> 
                 </div>
                 <div class="field-row">
                     <div class="field">
