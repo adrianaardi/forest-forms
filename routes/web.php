@@ -7,6 +7,44 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\AccountController;
 use App\Http\Controllers\Admin\ProfileController;
 use App\Http\Controllers\Admin\BahagianController;
+use App\Http\Controllers\Booking\AuthController;
+use App\Http\Controllers\Booking\BookingController;
+use App\Http\Controllers\Booking\AdminBookingController;
+
+// public booking routes
+Route::prefix('booking')->name('booking.')->group(function () {
+
+    Route::get('/', [BookingController::class, 'index'])->name('home');
+    Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
+    Route::post('/login', [AuthController::class, 'login']);
+    Route::get('/daftar', [AuthController::class, 'showRegister'])->name('daftar');
+    Route::post('/daftar', [AuthController::class, 'register']);
+
+    // user routes
+    Route::middleware('booking.user')->group(function () {
+        Route::get('/user/dashboard', [BookingController::class, 'userDashboard'])->name('user.dashboard');
+        Route::get('/calendar/{bilik}', [BookingController::class, 'calendar'])->name('calendar');
+        Route::get('/tempah/{bilik}', [BookingController::class, 'showTempah'])->name('tempah');
+        Route::post('/tempah/{bilik}', [BookingController::class, 'storeTempah'])->name('tempah.store');
+        Route::delete('/batal/{id}', [BookingController::class, 'batal'])->name('batal');
+        Route::post('/user/logout', [AuthController::class, 'logoutUser'])->name('user.logout');
+    });
+
+    // admin routes
+    Route::middleware('booking.admin')->prefix('admin')->name('admin.')->group(function () {
+        Route::get('/dashboard', [AdminBookingController::class, 'dashboard'])->name('dashboard');
+        Route::get('/tempahan', [AdminBookingController::class, 'tempahan'])->name('tempahan');
+        Route::post('/tempahan/{id}/status', [AdminBookingController::class, 'updateStatus'])->name('tempahan.status');
+        Route::get('/users', [AdminBookingController::class, 'users'])->name('users');
+        Route::post('/users', [AdminBookingController::class, 'storeUser'])->name('users.store');
+        Route::post('/users/{id}/status', [AdminBookingController::class, 'updateUserStatus'])->name('users.status');
+        Route::delete('/users/{id}', [AdminBookingController::class, 'deleteUser'])->name('users.delete');
+        Route::get('/bilik', [AdminBookingController::class, 'bilik'])->name('bilik');
+        Route::post('/bilik', [AdminBookingController::class, 'storeBilik'])->name('bilik.store');
+        Route::delete('/bilik/{id}', [AdminBookingController::class, 'deleteBilik'])->name('bilik.delete');
+        Route::post('/logout', [AuthController::class, 'logoutAdmin'])->name('logout');
+    });
+});
 
 
 Route::get('/', function () {

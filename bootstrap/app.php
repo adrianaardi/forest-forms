@@ -11,7 +11,10 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        //
+        $middleware->alias([
+            'booking.admin' => \App\Http\Middleware\BookingAdminAuth::class,
+            'booking.user'  => \App\Http\Middleware\BookingUserAuth::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

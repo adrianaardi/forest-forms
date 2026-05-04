@@ -32,5 +32,14 @@ class AdminSeeder extends Seeder
                 'wilayah_id' => null,
             ]
         );
+
+        User::updateOrCreate(
+            ['email' => 'admin.booking@sarawak.gov.my'],
+            [
+                'name'     => 'Admin Booking',
+                'email'    => 'admin.booking@sarawak.gov.my',
+                'password' => Hash::make('password123'),
+            ]
+        );
     }
 }
