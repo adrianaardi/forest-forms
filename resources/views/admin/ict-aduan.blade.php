@@ -56,6 +56,7 @@
             @if(Auth::user()->role === 'admin')
                 <select name="wilayah">
                     <option value="">-- Semua Wilayah --</option>
+                    <option value="Ibu Pejabat" {{ request('wilayah') == 'Ibu Pejabat' ? : '' }}>Ibu Pejabat</option>
                     <option value="Kuching" {{ request('wilayah') == 'Kuching' ? 'selected' : '' }}>Kuching</option>
                     <option value="Sibu" {{ request('wilayah') == 'Sibu' ? 'selected' : '' }}>Sibu</option>
                     <option value="Miri" {{ request('wilayah') == 'Miri' ? 'selected' : '' }}>Miri</option>

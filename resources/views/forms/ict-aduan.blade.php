@@ -106,6 +106,7 @@
                         <label>Wilayah</label>
                         <select name="wilayah" id="wilayah" onchange="toggleWilayahLain()">
                             <option value="">-- Pilih Wilayah --</option>
+                            <option value="Ibu Pejabat" {{ old('wilayah') == 'Ibu Pejabat' ? 'selected' : '' }}>Ibu Pejabat</option>
                             <option value="Kuching" {{ old('wilayah') == 'Kuching' ? 'selected' : '' }}>Kuching</option>
                             <option value="Sibu" {{ old('wilayah') == 'Sibu' ? 'selected' : '' }}>Sibu</option>
                             <option value="Bintulu" {{ old('wilayah') == 'Bintulu' ? 'selected' : '' }}>Bintulu</option>
@@ -114,13 +115,7 @@
                             <option value="Sarikei" {{ old('wilayah') == 'Sarikei' ? 'selected' : '' }}>Sarikei</option>
                             <option value="Kapit" {{ old('wilayah') == 'Kapit' ? 'selected' : '' }}>Kapit</option>
                             <option value="Limbang" {{ old('wilayah') == 'Limbang' ? 'selected' : '' }}>Limbang</option>
-                            <option value="lain" {{ old('wilayah') == 'lain' ? 'selected' : '' }}>Lain-lain (Nyatakan)</option>
                         </select>
-
-                        <div id="wilayah-lain-box" style="display:none; margin-top:8px;">
-                            <input type="text" name="wilayah_lain" value="{{ old('wilayah_lain') }}" placeholder="Sila nyatakan wilayah">
-                        </div>
-                    </div>
 
                 </div>
                 <div class="field-row">
@@ -229,11 +224,6 @@ function toggleLain() {
 function toggleBahagianLain() {
     var v = document.getElementById('bahagian').value;
     document.getElementById('bahagian-lain-box').style.display = (v === 'lain') ? 'block' : 'none';
-}
-
-function toggleWilayahLain() {
-    var v = document.getElementById('wilayah').value;
-    document.getElementById('wilayah-lain-box').style.display = (v === 'lain') ? 'block' : 'none';
 }
 
 document.addEventListener("DOMContentLoaded", function () {

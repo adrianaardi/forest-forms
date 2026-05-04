@@ -10,6 +10,7 @@ class WilayahSeeder extends Seeder
     public function run(): void
     {
         DB::table('wilayahs')->insert([
+            ['nama_wilayah' => 'Ibu Pejabat'],
             ['nama_wilayah' => 'Kuching'],
             ['nama_wilayah' => 'Sibu'],
             ['nama_wilayah' => 'Miri'],
