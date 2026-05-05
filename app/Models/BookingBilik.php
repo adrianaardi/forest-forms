@@ -8,7 +8,7 @@ class BookingBilik extends Model
 {
     protected $table = 'booking_bilik';
 
-    protected $fillable = ['nama_bilik', 'aras', 'lokasi', 'kapasiti'];
+    protected $fillable = ['nama_bilik', 'aras', 'wing'];
 
     public function bookings()
     {

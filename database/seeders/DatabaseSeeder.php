@@ -17,7 +17,6 @@ class DatabaseSeeder extends Seeder
     {
         $this->call(AdminSeeder::class);
         $this->call(WilayahSeeder::class);
-        $this->call(BookingSeeder::class);
     }
 
     

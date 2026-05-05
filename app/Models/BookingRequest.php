@@ -9,9 +9,9 @@ class BookingRequest extends Model
     protected $table = 'booking_requests';
 
     protected $fillable = [
-        'user_id', 'bilik_id', 'tarikh',
-        'masa_mula', 'masa_tamat', 'tujuan',
-        'status', 'catatan_admin',
+        'user_id', 'bilik_id', 'tajuk_mesyuarat',
+        'tarikh', 'masa_mula', 'masa_tamat',
+        'status', 'cancel_token',
     ];
 
     public function user()

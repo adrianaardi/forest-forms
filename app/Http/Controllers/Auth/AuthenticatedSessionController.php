@@ -25,7 +25,6 @@ class AuthenticatedSessionController extends Controller
     public function store(LoginRequest $request): RedirectResponse
     {
         $request->authenticate();
-
         $request->session()->regenerate();
 
         $user = Auth::user();
@@ -33,17 +32,17 @@ class AuthenticatedSessionController extends Controller
         if ($user->email === 'admin.aduan@sarawak.gov.my') {
             return redirect('/admin/ict-aduan');
         }
-        if ($user->role === 'admin') {
-            return redirect('/admin/dashboard');
+
+        if ($user->email === 'admin.mohon@sarawak.gov.my') {
+            return redirect('/admin/portal-upload');
         }
 
-        if ($user->role === 'sub_admin') {
-            return redirect('/admin/ict-aduan');
+        if ($user->email === 'admin.booking@sarawak.gov.my') {
+            return redirect('/booking/admin/dashboard');
         }
 
-        return redirect('/admin/portal-upload'); 
+        return redirect('/');
     }
-
     /**
      * Destroy an authenticated session.
      */

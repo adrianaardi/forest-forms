@@ -12,12 +12,12 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained('booking_users')->cascadeOnDelete();
             $table->foreignId('bilik_id')->constrained('booking_bilik')->cascadeOnDelete();
+            $table->string('tajuk_mesyuarat');
             $table->date('tarikh');
             $table->time('masa_mula');
             $table->time('masa_tamat');
-            $table->string('tujuan');
-            $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending');
-            $table->text('catatan_admin')->nullable();
+            $table->enum('status', ['confirmed', 'cancelled'])->default('confirmed');
+            $table->string('cancel_token')->unique()->nullable();
             $table->timestamps();
         });
     }

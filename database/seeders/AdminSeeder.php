@@ -39,6 +39,7 @@ class AdminSeeder extends Seeder
                 'name'     => 'Admin Booking',
                 'email'    => 'admin.booking@sarawak.gov.my',
                 'password' => Hash::make('password123'),
+                'role'     =>'admin',
             ]
         );
     }

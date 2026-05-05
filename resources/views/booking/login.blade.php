@@ -1,16 +1,28 @@
-@extends('booking.layout')
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Log Masuk — Sistem Tempahan</title>
+    <link rel="stylesheet" href="{{ asset('style.css') }}">
+</head>
+<body>
+<header>
+    <div class="logo">🌿</div>
+    <div>
+        <h1>Jabatan Hutan Sarawak</h1>
+        <p>Sistem Tempahan Bilik Mesyuarat</p>
+    </div>
+</header>
+<x-navbar />
 
-@section('title', 'Log Masuk — Sistem Tempahan')
-
-@section('content')
-
-<div style="max-width:420px; margin:0 auto;">
+<div class="pg-body" style="max-width:420px;">
     <div class="form-card">
         <div class="form-card-header">
             <h2>Log Masuk</h2>
             <p>Sistem Tempahan Bilik Mesyuarat</p>
         </div>
-        <form method="POST" action="/booking/login">
+        <form method="POST" action="{{ route('booking.login.post') }}">
             @csrf
             <div class="form-section">
                 @if(session('error'))
@@ -33,11 +45,16 @@
                 </div>
             </div>
             <div class="form-footer">
-                <a href="/booking/daftar" style="font-size:13px; color:#1a4731;">Belum ada akaun? Daftar</a>
+                <a href="{{ route('booking.daftar') }}" style="font-size:13px; color:#1a4731;">Belum ada akaun? Daftar</a>
                 <button type="submit" class="btn-submit">Log Masuk</button>
             </div>
         </form>
     </div>
 </div>
 
-@endsection
+<footer>
+    <div><strong>Jabatan Hutan Sarawak</strong> &nbsp;|&nbsp; Wisma Sumber Alam, Petra Jaya, 93660 Kuching, Sarawak</div>
+    <div>© 2025 Jabatan Hutan Sarawak. Hak Cipta Terpelihara.</div>
+</footer>
+</body>
+</html>
