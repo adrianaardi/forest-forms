@@ -103,63 +103,51 @@
             @endif
         </div>
 
-        {{-- Grid --}}
-<div class="bk-grid-wrap" 
-     data-auth="{{ Auth::guard('booking_user')->check() ? '1' : '0' }}"
-     data-bilik="{{ $bilik?->id }}">
-                 <div class="bk-grid">
+        <div class="cal-grid">
+            {{-- empty cells before first day --}}
+            @for($i = 0; $i < $startOfMonth->dayOfWeek; $i++)
+                <div class="cal-day empty"></div>
+            @endfor
 
-                {{-- Header --}}
-                <div class="bk-col-header"></div>
-                @foreach($days as $day)
-                    <div class="bk-col-header">
-                        <div class="dname">{{ $day->translatedFormat('D') }}</div>
-                        <div class="dnum {{ $day->isToday() ? 'today' : '' }}">{{ $day->format('j') }}</div>
-                    </div>
-                @endforeach
+            @for($d = 1; $d <= $endOfMonth->day; $d++)
+                @php
+                    $date       = \Carbon\Carbon::createFromDate($year, $month, $d);
+                    $dateStr    = $date->toDateString();
+                    $isPast     = $date->lt($today);
+                    $isToday    = $date->isToday();
+                    $dayBookings = $bookings[$dateStr] ?? collect();
 
-                {{-- Time rows --}}
-                @foreach($hours as $hour)
-                    <div class="bk-time-gutter">{{ str_pad($hour, 2, '0', STR_PAD_LEFT) }}:00</div>
-                    @foreach($days as $day)
-                        @php
-                            $dateStr     = $day->toDateString();
-                            $dayBookings = $bookings->filter(fn($b) =>
-                                $b->tarikh === $dateStr &&
-                                (int)substr($b->masa_mula, 0, 2) <= $hour &&
-                                (int)substr($b->masa_tamat, 0, 2) > $hour
-                            );
-                        @endphp
-                        <div class="bk-cell"
-                            onclick="openBookSlot('{{ $dateStr }}', '{{ $bilik?->id }}', '{{ str_pad($hour, 2, '0', STR_PAD_LEFT) }}:00')">
-                            @foreach($dayBookings as $b)
-                                @php
-                                    $startsHere = (int)substr($b->masa_mula, 0, 2) === $hour;
-                                    $mins = \Carbon\Carbon::parse($b->masa_mula)->diffInMinutes(\Carbon\Carbon::parse($b->masa_tamat));
-                                    $h = ($mins / 60) * 48;
-                                @endphp
-                                @if($startsHere)
-                                    <div class="bk-event"
-                                        style="height:{{ max($h - 4, 14) }}px;"
-                                        onclick="event.stopPropagation(); showEvent(
-                                            '{{ addslashes($b->tajuk_mesyuarat) }}',
-                                            '{{ addslashes($b->user->name) }}',
-                                            '{{ addslashes($b->user->bahagian ?? '-') }}',
-                                            '{{ substr($b->masa_mula,0,5) }}',
-                                            '{{ substr($b->masa_tamat,0,5) }}',
-                                            '{{ $day->translatedFormat('d F Y') }}'
-                                        )"
-                                        title="{{ $b->tajuk_mesyuarat }} — {{ $b->user->name }}">
-                                        <strong>{{ Str::limit($b->tajuk_mesyuarat, 22) }}</strong><br>
-                                        {{ substr($b->masa_mula,0,5) }}–{{ substr($b->masa_tamat,0,5) }}
-                                    </div>
-                                @endif
-                            @endforeach
-                        </div>
-                    @endforeach
-                @endforeach
+                    // calculate how booked the day is
+                    $bookedMinutes = 0;
+                    foreach ($dayBookings as $b) {
+                        $start = \Carbon\Carbon::parse($b->masa_mula);
+                        $end   = \Carbon\Carbon::parse($b->masa_tamat);
+                        $bookedMinutes += $start->diffInMinutes($end);
+                    }
+                    $totalMinutes = $totalSlots * 60;
+                    $ratio = $totalMinutes > 0 ? $bookedMinutes / $totalMinutes : 0;
 
-            </div>
+                    if ($isPast) $dayClass = 'past';
+                    elseif ($ratio >= 1) $dayClass = 'full';
+                    elseif ($ratio > 0) $dayClass = 'partial';
+                    else $dayClass = 'available';
+                @endphp
+
+                <div class="cal-day {{ $dayClass }} {{ $isToday ? 'today' : '' }}"
+                    @if(!$isPast) onclick="showSlots('{{ $dateStr }}', {{ $dayBookings->toJson() }})" style="cursor:pointer;" @endif>
+                    <div class="day-num">{{ $d }}</div>
+                    @if($dayBookings->count() > 0 && !$isPast)
+                        <div style="font-size:10px; margin-top:2px; color:#555;">{{ $dayBookings->count() }} tempahan</div>
+                    @endif
+                </div>
+            @endfor
+        </div>
+
+        <div class="cal-legend">
+            <span><span class="dot" style="background:#eaf3de;"></span> Tersedia</span>
+            <span><span class="dot" style="background:#fef9e7;"></span> Sebahagian</span>
+            <span><span class="dot" style="background:#fdf0f0;"></span> Penuh</span>
+            <span><span class="dot" style="background:#f5f5f5;"></span> Lepas</span>
         </div>
     </div>
 </div>
