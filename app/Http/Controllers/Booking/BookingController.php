@@ -23,11 +23,12 @@ class BookingController extends Controller
 
     public function calendar(Request $request)
     {
-        $bilikList   = BookingBilik::orderBy('aras')->orderBy('nama_bilik')->get()->groupBy('aras');
-        $selectedId  = $request->get('bilik', BookingBilik::first()->id ?? null);
-        $bilik       = BookingBilik::find($selectedId);
+        $bilikList  = BookingBilik::orderBy('aras')->orderBy('nama_bilik')->get()->groupBy('aras');
+        
+        // default to first room if none selected
+        $selectedId = $request->get('bilik') ?? BookingBilik::orderBy('aras')->orderBy('nama_bilik')->first()?->id;
+        $bilik      = BookingBilik::find($selectedId);
 
-        // week navigation
         $weekStart = $request->get('week')
             ? Carbon::parse($request->get('week'))->startOfWeek(Carbon::MONDAY)
             : Carbon::now()->startOfWeek(Carbon::MONDAY);
