@@ -65,23 +65,40 @@
                     elseif ($ratio >= 1) $dayClass = 'full';
                     elseif ($ratio > 0) $dayClass = 'partial';
                     else $dayClass = 'available';
+
+                    if ($dayClass == 'available') {
+                        $bg = '#e8f5e9'; $border = '#2e7d32'; $text = '#1b5e20';
+                    } elseif ($dayClass == 'partial') {
+                        $bg = '#fff3e0'; $border = '#ed6c02'; $text = '#e65100';
+                    } elseif ($dayClass == 'full') {
+                        $bg = '#ffebee'; $border = '#c62828'; $text = '#b71c1c';
+                    } else {
+                        $bg = '#f3f4f6'; $border = '#6b7280'; $text = '#374151';
+                    }
                 @endphp
 
-                <div class="cal-day {{ $dayClass }} {{ $isToday ? 'today' : '' }}"
-                    @if(!$isPast) onclick="showSlots('{{ $dateStr }}', {{ $dayBookings->toJson() }})" style="cursor:pointer;" @endif>
+                <div class="cal-day {{ $isToday ? 'today' : '' }}"
+                    style="background: {{ $bg }};
+                            color: {{ $text }};
+                            border: 1px solid {{ $border }};
+                            border-radius: 8px;
+                            cursor: {{ !$isPast ? 'pointer' : 'default' }};"
+                    @if(!$isPast)
+                        onclick='showSlots(@json($dateStr), @json($dayBookings->values()))'
+                    @endif>
                     <div class="day-num">{{ $d }}</div>
                     @if($dayBookings->count() > 0 && !$isPast)
-                        <div style="font-size:10px; margin-top:2px; color:#555;">{{ $dayBookings->count() }} tempahan</div>
+                        <div style="font-size:10px; margin-top:2px;">{{ $dayBookings->count() }} tempahan</div>
                     @endif
                 </div>
             @endfor
         </div>
 
         <div class="cal-legend">
-            <span><span class="dot" style="background:#eaf3de;"></span> Tersedia</span>
-            <span><span class="dot" style="background:#fef9e7;"></span> Sebahagian</span>
-            <span><span class="dot" style="background:#fdf0f0;"></span> Penuh</span>
-            <span><span class="dot" style="background:#f5f5f5;"></span> Lepas</span>
+            <span><span class="dot" style="background:#e8f5e9; border:1px solid #2e7d32;"></span> Tersedia</span>
+            <span><span class="dot" style="background:#fff3e0; border:1px solid #ed6c02;"></span> Sebahagian</span>
+            <span><span class="dot" style="background:#ffebee; border:1px solid #c62828;"></span> Penuh</span>
+            <span><span class="dot" style="background:#f3f4f6; border:1px solid #6b7280;"></span> Lepas</span>        
         </div>
     </div>
 </div>
