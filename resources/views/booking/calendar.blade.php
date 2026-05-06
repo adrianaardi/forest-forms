@@ -60,6 +60,16 @@
         .bk-event { position: absolute; left: 2px; right: 2px; border-radius: 4px; padding: 2px 4px; font-size: 10px; overflow: hidden; cursor: pointer; z-index: 1; background: #1a4731; color: #fff; line-height: 1.3; box-shadow: 0 1px 3px rgba(0,0,0,0.15); transition: opacity 0.1s; }
         .bk-event:hover { opacity: 0.85; }
 
+        .bk-guide-text {
+            font-size: 11px;
+            color: #666;
+            line-height: 1.4;
+            background: #f3f7f2;
+            border-left: 3px solid #1a4731;
+            padding: 8px 10px;
+            border-radius: 6px;
+        }
+
         @media (max-width: 700px) {
             .bk-sidebar { display: none; }
         }
@@ -163,6 +173,13 @@
             </div>
         </div>
         @endif
+
+        {{-- Guide text --}}
+        <div class="bk-sidebar-section">
+            <div class="bk-guide-text">
+                Sila pilih bilik mesyuarat di bawah untuk membuat tempahan.
+            </div>
+        </div>
 
         {{-- Room list --}}
         @foreach($bilikList as $aras => $rooms)
