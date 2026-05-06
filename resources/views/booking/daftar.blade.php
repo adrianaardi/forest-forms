@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Daftar — Sistem Tempahan</title>
+        <link rel="icon" href="{{ asset('images/logo-icon.png')}}">
+
     <link rel="stylesheet" href="{{ asset('style.css') }}">
 </head>
 <body>
@@ -18,7 +20,7 @@
 
 <div class="pg-body" style="max-width:500px;">
     <div class="form-card">
-        <div class="form-card-header">
+        <div class="form-card-header" style="background:#194169;">
             <h2>Daftar Akaun</h2>
             <p>Pendaftaran memerlukan kelulusan admin sebelum anda boleh membuat tempahan.</p>
         </div>
@@ -57,7 +59,7 @@
             </div>
             <div class="form-footer">
                 <a href="{{ route('booking.login') }}" class="btn-back">← Log Masuk</a>
-                <button type="submit" class="btn-submit">Daftar</button>
+                <button type="submit" class="btn-submit" style="background:#194169;">Daftar</button>
             </div>
         </form>
     </div>

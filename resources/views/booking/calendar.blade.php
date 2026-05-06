@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kalendar — {{ $bilik?->nama_bilik ?? 'Tempahan' }}</title>
+        <link rel="icon" href="{{ asset('images/logo-icon.png')}}">
+
     <link rel="stylesheet" href="{{ asset('style.css') }}">
     <style>
         .bk-wrap { display: flex; height: calc(100vh - 180px); overflow: hidden; }

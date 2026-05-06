@@ -5,10 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profil Saya — Sistem Tempahan</title>
     <link rel="stylesheet" href="{{ asset('style.css') }}">
+        <link rel="icon" href="{{ asset('images/logo-icon.png')}}">
+
 </head>
 <body>
 <header>
-    <div class="logo">🌿</div>
+    <div class="logo"></div>
     <div>
         <h1>Jabatan Hutan Sarawak</h1>
         <p>Sistem Tempahan Bilik Mesyuarat</p>
