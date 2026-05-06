@@ -114,7 +114,8 @@ Route::prefix('booking')->name('booking.')->group(function () {
         Route::post('/users/{id}/status', [AdminBookingController::class, 'updateUserStatus'])->name('users.status');
         Route::delete('/users/{id}',      [AdminBookingController::class, 'deleteUser'])->name('users.delete');
         Route::post('/logout',            [BookingAuthController::class, 'logoutAdmin'])->name('logout');
-
+        Route::post('/users', [AdminBookingController::class, 'storeUser'])->name('users.store');
+        
     });
 
     

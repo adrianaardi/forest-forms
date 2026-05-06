@@ -24,6 +24,51 @@
         </div>
     @endif
 
+    {{-- Add user --}}
+    <div class="form-card" style="margin-bottom:1.5rem;">
+        <div class="form-card-header">
+            <h2>Tambah Pengguna</h2>
+            <p>Pengguna yang ditambah oleh admin akan terus diluluskan.</p>
+        </div>
+        <form method="POST" action="{{ route('booking.admin.users.store') }}">
+            @csrf
+            <div class="form-section">
+                @if($errors->any())
+                    <div style="background:#fdf0f0; border:1px solid #f5c1c1; color:#a32d2d; padding:0.75rem 1rem; border-radius:8px; margin-bottom:1rem; font-size:13px;">
+                        <ul style="margin:0; padding-left:1.2rem;">
+                            @foreach($errors->all() as $e)<li>{{ $e }}</li>@endforeach
+                        </ul>
+                    </div>
+                @endif
+                <div class="field-row">
+                    <div class="field">
+                        <label>Nama <span class="required">*</span></label>
+                        <input type="text" name="name" value="{{ old('name') }}" placeholder="Nama penuh" required>
+                    </div>
+                    <div class="field">
+                        <label>Emel <span class="required">*</span></label>
+                        <input type="email" name="email" value="{{ old('email') }}" placeholder="emel@domain.com" required>
+                    </div>
+                </div>
+                <div class="field-row">
+                    <div class="field">
+                        <label>Bahagian</label>
+                        <input type="text" name="bahagian" value="{{ old('bahagian') }}" placeholder="Cth: Bahagian ICT">
+                    </div>
+                    <div class="field">
+                        <label>Kata Laluan <span class="required">*</span></label>
+                        <input type="password" name="password" placeholder="Minimum 8 aksara" required>
+                    </div>
+                </div>
+            </div>
+            <div class="form-footer">
+                <span></span>
+                <button type="submit" class="btn-submit">Tambah</button>
+            </div>
+        </form>
+    </div>
+
+    {{-- User list --}}
     <p class="section-heading">Senarai Pengguna</p>
 
     <form method="GET" action="/booking/admin/users">

@@ -55,4 +55,24 @@ class AdminBookingController extends Controller
         BookingUser::findOrFail($id)->delete();
         return back()->with('success', 'Pengguna berjaya dipadam.');
     }
+
+    public function storeUser(Request $request)
+    {
+        $request->validate([
+            'name'     => 'required|string|max:255',
+            'email'    => 'required|email|unique:booking_users,email',
+            'password' => 'required|min:8',
+            'bahagian' => 'nullable|string|max:255',
+        ]);
+
+        \App\Models\BookingUser::create([
+            'name'     => $request->name,
+            'email'    => $request->email,
+            'password' => \Illuminate\Support\Facades\Hash::make($request->password),
+            'bahagian' => $request->bahagian,
+            'status'   => 'approved',
+        ]);
+
+        return back()->with('success', 'Pengguna berjaya ditambah.');
+    }
 }
