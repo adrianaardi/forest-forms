@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tempahan Dibatalkan</title>
+    <title>Urus Pengguna — Tempahan</title>
     <link rel="stylesheet" href="{{ asset('style.css') }}">
 </head>
 <body>
@@ -11,36 +11,86 @@
     <div class="logo">🌿</div>
     <div>
         <h1>Jabatan Hutan Sarawak</h1>
-        <p>Sistem Tempahan Bilik Mesyuarat</p>
+        <p>Sistem Tempahan Bilik Mesyuarat — Admin</p>
     </div>
 </header>
 <x-navbar />
 
-<div class="pg-body" style="max-width:500px;">
-    <div class="form-card">
-        <div class="form-card-header">
-            <h2>{{ $alreadyCancelled ? 'Tempahan Sudah Dibatalkan' : 'Tempahan Berjaya Dibatalkan' }}</h2>
-            <p>{{ $alreadyCancelled ? 'Tempahan ini telah pun dibatalkan sebelum ini.' : 'Tempahan anda telah berjaya dibatalkan.' }}</p>
+<div class="dashboard-body">
+
+    @if(session('success'))
+        <div style="background:#eaf3de; border:1px solid #c0dd97; color:#3b6d11; padding:0.75rem 1rem; border-radius:8px; margin-bottom:1rem; font-size:13px;">
+            {{ session('success') }}
         </div>
-        <div class="form-section" style="text-align:center; padding:2rem;">
-            <div style="font-size:40px; margin-bottom:1rem;">
-                {{ $alreadyCancelled ? '⚠️' : '✅' }}
-            </div>
-            <div style="background:#f9fafb; border:1px solid #dde8e1; border-radius:8px; padding:1rem; text-align:left; font-size:13px; color:#333; max-width:320px; margin:0 auto;">
-                <div style="margin-bottom:6px;"><strong>Tajuk:</strong> {{ $booking->tajuk_mesyuarat }}</div>
-                <div style="margin-bottom:6px;"><strong>Bilik:</strong> {{ $booking->bilik->nama_bilik }}</div>
-                <div style="margin-bottom:6px;"><strong>Tarikh:</strong> {{ \Carbon\Carbon::parse($booking->tarikh)->format('d/m/Y') }}</div>
-                <div><strong>Masa:</strong> {{ substr($booking->masa_mula,0,5) }} – {{ substr($booking->masa_tamat,0,5) }}</div>
-            </div>
-            @if(!$alreadyCancelled)
-                <p style="font-size:12px; color:#777; margin-top:1rem;">Jika anda ingin membuat tempahan baharu, sila kembali ke kalendar.</p>
-            @endif
+    @endif
+
+    <p class="section-heading">Senarai Pengguna</p>
+
+    <form method="GET" action="/booking/admin/users">
+        <div class="toolbar" style="margin-bottom:1rem;">
+            <select name="status">
+                <option value="">-- Semua Status --</option>
+                <option value="pending"  {{ request('status') == 'pending'  ? 'selected' : '' }}>Pending</option>
+                <option value="approved" {{ request('status') == 'approved' ? 'selected' : '' }}>Diluluskan</option>
+                <option value="rejected" {{ request('status') == 'rejected' ? 'selected' : '' }}>Ditolak</option>
+            </select>
+            <button type="submit" style="padding:7px 16px; background:#1a4731; color:#fff; border:none; border-radius:6px; font-size:13px; cursor:pointer;">Tapis</button>
+            <a href="/booking/admin/users" class="btn-reset">Set Semula</a>
         </div>
-        <div class="form-footer">
-            <span></span>
-            <a href="/booking/calendar?bilik={{ $booking->bilik_id }}" class="btn-submit" style="text-decoration:none;">Lihat Kalendar</a>
-        </div>
-    </div>
+    </form>
+
+    <table class="data-table">
+        <tr>
+            <th>Nama</th>
+            <th>Emel</th>
+            <th>Bahagian</th>
+            <th>Tarikh Daftar</th>
+            <th>Status</th>
+            <th>Tindakan</th>
+        </tr>
+        @forelse($users as $user)
+        <tr>
+            <td>{{ $user->name }}</td>
+            <td>{{ $user->email }}</td>
+            <td>{{ $user->bahagian ?? '-' }}</td>
+            <td>{{ \Carbon\Carbon::parse($user->created_at)->format('d/m/Y') }}</td>
+            <td>
+                @if($user->status === 'pending')
+                    <span class="badge badge-pending">Pending</span>
+                @elseif($user->status === 'approved')
+                    <span class="badge badge-done">Diluluskan</span>
+                @else
+                    <span class="badge" style="background:#fdf0f0; color:#a32d2d;">Ditolak</span>
+                @endif
+            </td>
+            <td style="display:flex; gap:6px; flex-wrap:wrap;">
+                @if($user->status === 'pending')
+                    <form method="POST" action="{{ route('booking.admin.users.status', $user->id) }}">
+                        @csrf
+                        <input type="hidden" name="status" value="approved">
+                        <button type="submit" class="btn-lulus" style="padding:4px 12px; font-size:12px;">Lulus</button>
+                    </form>
+                    <form method="POST" action="{{ route('booking.admin.users.status', $user->id) }}">
+                        @csrf
+                        <input type="hidden" name="status" value="rejected">
+                        <button type="submit" class="btn-tolak" style="padding:4px 12px; font-size:12px;">Tolak</button>
+                    </form>
+                @endif
+                <form method="POST" action="{{ route('booking.admin.users.delete', $user->id) }}"
+                    onsubmit="return confirm('Padam pengguna {{ addslashes($user->name) }}?')">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="btn-delete" style="padding:4px 12px; font-size:12px;">Padam</button>
+                </form>
+            </td>
+        </tr>
+        @empty
+        <tr><td colspan="6" style="text-align:center; color:#999; padding:1.5rem;">Tiada pengguna.</td></tr>
+        @endforelse
+    </table>
+
+    <div class="pagination-wrap">{{ $users->links() }}</div>
+
 </div>
 
 <footer>

@@ -9,8 +9,21 @@ class BrevoMailer
 {
     public static function send(string $to, string $toName, string $subject, string $htmlContent): bool
     {
-        $client = new Client();
+        // use Laravel mail locally for Mailpit testing
+        if (app()->environment('local')) {
+            try {
+                \Illuminate\Support\Facades\Mail::html($htmlContent, function($msg) use ($to, $toName, $subject) {
+                    $msg->to($to, $toName)->subject($subject);
+                });
+                return true;
+            } catch (\Throwable $e) {
+                \Illuminate\Support\Facades\Log::error('Mail error: ' . $e->getMessage());
+                return false;
+            }
+        }
 
+        // use Brevo HTTP API in production
+        $client = new \GuzzleHttp\Client();
         try {
             $response = $client->post('https://api.brevo.com/v3/smtp/email', [
                 'headers' => [
@@ -27,11 +40,9 @@ class BrevoMailer
                     'htmlContent' => $htmlContent,
                 ],
             ]);
-
             return $response->getStatusCode() === 201;
-
         } catch (\Throwable $e) {
-            Log::error('Brevo mail error: ' . $e->getMessage());
+            \Illuminate\Support\Facades\Log::error('Brevo mail error: ' . $e->getMessage());
             return false;
         }
     }
