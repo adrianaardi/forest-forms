@@ -74,12 +74,12 @@ class BookingAuthController extends Controller
     public function logout()
     {
         Auth::guard('booking_user')->logout();
-        return redirect('/booking/login');
+        return redirect('/');
     }
 
     public function logoutAdmin()
     {
         Auth::guard('web')->logout();
-        return redirect('/booking/login');
+        return redirect('/');
     }
 }

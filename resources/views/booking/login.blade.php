@@ -18,9 +18,9 @@
 
 <div class="pg-body" style="max-width:420px;">
     <div class="form-card">
-        <div class="form-card-header">
-            <h2>Log Masuk</h2>
-            <p>Sistem Tempahan Bilik Mesyuarat</p>
+        <div class="form-card-header" style="background:#194169;">
+            <h2>Log Masuk — Sistem Tempahan</h2>
+            <p>Masukkan emel dan kata laluan anda untuk membuat tempahan.</p>
         </div>
         <form method="POST" action="{{ route('booking.login.post') }}">
             @csrf
@@ -46,7 +46,7 @@
             </div>
             <div class="form-footer">
                 <a href="{{ route('booking.daftar') }}" style="font-size:13px; color:#1a4731;">Belum ada akaun? Daftar</a>
-                <button type="submit" class="btn-submit">Log Masuk</button>
+                <button type="submit" class="btn-submit" style="background:#194169;">Log Masuk</button>
             </div>
         </form>
     </div>

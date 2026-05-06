@@ -102,7 +102,11 @@ Route::prefix('booking')->name('booking.')->group(function () {
     Route::get('/daftar', [BookingAuthController::class, 'showRegister'])->name('daftar');
     Route::post('/daftar',[BookingAuthController::class, 'register'])->name('daftar.post');
     Route::post('/logout',[BookingAuthController::class, 'logout'])->name('logout');
+    Route::get('/profile',           [\App\Http\Controllers\Booking\BookingUserProfileController::class, 'index'])->name('user.profile');
+    Route::post('/profile',          [\App\Http\Controllers\Booking\BookingUserProfileController::class, 'update'])->name('user.profile.update');
+    Route::post('/profile/password', [\App\Http\Controllers\Booking\BookingUserProfileController::class, 'updatePassword'])->name('user.profile.password');
 
+    
     // booking admin
     Route::middleware('booking.admin')->prefix('admin')->name('admin.')->group(function () {
         Route::get('/dashboard',          [AdminBookingController::class, 'dashboard'])->name('dashboard');
@@ -110,18 +114,10 @@ Route::prefix('booking')->name('booking.')->group(function () {
         Route::post('/users/{id}/status', [AdminBookingController::class, 'updateUserStatus'])->name('users.status');
         Route::delete('/users/{id}',      [AdminBookingController::class, 'deleteUser'])->name('users.delete');
         Route::post('/logout',            [BookingAuthController::class, 'logoutAdmin'])->name('logout');
-    });
-});
 
-// ── Test Mail ─────────────────────────────────────────────
-Route::get('/test-mail', function () {
-    $result = \App\Mail\BrevoMailer::send(
-        'vienneblue@email.com',
-        'Test',
-        'Test dari Railway',
-        '<p>Ini adalah emel ujian dari Railway.</p>'
-    );
-    return $result ? 'Sent!' : 'Failed — check logs';
+    });
+
+    
 });
 
 // ── Breeze Auth ───────────────────────────────────────────
