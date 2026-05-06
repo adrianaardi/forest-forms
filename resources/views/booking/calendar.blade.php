@@ -58,7 +58,9 @@
         .bk-col-header .dnum.today { background: #1a4731; color: #fff; }
         .bk-time-gutter { font-size: 10px; color: #bbb; text-align: right; padding: 2px 6px 0 0; height: 48px; border-right: 1px solid #e0e0e0; }
         .bk-cell { border-right: 1px solid #eee; border-bottom: 1px solid #f5f5f5; height: 48px; position: relative; cursor: pointer; }
-        .bk-cell:hover { background: #f0f9f4; }
+        .bk-cell:hover {
+            background: #e6f4ea !important;
+        }
         .bk-event { position: absolute; left: 2px; right: 2px; border-radius: 4px; padding: 2px 4px; font-size: 10px; overflow: hidden; cursor: pointer; z-index: 1; background: #1a4731; color: #fff; line-height: 1.3; box-shadow: 0 1px 3px rgba(0,0,0,0.15); transition: opacity 0.1s; }
         .bk-event:hover { opacity: 0.85; }
 
@@ -70,6 +72,14 @@
             border-left: 3px solid #1a4731;
             padding: 8px 10px;
             border-radius: 6px;
+        }
+
+        .row-light {
+            background: #ffffff;
+        }
+
+        .row-dark {
+            background: #f6f8f7;
         }
 
         @media (max-width: 700px) {
@@ -251,7 +261,7 @@
                                 (int)substr($b->masa_tamat, 0, 2) > $hour
                             );
                         @endphp
-                        <div class="bk-cell"
+                        <div class="bk-cell {{ $loop->parent->index % 2 === 0 ? 'row-light' : 'row-dark' }}"
                             onclick="openBookSlot('{{ $dateStr }}', '{{ str_pad($hour, 2, '0', STR_PAD_LEFT) }}:00')">
                             @foreach($dayBookings as $b)
                                 @php
