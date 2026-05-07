@@ -19,6 +19,15 @@
 <x-navbar />
 
 <div class="pg-body" style="max-width:420px;">
+    @auth('web')
+        <div style="background:#faeeda; border:1px solid #f5d5a0; color:#854f0b; padding:0.75rem 1rem; border-radius:8px; margin-bottom:1rem; font-size:13px; display:flex; align-items:center; gap:0.75rem;">
+            <span style="font-size:18px;">⚠️</span>
+            <div>
+                <strong>Anda sedang log masuk sebagai admin.</strong><br>
+                Sila log keluar dahulu sebelum log masuk sebagai pengguna tempahan.
+            </div>
+        </div>
+    @endauth
     <div class="form-card">
         <div class="form-card-header" style="background:#194169;">
             <h2>Log Masuk — Sistem Tempahan</h2>
