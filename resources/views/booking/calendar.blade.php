@@ -455,8 +455,7 @@
 
                 </div>
 
-                <div class="form-footer" style="margin-top:0.5rem;">
-                    <button type="button" class="btn-secondary" onclick="closeBookModal()">Batal</button>
+                <div class="form-footer" style="margin-top:0.5rem; display:flex; justify-content:flex-end;">
                     <button type="submit" class="btn-submit">Sahkan Tempahan</button>
                 </div>
 
