@@ -38,7 +38,7 @@ class BookingController extends Controller
         if ($bilik) {
             $bookings = BookingRequest::with('user')
                 ->where('bilik_id', $bilik->id)
-                ->where('status', 'confirmed')
+                ->whereIn('status', ['confirmed', 'Confirmed', 'CONFIRMED'])
                 ->whereBetween('tarikh', [$weekStart->toDateString(), $weekEnd->toDateString()])
                 ->get();
         }
@@ -111,9 +111,10 @@ class BookingController extends Controller
             view('emails.booking-confirmation', compact('booking', 'bilik', 'user', 'cancelUrl'))->render()
         );
 
-        return redirect('/booking/calendar?bilik=' . $bilikId . '&week=' . $request->tarikh)
-            ->with('success', 'Tempahan berjaya! Emel pengesahan telah dihantar ke ' . $user->email);
-    }
+        return redirect('/booking/calendar?bilik=' . $bilikId)
+            ->with('success', 'Tempahan berjaya!');
+        }
+
 
     public function cancelBooking($token)
     {

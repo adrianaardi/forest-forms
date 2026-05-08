@@ -82,6 +82,60 @@
             background: #f6f8f7;
         }
 
+        .modal-body .field input {
+            font-size: 13px;
+            padding: 6px 8px;
+        }
+
+        .modal-body .field label {
+            font-size: 11px;
+            margin-bottom: 3px;
+        }
+
+        .modal-body .field-row {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-secondary {
+            padding: 8px 16px;
+            font-size: 13px;
+            border-radius: 6px;
+            border: 1px solid #c32f2f;
+            background: #df8b8b77;
+            color: #333;
+            cursor: pointer;
+        }
+
+        .btn-secondary:hover {
+            background: #eaeaea;
+        }
+
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.4);
+            justify-content: center;
+            align-items: center;
+            z-index: 999;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .past-cell {
+            background: #f1f1f1 !important;
+            color: #b5b5b5 !important;
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        .past-cell:hover {
+            background: #f1f1f1 !important;
+        }
+
         @media (max-width: 700px) {
             .bk-sidebar { display: none; }
         }
@@ -270,15 +324,21 @@
                     <div class="bk-time-gutter">{{ str_pad($hour, 2, '0', STR_PAD_LEFT) }}:00</div>
                     @foreach($days as $day)
                         @php
-                            $dateStr     = $day->toDateString();
+                            $dateStr = $day->toDateString();
+                            $isPast = \Carbon\Carbon::parse($dateStr)->lt($today);
+
                             $dayBookings = $bookings->filter(fn($b) =>
                                 $b->tarikh === $dateStr &&
                                 (int)substr($b->masa_mula, 0, 2) <= $hour &&
                                 (int)substr($b->masa_tamat, 0, 2) > $hour
                             );
                         @endphp
-                        <div class="bk-cell {{ $loop->parent->index % 2 === 0 ? 'row-light' : 'row-dark' }}"
-                            onclick="openBookSlot('{{ $dateStr }}', '{{ str_pad($hour, 2, '0', STR_PAD_LEFT) }}:00')">
+
+                        <div class="bk-cell {{ $loop->parent->index % 2 === 0 ? 'row-light' : 'row-dark' }} {{ $isPast ? 'past-cell' : '' }}"
+                            @if(!$isPast)
+                                onclick="openBookSlot('{{ $dateStr }}', '{{ str_pad($hour, 2, '0', STR_PAD_LEFT) }}:00')"
+                            @endif
+                        > 
                             @foreach($dayBookings as $b)
                                 @php
                                     $startsHere = (int)substr($b->masa_mula, 0, 2) === $hour;
@@ -292,17 +352,17 @@
                                     @endphp
                                     <div class="bk-event"
                                         style="height:{{ max($h - 4, 14) }}px; background:{{ $isOwn ? '#7ec99a' : '#1a4731' }}; color:{{ $isOwn ? '#14381f' : '#fff' }};"
-                                        onclick="event.stopPropagation(); showEvent(
-                                            '{{ addslashes($b->tajuk_mesyuarat) }}',
-                                            '{{ addslashes($b->user->name) }}',
-                                            '{{ addslashes($b->user->bahagian ?? '-') }}',
-                                            '{{ substr($b->masa_mula,0,5) }}',
-                                            '{{ substr($b->masa_tamat,0,5) }}',
-                                            '{{ $day->translatedFormat('d F Y') }}',
-                                            {{ $b->id }},
-                                            '{{ $b->cancel_token }}',
-                                            {{ $isOwn ? 'true' : 'false' }}
-                                        )"
+                                        onclick='event.stopPropagation(); showEvent(
+                                            @json($b->tajuk_mesyuarat),
+                                            @json($b->user->name),
+                                            @json($b->user->bahagian ?? "-"),
+                                            @json(substr($b->masa_mula,0,5)),
+                                            @json(substr($b->masa_tamat,0,5)),
+                                            @json($day->translatedFormat("d F Y")),
+                                            @json($b->id),
+                                            @json($b->cancel_token),
+                                            @json($isOwn)
+                                        )'
                                         title="{{ $b->tajuk_mesyuarat }} — {{ $b->user->name }}">
                                         <strong>{{ Str::limit($b->tajuk_mesyuarat, 22) }}</strong><br>
                                         {{ substr($b->masa_mula,0,5) }}–{{ substr($b->masa_tamat,0,5) }}
@@ -353,46 +413,130 @@
     </div>
 </div>
 
+<div class="modal-overlay" id="bookModal" onclick="if(event.target===this)closeBookModal()">
+    <div class="modal" style="max-width:520px;">
+
+        <div class="modal-header">
+            <h2 style="font-size:15px;">Buat Tempahan</h2>
+            <button class="modal-close" onclick="closeBookModal()">×</button>
+        </div>
+
+        <div class="modal-body">
+
+        <form method="POST" action="{{ route('booking.book.store', $bilik->id) }}">
+                @csrf
+
+                <div class="form-section">
+
+                    <div style="background:#f0f4f1; border:1px solid #dde8e1; border-radius:8px; padding:0.6rem 0.9rem; margin-bottom:0.8rem; font-size:12px; color:#444;">
+                        {{ $bilik->nama_bilik }} — {{ $bilik->aras }}, {{ $bilik->wing }}
+                    </div>
+
+                    <div class="field">
+                        <label>Tajuk Mesyuarat</label>
+                        <input type="text" name="tajuk_mesyuarat" placeholder="Cth: Mesyuarat Jabatan">
+                    </div>
+
+                    <div class="field">
+                        <label>Tarikh</label>
+                        <input type="date" id="bk-tarikh" name="tarikh">
+                    </div>
+
+                    <div class="field-row">
+                        <div class="field">
+                            <label>Masa Mula</label>
+                            <input type="time" id="bk-mula" name="masa_mula">
+                        </div>
+
+                        <div class="field">
+                            <label>Masa Tamat</label>
+                            <input type="time" id="bk-tamat" name="masa_tamat">
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="form-footer" style="margin-top:0.5rem;">
+                    <button type="button" class="btn-secondary" onclick="closeBookModal()">Batal</button>
+                    <button type="submit" class="btn-submit">Sahkan Tempahan</button>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+</div>
+
 <footer>
     <div><strong>Jabatan Hutan Sarawak</strong> &nbsp;|&nbsp; Wisma Sumber Alam, Petra Jaya, 93660 Kuching, Sarawak</div>
     <div>© 2025 Jabatan Hutan Sarawak. Hak Cipta Terpelihara.</div>
 </footer>
 
 <script>
-function showEvent(tajuk, nama, bahagian, mula, tamat, tarikh, bookingId, cancelToken, isOwn) {
-    document.getElementById('ev-tajuk').textContent    = tajuk;
-    document.getElementById('ev-nama').textContent     = nama;
-    document.getElementById('ev-bahagian').textContent = bahagian;
-    document.getElementById('ev-masa').textContent     = mula + ' – ' + tamat;
-    document.getElementById('ev-tarikh').textContent   = tarikh;
+function openBookSlot(date, time) {
+    const wrap = document.querySelector('.bk-grid-wrap');
+    if (!wrap) {
+        console.error('bk-grid-wrap not found');
+        return;
+    }
 
-    var cancelWrap = document.getElementById('ev-cancel-wrap');
-    var cancelForm = document.getElementById('ev-cancel-form');
+    const isAuth = wrap.dataset.auth === '1';
+    const bilikId = wrap.dataset.bilik;
+
+    if (!bilikId) {
+        console.error('bilikId missing');
+        return;
+    }
+
+    if (!isAuth) {
+        window.location = '/booking/login';
+        return;
+    }
+
+    const modal = document.getElementById('bookModal');
+    if (!modal) {
+        console.error('bookModal not found');
+        return;
+    }
+
+    // Prefill values
+    document.getElementById('bk-tarikh').value = date;
+    document.getElementById('bk-mula').value = time;
+
+    let [h, m] = time.split(':');
+    let endHour = String(parseInt(h) + 1).padStart(2, '0');
+    document.getElementById('bk-tamat').value = endHour + ':' + m;
+
+    // OPEN MODAL
+    modal.classList.add('active');
+}
+
+function showEvent(tajuk, nama, bahagian, mula, tamat, tarikh, bookingId, cancelToken, isOwn) {
+    document.getElementById('ev-tajuk').textContent = tajuk;
+    document.getElementById('ev-nama').textContent = nama;
+    document.getElementById('ev-bahagian').textContent = bahagian;
+    document.getElementById('ev-masa').textContent = mula + ' – ' + tamat;
+    document.getElementById('ev-tarikh').textContent = tarikh;
+
+    const wrap = document.getElementById('ev-cancel-wrap');
+    const form = document.getElementById('ev-cancel-form');
 
     if (isOwn) {
-        cancelForm.action = '/booking/cancel/' + cancelToken;
-        cancelWrap.style.display = 'block';
+        form.action = '/booking/cancel/' + cancelToken;
+        wrap.style.display = 'block';
     } else {
-        cancelWrap.style.display = 'none';
+        wrap.style.display = 'none';
     }
 
     document.getElementById('eventModal').classList.add('active');
 }
 
 function closeEvent() {
-    document.getElementById('eventModal').classList.remove('active');
+    document.getElementById('eventModal')?.classList.remove('active');
 }
 
-function openBookSlot(date, time) {
-    var wrap    = document.querySelector('.bk-grid-wrap');
-    var isAuth  = wrap.dataset.auth === '1';
-    var bilikId = wrap.dataset.bilik;
-    if (!bilikId) return;
-    if (isAuth) {
-        window.location = '/booking/book/' + bilikId + '?tarikh=' + date + '&masa_mula=' + time;
-    } else {
-        window.location = '/booking/login';
-    }
+function closeBookModal() {
+    document.getElementById('bookModal')?.classList.remove('active');
 }
 </script>
 
