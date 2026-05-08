@@ -4,8 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Buat Tempahan — {{ $bilik->nama_bilik }}</title>
-            <link rel="icon" href="{{ asset('images/logo-icon.png')}}">
-
+    <link rel="icon" href="{{ asset('images/logo-icon.png')}}">
     <link rel="stylesheet" href="{{ asset('style.css') }}">
 </head>
 <body>
@@ -18,7 +17,7 @@
 </header>
 <x-navbar />
 
-<div class="pg-body" style="max-width:560px;">
+<div class="pg-body" style="max-width:520px;">
     <div class="form-card">
         <div class="form-card-header">
             <h2>Buat Tempahan</h2>
@@ -26,9 +25,7 @@
         </div>
         <form method="POST" action="{{ route('booking.book.store', $bilik->id) }}">
             @csrf
-
             <div class="form-section">
-                <div class="section-label">Maklumat Mesyuarat</div>
 
                 @if(session('error'))
                     <div style="background:#fdf0f0; border:1px solid #f5c1c1; color:#a32d2d; padding:0.75rem 1rem; border-radius:8px; margin-bottom:1rem; font-size:13px;">
@@ -42,6 +39,10 @@
                         </ul>
                     </div>
                 @endif
+
+                <div style="background:#f0f4f1; border:1px solid #dde8e1; border-radius:8px; padding:0.75rem 1rem; margin-bottom:1rem; font-size:13px; color:#444;">
+                    Tempahan sebagai <strong>{{ $user->name }}</strong> ({{ $user->bahagian ?? '-' }})
+                </div>
 
                 <div class="field">
                     <label>Tajuk Mesyuarat <span class="required">*</span></label>
@@ -63,20 +64,6 @@
                     </div>
                 </div>
             </div>
-
-            <div class="form-section">
-                <div class="section-label">Pengesahan Identiti</div>
-                <p style="font-size:12px; color:#777; margin-bottom:0.75rem;">Masukkan emel dan kata laluan akaun anda untuk mengesahkan tempahan.</p>
-                <div class="field">
-                    <label>Emel <span class="required">*</span></label>
-                    <input type="email" name="email" value="{{ old('email', $user?->email) }}" placeholder="emel@domain.com" required>
-                </div>
-                <div class="field">
-                    <label>Kata Laluan <span class="required">*</span></label>
-                    <input type="password" name="password" placeholder="••••••••" required>
-                </div>
-            </div>
-
             <div class="form-footer">
                 <a href="/booking/calendar?bilik={{ $bilik->id }}" class="btn-back">← Kembali</a>
                 <button type="submit" class="btn-submit">Sahkan Tempahan</button>

@@ -53,11 +53,6 @@
             </div>
         </div>
 
-        <div class="cancel-box">
-            <p>Jika anda ingin membatalkan atau mengubah tempahan ini, sila batalkan dan buat tempahan baharu melalui sistem. Klik butang di bawah untuk membatalkan.</p>
-            <a href="{{ $cancelUrl }}" class="btn-cancel">Batalkan Tempahan</a>
-        </div>
-
         <p style="margin-top:1.5rem; font-size:12px; color:#999;">Jika anda tidak membuat tempahan ini, sila abaikan emel ini.</p>
     </div>
     <div class="footer">

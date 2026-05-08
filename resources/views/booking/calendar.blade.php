@@ -98,6 +98,22 @@
 </header>
 <x-navbar />
 
+@if(session('success') || session('info'))
+    <div id="flash-msg" style="position:fixed; top:1rem; right:1rem; z-index:999; padding:0.75rem 1.25rem; border-radius:8px; font-size:13px; font-weight:500; box-shadow:0 2px 12px rgba(0,0,0,0.15); transition:opacity 0.5s;
+        {{ session('success') ? 'background:#eaf3de; color:#27500a; border:1px solid #c0dd97;' : 'background:#e6f1fb; color:#0c447c; border:1px solid #b5d4f4;' }}">
+        {{ session('success') ?? session('info') }}
+    </div>
+    <script>
+        setTimeout(function() {
+            var el = document.getElementById('flash-msg');
+            if (el) {
+                el.style.opacity = '0';
+                setTimeout(function() { el.remove(); }, 500);
+            }
+        }, 3000);
+    </script>
+@endif
+
 @php
     $today      = \Carbon\Carbon::today();
     $prevWeek   = $weekStart->copy()->subWeek()->toDateString();
@@ -270,15 +286,22 @@
                                     $h = ($mins / 60) * 48;
                                 @endphp
                                 @if($startsHere)
+                                    @php
+                                        $isOwn = Auth::guard('booking_user')->check() &&
+                                                Auth::guard('booking_user')->user()->id === $b->user_id;
+                                    @endphp
                                     <div class="bk-event"
-                                        style="height:{{ max($h - 4, 14) }}px;"
+                                        style="height:{{ max($h - 4, 14) }}px; background:{{ $isOwn ? '#7ec99a' : '#1a4731' }}; color:{{ $isOwn ? '#14381f' : '#fff' }};"
                                         onclick="event.stopPropagation(); showEvent(
                                             '{{ addslashes($b->tajuk_mesyuarat) }}',
                                             '{{ addslashes($b->user->name) }}',
                                             '{{ addslashes($b->user->bahagian ?? '-') }}',
                                             '{{ substr($b->masa_mula,0,5) }}',
                                             '{{ substr($b->masa_tamat,0,5) }}',
-                                            '{{ $day->translatedFormat('d F Y') }}'
+                                            '{{ $day->translatedFormat('d F Y') }}',
+                                            {{ $b->id }},
+                                            '{{ $b->cancel_token }}',
+                                            {{ $isOwn ? 'true' : 'false' }}
                                         )"
                                         title="{{ $b->tajuk_mesyuarat }} — {{ $b->user->name }}">
                                         <strong>{{ Str::limit($b->tajuk_mesyuarat, 22) }}</strong><br>
@@ -316,6 +339,16 @@
                     <label>Bahagian</label><p id="ev-bahagian"></p>
                 </div>
             </div>
+            <div id="ev-cancel-wrap" style="display:none; margin-top:0.75rem;">
+                <p style="font-size:12px; color:#777; margin-bottom:0.5rem;">Ini adalah tempahan anda.</p>
+                <form id="ev-cancel-form" method="POST">
+                    @csrf
+                    <button type="submit" class="btn-delete" style="padding:8px 16px; font-size:13px; cursor:pointer;"
+                        onclick="return confirm('Batalkan tempahan ini?')">
+                        Batalkan Tempahan
+                    </button>
+                </form>
+            </div>
         </div>
     </div>
 </div>
@@ -326,12 +359,23 @@
 </footer>
 
 <script>
-function showEvent(tajuk, nama, bahagian, mula, tamat, tarikh) {
+function showEvent(tajuk, nama, bahagian, mula, tamat, tarikh, bookingId, cancelToken, isOwn) {
     document.getElementById('ev-tajuk').textContent    = tajuk;
     document.getElementById('ev-nama').textContent     = nama;
     document.getElementById('ev-bahagian').textContent = bahagian;
     document.getElementById('ev-masa').textContent     = mula + ' – ' + tamat;
     document.getElementById('ev-tarikh').textContent   = tarikh;
+
+    var cancelWrap = document.getElementById('ev-cancel-wrap');
+    var cancelForm = document.getElementById('ev-cancel-form');
+
+    if (isOwn) {
+        cancelForm.action = '/booking/cancel/' + cancelToken;
+        cancelWrap.style.display = 'block';
+    } else {
+        cancelWrap.style.display = 'none';
+    }
+
     document.getElementById('eventModal').classList.add('active');
 }
 

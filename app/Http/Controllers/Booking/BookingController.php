@@ -58,53 +58,39 @@ class BookingController extends Controller
     public function storeBook(Request $request, $bilikId)
     {
         $bilik = BookingBilik::findOrFail($bilikId);
+        $user  = Auth::guard('booking_user')->user();
+
+        if (!$user) {
+            return redirect('/booking/login')->with('error', 'Sila log masuk untuk membuat tempahan.');
+        }
 
         $request->validate([
             'tajuk_mesyuarat' => 'required|string|max:255',
             'tarikh'          => 'required|date|after_or_equal:today',
             'masa_mula'       => 'required',
             'masa_tamat'      => 'required|after:masa_mula',
-            'email'           => 'required|email',
-            'password'        => 'required',
         ]);
 
-        // verify user
-        $user = BookingUser::where('email', $request->email)->first();
-
-        if (!$user || !Hash::check($request->password, $user->password)) {
-            return back()->with('error', 'Emel atau kata laluan tidak sah.')->withInput();
-        }
-
-        if ($user->status === 'pending') {
-            return back()->with('error', 'Akaun anda masih menunggu kelulusan admin.')->withInput();
-        }
-
-        if ($user->status === 'rejected') {
-            return back()->with('error', 'Akaun anda telah ditolak.')->withInput();
-        }
-
-        // validate time range 8am-5pm
-        $mula  = Carbon::parse($request->masa_mula);
-        $tamat = Carbon::parse($request->masa_tamat);
+        $mula  = \Carbon\Carbon::parse($request->masa_mula);
+        $tamat = \Carbon\Carbon::parse($request->masa_tamat);
 
         if ($mula->hour < 8 || $tamat->hour > 17 || ($tamat->hour == 17 && $tamat->minute > 0)) {
             return back()->with('error', 'Masa tempahan mestilah dalam lingkungan 8:00 pagi hingga 5:00 petang.')->withInput();
         }
 
-        // check conflict
         $conflict = BookingRequest::where('bilik_id', $bilikId)
             ->where('tarikh', $request->tarikh)
             ->where('status', 'confirmed')
             ->where(function ($q) use ($request) {
                 $q->where('masa_mula', '<', $request->masa_tamat)
-                  ->where('masa_tamat', '>', $request->masa_mula);
+                ->where('masa_tamat', '>', $request->masa_mula);
             })->exists();
 
         if ($conflict) {
             return back()->with('error', 'Masa yang dipilih telah ditempah. Sila pilih masa lain.')->withInput();
         }
 
-        $token = Str::random(40);
+        $token = \Illuminate\Support\Str::random(40);
 
         $booking = BookingRequest::create([
             'user_id'         => $user->id,
@@ -117,9 +103,8 @@ class BookingController extends Controller
             'cancel_token'    => $token,
         ]);
 
-        // send confirmation email
         $cancelUrl = url('/booking/cancel/' . $token);
-        BrevoMailer::send(
+        \App\Mail\BrevoMailer::send(
             $user->email,
             $user->name,
             'Pengesahan Tempahan — ' . $bilik->nama_bilik,
@@ -135,11 +120,13 @@ class BookingController extends Controller
         $booking = BookingRequest::with(['user', 'bilik'])->where('cancel_token', $token)->firstOrFail();
 
         if ($booking->status === 'cancelled') {
-            return view('booking.cancelled', ['alreadyCancelled' => true, 'booking' => $booking]);
+            return redirect('/booking/calendar?bilik=' . $booking->bilik_id)
+                ->with('info', 'Tempahan ini telah pun dibatalkan sebelum ini.');
         }
 
         $booking->update(['status' => 'cancelled']);
 
-        return view('booking.cancelled', ['alreadyCancelled' => false, 'booking' => $booking]);
+        return redirect('/booking/calendar?bilik=' . $booking->bilik_id)
+            ->with('success', 'Tempahan berjaya dibatalkan.');
     }
 }
