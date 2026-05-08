@@ -96,6 +96,7 @@ class BookingController extends Controller
             'user_id'         => $user->id,
             'bilik_id'        => $bilikId,
             'tajuk_mesyuarat' => $request->tajuk_mesyuarat,
+            'remarks'         => $request->remarks,
             'tarikh'          => $request->tarikh,
             'masa_mula'       => $request->masa_mula,
             'masa_tamat'      => $request->masa_tamat,

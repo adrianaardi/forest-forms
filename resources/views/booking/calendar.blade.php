@@ -359,6 +359,7 @@
                                             @json(substr($b->masa_mula,0,5)),
                                             @json(substr($b->masa_tamat,0,5)),
                                             @json($day->translatedFormat("d F Y")),
+                                            @json($b->remarks),
                                             @json($b->id),
                                             @json($b->cancel_token),
                                             @json($isOwn)
@@ -395,8 +396,12 @@
                     <div class="detail-field"><label>Masa</label><p id="ev-masa"></p></div>
                     <div class="detail-field"><label>Pemohon</label><p id="ev-nama"></p></div>
                 </div>
-                <div class="detail-field" style="margin-top:0.5rem;">
-                    <label>Bahagian</label><p id="ev-bahagian"></p>
+                <div class="detail-row">
+                    <div class="detail-field" style="margin-top:0.5rem;">
+                        <label>Bahagian</label><p id="ev-bahagian"></p>
+                    </div>
+                </div>
+                    <div class="detail-field"><label>Remarks</label><p id="ev-remarks"></p>
                 </div>
             </div>
             <div id="ev-cancel-wrap" style="display:none; margin-top:0.75rem;">
@@ -434,6 +439,11 @@
                     <div class="field">
                         <label>Tajuk Mesyuarat</label>
                         <input type="text" name="tajuk_mesyuarat" placeholder="Cth: Mesyuarat Jabatan" required>
+                    </div>
+
+                    <div class="field">
+                        <label>Remarks</label>
+                        <textarea name="remarks" rows="3" placeholder="Contoh: Perlu projector, meeting penting..." required></textarea>
                     </div>
 
                     <div class="field">
@@ -509,12 +519,13 @@ function openBookSlot(date, time) {
     modal.classList.add('active');
 }
 
-function showEvent(tajuk, nama, bahagian, mula, tamat, tarikh, bookingId, cancelToken, isOwn) {
+function showEvent(tajuk, nama, bahagian, mula, tamat, tarikh, remarks, bookingId, cancelToken, isOwn) {
     document.getElementById('ev-tajuk').textContent = tajuk;
     document.getElementById('ev-nama').textContent = nama;
     document.getElementById('ev-bahagian').textContent = bahagian;
     document.getElementById('ev-masa').textContent = mula + ' – ' + tamat;
     document.getElementById('ev-tarikh').textContent = tarikh;
+    document.getElementById('ev-remarks').textContent = remarks ?? '-';
 
     const wrap = document.getElementById('ev-cancel-wrap');
     const form = document.getElementById('ev-cancel-form');

@@ -10,7 +10,7 @@ class BookingRequest extends Model
 
     protected $fillable = [
         'user_id', 'bilik_id', 'tajuk_mesyuarat',
-        'tarikh', 'masa_mula', 'masa_tamat',
+        'remarks', 'tarikh', 'masa_mula', 'masa_tamat',
         'status', 'cancel_token',
     ];
 
