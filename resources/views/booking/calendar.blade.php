@@ -433,23 +433,23 @@
 
                     <div class="field">
                         <label>Tajuk Mesyuarat</label>
-                        <input type="text" name="tajuk_mesyuarat" placeholder="Cth: Mesyuarat Jabatan">
+                        <input type="text" name="tajuk_mesyuarat" placeholder="Cth: Mesyuarat Jabatan" required>
                     </div>
 
                     <div class="field">
                         <label>Tarikh</label>
-                        <input type="date" id="bk-tarikh" name="tarikh">
+                        <input type="date" id="bk-tarikh" name="tarikh" required>
                     </div>
 
                     <div class="field-row">
                         <div class="field">
                             <label>Masa Mula</label>
-                            <input type="time" id="bk-mula" name="masa_mula">
+                            <input type="time" id="bk-mula" name="masa_mula" required step="60">
                         </div>
 
                         <div class="field">
                             <label>Masa Tamat</label>
-                            <input type="time" id="bk-tamat" name="masa_tamat">
+                            <input type="time" id="bk-tamat" name="masa_tamat" required step="60">
                         </div>
                     </div>
 
