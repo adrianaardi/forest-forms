@@ -423,7 +423,7 @@
 
         <div class="modal-body">
 
-        <form method="POST" action="{{ route('booking.book.store', $bilik->id) }}">
+        <form method="POST" action="{{ route('booking.book.store', data-bilik="{{ $bilik?->id }}") }}">
                 @csrf
 
                 <div class="form-section">
