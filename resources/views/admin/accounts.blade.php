@@ -103,7 +103,7 @@
                 <tr>
                     <th>Nama</th>
                     <th>Email</th>
-                    <th>Wilayah</th>
+                    <th>Wilayah  </th>
                     <th>Tarikh Daftar</th>
                     <th>Tindakan</th>
                 </tr>
