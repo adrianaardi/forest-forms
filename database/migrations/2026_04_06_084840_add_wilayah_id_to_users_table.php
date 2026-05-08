@@ -6,17 +6,13 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->foreignId('wilayah_id')
-                ->nullable()
-                ->constrained('wilayahs')
-                ->onDelete('set null');
-        });
+        if (!Schema::hasColumn('users', 'wilayah_id')) {
+            Schema::table('users', function (Blueprint $table) {
+                $table->foreignId('wilayah_id')->nullable()->constrained('wilayahs')->nullOnDelete();
+            });
+        }
     }
 
     /**
