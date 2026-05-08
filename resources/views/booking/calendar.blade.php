@@ -423,13 +423,12 @@
 
         <div class="modal-body">
 
-        <form method="POST" action="{{ route('booking.book.store', data-bilik="{{ $bilik?->id }}") }}">
-                @csrf
+<form method="POST" action="{{ $bilik ? route('booking.book.store', $bilik->id) : '#' }}">                @csrf
 
                 <div class="form-section">
 
                     <div style="background:#f0f4f1; border:1px solid #dde8e1; border-radius:8px; padding:0.6rem 0.9rem; margin-bottom:0.8rem; font-size:12px; color:#444;">
-                        {{ $bilik->nama_bilik }} — {{ $bilik->aras }}, {{ $bilik->wing }}
+                        {{ $bilik?->nama_bilik }} — {{ $bilik?->aras }}, {{ $bilik?->wing }}
                     </div>
 
                     <div class="field">
