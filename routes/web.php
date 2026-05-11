@@ -92,9 +92,9 @@ Route::prefix('booking')->name('booking.')->group(function () {
     // public
     Route::get('/',               [BookingController::class, 'index'])->name('home');
     Route::get('/calendar',       [BookingController::class, 'calendar'])->name('calendar');
-Route::post('/cancel/{token}', [BookingController::class, 'cancelBooking'])->name('cancel');    Route::get('/book/{bilik}',   [BookingController::class, 'showBook'])->name('book');
-    Route::post('/book/{bilik}',  [BookingController::class, 'storeBook'])->name('book.store');
-
+    Route::post('/cancel/{token}', [BookingController::class, 'cancelBooking'])->name('cancel');    Route::get('/book/{bilik}',   [BookingController::class, 'showBook'])->name('book');
+    Route::get('/book/{bilik?}', [BookingController::class, 'showBook'])->name('book');
+    Route::post('/book', [BookingController::class, 'storeBook'])->name('book.store');
     // auth
     Route::get('/login',  [BookingAuthController::class, 'showLogin'])->name('login');
     Route::post('/login', [BookingAuthController::class, 'login'])->name('login.post');

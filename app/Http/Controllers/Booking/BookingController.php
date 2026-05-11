@@ -46,18 +46,22 @@ class BookingController extends Controller
         return view('booking.calendar', compact('bilikList', 'bilik', 'bookings', 'weekStart', 'weekEnd'));
     }
 
-    public function showBook(Request $request, $bilikId)
+   public function showBook(Request $request, $bilikId = null)
     {
-        $bilik  = BookingBilik::findOrFail($bilikId);
-        $tarikh = $request->get('tarikh', Carbon::today()->toDateString());
-        $user   = Auth::guard('booking_user')->user();
+        $bilikList = BookingBilik::orderBy('aras')->orderBy('nama_bilik')->get();
+        $bilik     = $bilikId ? BookingBilik::find($bilikId) : null;
+        $tarikh    = $request->get('tarikh', \Carbon\Carbon::today()->toDateString());
+        $user      = Auth::guard('booking_user')->user();
 
-        return view('booking.book', compact('bilik', 'tarikh', 'user'));
+        if (!$user) return redirect('/booking/login');
+
+        return view('booking.book', compact('bilikList', 'bilik', 'tarikh', 'user'));
     }
 
-    public function storeBook(Request $request, $bilikId)
+    public function storeBook(Request $request, $bilikId = null)
     {
-        $bilik = BookingBilik::findOrFail($bilikId);
+        $bilikId = $bilikId ?? $request->bilik_id;
+        $bilik   = BookingBilik::findOrFail($bilikId);
         $user  = Auth::guard('booking_user')->user();
 
         if (!$user) {

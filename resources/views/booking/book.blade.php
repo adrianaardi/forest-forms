@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Buat Tempahan — {{ $bilik->nama_bilik }}</title>
+    <title>Buat Tempahan</title>
     <link rel="icon" href="{{ asset('images/logo-icon.png')}}">
     <link rel="stylesheet" href="{{ asset('style.css') }}">
 </head>
@@ -17,13 +17,13 @@
 </header>
 <x-navbar />
 
-<div class="pg-body" style="max-width:520px;">
+<div class="pg-body" style="max-width:560px;">
     <div class="form-card">
         <div class="form-card-header">
             <h2>Buat Tempahan</h2>
-            <p>{{ $bilik->nama_bilik }} — {{ $bilik->aras }}, {{ $bilik->wing }}</p>
+            <p>Isi butiran tempahan bilik mesyuarat anda.</p>
         </div>
-        <form method="POST" action="{{ route('booking.book.store', $bilik->id) }}">
+        <form method="POST" action="{{ route('booking.book.store') }}">
             @csrf
             <div class="form-section">
 
@@ -45,27 +45,57 @@
                 </div>
 
                 <div class="field">
-                    <label>Tajuk Mesyuarat <span class="required">*</span></label>
-                    <input type="text" name="tajuk_mesyuarat" value="{{ old('tajuk_mesyuarat') }}" placeholder="Cth: Mesyuarat Jabatan Q2" required>
+                    <label>Bilik Mesyuarat <span class="required">*</span></label>
+                    <select name="bilik_id" required onchange="updateCalendarLink(this.value)">
+                        <option value="">-- Pilih Bilik --</option>
+                        @foreach($bilikList->groupBy('aras') as $aras => $rooms)
+                            <optgroup label="{{ $aras }}">
+                                @foreach($rooms as $room)
+                                    <option value="{{ $room->id }}"
+                                        {{ old('bilik_id', $bilik?->id) == $room->id ? 'selected' : '' }}>
+                                        {{ $room->nama_bilik }} ({{ $room->wing }})
+                                    </option>
+                                @endforeach
+                            </optgroup>
+                        @endforeach
+                    </select>
                 </div>
+
+                <div class="field">
+                    <label>Tajuk Mesyuarat <span class="required">*</span></label>
+                    <input type="text" name="tajuk_mesyuarat" value="{{ old('tajuk_mesyuarat') }}"
+                        placeholder="Cth: Mesyuarat Jabatan Q2" required>
+                </div>
+
+                <div class="field">
+                    <label>Remarks</label>
+                    <textarea name="remarks" rows="2" placeholder="Cth: Perlu projector, whiteboard..." style="resize:none;">{{ old('remarks') }}</textarea>
+                </div>
+
                 <div class="field">
                     <label>Tarikh <span class="required">*</span></label>
                     <input type="date" name="tarikh" value="{{ old('tarikh', $tarikh) }}"
                         min="{{ \Carbon\Carbon::today()->toDateString() }}" required>
                 </div>
+
                 <div class="field-row">
                     <div class="field">
                         <label>Masa Mula <span class="required">*</span></label>
-                        <input type="time" name="masa_mula" value="{{ old('masa_mula', request('masa_mula', '08:00')) }}" min="08:00" max="17:00" required>
+                        <input type="time" name="masa_mula"
+                            value="{{ old('masa_mula', request('masa_mula', '08:00')) }}"
+                            min="08:00" max="17:00" required>
                     </div>
                     <div class="field">
                         <label>Masa Tamat <span class="required">*</span></label>
-                        <input type="time" name="masa_tamat" value="{{ old('masa_tamat', '09:00') }}" min="08:00" max="17:00" required>
+                        <input type="time" name="masa_tamat"
+                            value="{{ old('masa_tamat', '09:00') }}"
+                            min="08:00" max="17:00" required>
                     </div>
                 </div>
+
             </div>
             <div class="form-footer">
-                <a href="/booking/calendar?bilik={{ $bilik->id }}" class="btn-back">← Kembali</a>
+                <a id="back-link" href="/booking/calendar{{ $bilik ? '?bilik='.$bilik->id : '' }}" class="btn-back">← Kembali</a>
                 <button type="submit" class="btn-submit">Sahkan Tempahan</button>
             </div>
         </form>
@@ -76,5 +106,12 @@
     <div><strong>Jabatan Hutan Sarawak</strong> &nbsp;|&nbsp; Wisma Sumber Alam, Petra Jaya, 93660 Kuching, Sarawak</div>
     <div>© 2025 Jabatan Hutan Sarawak. Hak Cipta Terpelihara.</div>
 </footer>
+
+<script>
+function updateCalendarLink(bilikId) {
+    const link = document.getElementById('back-link');
+    link.href = bilikId ? '/booking/calendar?bilik=' + bilikId : '/booking/calendar';
+}
+</script>
 </body>
 </html>
