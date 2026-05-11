@@ -24,7 +24,7 @@
             <a href="/admin/profile"
                class="{{ request()->is('admin/profile*') ? 'active' : '' }}"
                style="font-size:13px; color:rgba(255,255,255,0.7);">
-                👤 {{ Auth::guard('web')->user()->name }}
+                 {{ Auth::guard('web')->user()->name }}
             </a>
             <form method="POST" action="{{ $email === 'admin.booking@sarawak.gov.my' ? route('booking.admin.logout') : route('logout') }}">
                 @csrf
@@ -42,7 +42,7 @@
             <a href="/booking/profile"
             class="{{ request()->is('booking/profile*') ? 'active' : '' }}"
             style="font-size:13px; color:rgba(255,255,255,0.7); text-decoration:none;">
-                👤 {{ Auth::guard('booking_user')->user()->name }}
+                 {{ Auth::guard('booking_user')->user()->name }}
             </a>
             <form method="POST" action="{{ route('booking.logout') }}">
                 @csrf

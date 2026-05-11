@@ -69,8 +69,8 @@
 </div>
 
 <footer>
-    <div><strong>Jabatan Hutan Sarawak</strong> &nbsp;|&nbsp; Wisma Sumber Alam, Petra Jaya, 93660 Kuching, Sarawak</div>
-    <div>© 2025 Jabatan Hutan Sarawak. Hak Cipta Terpelihara.</div>
+    <div><strong>Jabatan Hutan Sarawak</strong> &nbsp;|&nbsp; Bangunan Baitul Makmur II, Medan Raya, Petra Jaya, 93050 Kuching, Sarawak</div>
+    <div>© <?php echo date("Y"); ?> Jabatan Hutan Sarawak. Hak Cipta Terpelihara.</div>
 </footer>
 </body>
 </html>
