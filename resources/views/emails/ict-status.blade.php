@@ -51,7 +51,7 @@
 
     <div class="header">
         <h1>Jabatan Hutan Sarawak</h1>
-        <p>Sistem Perkhidmatan Dalaman — Kemaskini Status Aduan</p>
+        <p> Hub Aplikasi Perkhidmatan Atas Talian</p>
     </div>
 
     <div class="body">
@@ -124,7 +124,7 @@
     </div>
 
     <div class="footer">
-        Emel ini dihantar secara automatik oleh Sistem Perkhidmatan Dalaman Jabatan Hutan Sarawak. Sila jangan balas emel ini.
+        Emel ini dihantar secara automatik oleh Hub Aplikasi Perkhidmatan Atas Talian Jabatan Hutan Sarawak. Sila jangan balas emel ini.
     </div>
 
 </div>

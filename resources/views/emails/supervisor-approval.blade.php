@@ -23,7 +23,7 @@
 <div class="container">
     <div class="header">
         <h1>Jabatan Hutan Sarawak</h1>
-        <p>Sistem Perkhidmatan Dalaman — Permohonan Muat Naik Portal</p>
+        <p> Hub Aplikasi Perkhidmatan Atas Talian</p>
     </div>
     <div class="body">
         <p>Salam hormat,</p>
@@ -59,7 +59,7 @@
         <p style="margin-top:1.5rem; font-size:12px; color:#999;">Jika anda tidak dapat tekan butang di atas, salin pautan berikut ke pelayar anda:<br>{{ $approvalUrl }}</p>
     </div>
     <div class="footer">
-        Emel ini dihantar secara automatik oleh Sistem Perkhidmatan Dalaman Jabatan Hutan Sarawak. Sila jangan balas emel ini.
+        Emel ini dihantar secara automatik oleh Hub Aplikasi Perkhidmatan Atas Talian Jabatan Hutan Sarawak. Sila jangan balas emel ini.
     </div>
 </div>
 </body>

@@ -24,7 +24,7 @@
 <div class="container">
     <div class="header">
         <h1>Jabatan Hutan Sarawak</h1>
-        <p>Sistem Tempahan Bilik Mesyuarat — Pengesahan Tempahan</p>
+        <p> Hub Aplikasi Perkhidmatan Atas Talian</p>
     </div>
     <div class="body">
         <p>Salam hormat <strong>{{ $user->name }}</strong>,</p>

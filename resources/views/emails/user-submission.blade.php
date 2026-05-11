@@ -26,7 +26,7 @@
 <div class="container">
     <div class="header">
         <h1>Jabatan Hutan Sarawak</h1>
-        <p>Sistem Perkhidmatan Dalaman — Pengesahan Permohonan</p>
+        <p> Hub Aplikasi Perkhidmatan Atas Talian</p>
     </div>
     <div class="body">
         <p>Salam hormat <strong>{{ $permohonan->nama }}</strong>,</p>
@@ -66,7 +66,7 @@
         <a href="{{ url('/semak-tiket') }}" class="btn">Semak Status Permohonan</a>
     </div>
     <div class="footer">
-        Emel ini dihantar secara automatik oleh Sistem Perkhidmatan Dalaman Jabatan Hutan Sarawak. Sila jangan balas emel ini.
+        Emel ini dihantar secara automatik oleh Hub Aplikasi Perkhidmatan Atas Talian Jabatan Hutan Sarawak. Sila jangan balas emel ini.
     </div>
 </div>
 </body>
