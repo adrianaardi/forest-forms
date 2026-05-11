@@ -69,7 +69,7 @@
 
                 <div class="field">
                     <label>Remarks</label>
-                    <textarea name="remarks" rows="2" placeholder="Cth: Perlu projector, whiteboard..." style="resize:none;">{{ old('remarks') }}</textarea>
+                    <textarea name="remarks" rows="2"  style="resize:none;">{{ old('remarks') }}</textarea>
                 </div>
 
                 <div class="field">

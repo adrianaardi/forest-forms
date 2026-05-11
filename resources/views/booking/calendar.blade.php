@@ -299,7 +299,7 @@
             </span>
             @if($bilik)
                 @auth('booking_user')
-                    <a href="/booking/book/{{ $bilik->id }}" class="btn-submit" style="text-decoration:none; font-size:12px; padding:6px 14px;">+ Tempah</a>
+                    <a href="/booking/book" class="btn-submit" style="text-decoration:none; font-size:12px; padding:6px 14px;">+ Tempah</a>
                 @else
                     <a href="/booking/login" style="text-decoration:none; font-size:12px; padding:6px 14px; background:#888; color:#fff; border-radius:6px;">Log Masuk untuk Tempah</a>
                 @endauth
@@ -418,8 +418,9 @@
             <button class="modal-close" onclick="closeBookModal()">×</button>
         </div>
         <div class="modal-body">
-            <form method="POST" action="{{ $bilik ? route('booking.book.store', $bilik->id) : '#' }}">
-                @csrf
+            <form method="POST" action="{{ route('booking.book.store') }}">
+            @csrf
+            <input type="hidden" name="bilik_id" value="{{ $bilik?->id }}">
                 <div class="form-section">
                     @if($bilik)
                     <div style="background:#f0f4f1; border:1px solid #dde8e1; border-radius:8px; padding:0.6rem 0.9rem; margin-bottom:0.75rem; font-size:12px; color:#555; display:flex; align-items:center; gap:6px;">
