@@ -79,7 +79,7 @@ Route::post('/semak-tiket', function (\Illuminate\Http\Request $request) {
         }
     }
 
-    return view('track', compact('result', 'type', 'tiket'));
+    return view('index', compact('result', 'type', 'tiket'));
 })->name('track.search');
 
 // ── Supervisor Review ─────────────────────────────────────
