@@ -29,16 +29,22 @@ class AuthenticatedSessionController extends Controller
 
         $user = Auth::user();
 
-        if ($user->email === 'admin.aduan@sarawak.gov.my') {
-            return redirect('/admin/ict-aduan');
+        // Booking admin
+        if ($user->email === 'admin.booking@sarawak.gov.my') {
+            return redirect('/booking/admin/dashboard');
         }
 
+        // Portal upload admin
         if ($user->email === 'admin.mohon@sarawak.gov.my') {
             return redirect('/admin/portal-upload');
         }
 
-        if ($user->email === 'admin.booking@sarawak.gov.my') {
-            return redirect('/booking/admin/dashboard');
+        // ICT aduan admin + subadmin
+        if (
+            $user->email === 'admin.aduan@sarawak.gov.my' ||
+            $user->role === 'sub_admin'
+        ) {
+            return redirect('/admin/ict-aduan');
         }
 
         return redirect('/');
