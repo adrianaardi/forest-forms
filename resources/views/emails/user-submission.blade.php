@@ -33,11 +33,11 @@
         <p>Permohonan muat naik portal anda telah berjaya dihantar dan sedang menunggu kelulusan penyelia bahagian anda.</p>
 
         <div class="ticket-box">
-            <p>Nombor Tiket Anda</p>
+            <p>No. Rujukan Anda</p>
             <h2 id="tiket-no" onclick="this.focus(); document.execCommand('selectAll')" 
                 style="cursor:pointer; user-select:all; -webkit-user-select:all;"
                 title="Klik untuk pilih">{{ $permohonan->no_tiket }}</h2>
-            <p style="font-size:11px; color:#777; margin-top:4px;">Klik nombor tiket untuk memilih, kemudian salin.</p>
+            <p style="font-size:11px; color:#777; margin-top:4px;">Klik No. Rujukan untuk memilih, kemudian salin.</p>
         </div>
 
         <div class="detail-row">
@@ -61,7 +61,7 @@
             <span class="detail-value">Pending — Menunggu Kelulusan Penyelia</span>
         </div>
 
-        <p style="margin-top:1rem;">Simpan nombor tiket ini untuk menyemak status permohonan anda.</p>
+        <p style="margin-top:1rem;">Simpan No. Rujukan ini untuk menyemak status permohonan anda.</p>
 
         <a href="{{ url('/semak-tiket') }}" class="btn">Semak Status Permohonan</a>
     </div>

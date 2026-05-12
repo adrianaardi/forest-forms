@@ -30,7 +30,7 @@
         <p>Terdapat permohonan muat naik portal baharu yang memerlukan kelulusan anda.</p>
 
         <div class="detail-row">
-            <span class="detail-label">No. Tiket</span>
+            <span class="detail-label">No. Rujukan</span>
             <span class="detail-value">{{ $permohonan->no_tiket }}</span>
         </div>
         <div class="detail-row">

@@ -80,7 +80,7 @@
     <table class="data-table">
         <tr>
             <th style="width:36px;"><input type="checkbox" id="checkAll" onclick="toggleAll(this)"></th>
-            <th>No. Tiket</th>
+            <th>No. Rujukan</th>
             <th>Nama</th>
             <th>Bahagian</th>
             <th>Wilayah</th>

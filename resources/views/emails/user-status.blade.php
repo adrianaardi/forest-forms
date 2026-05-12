@@ -44,7 +44,7 @@
 
 
         <div class="detail-row">
-            <span class="detail-label">No. Tiket</span>
+            <span class="detail-label">No. Rujukan</span>
             <span class="detail-value">
                 <span style="user-select:all; -webkit-user-select:all; cursor:pointer;" title="Klik untuk pilih">
                     {{ $aduan->no_tiket }}

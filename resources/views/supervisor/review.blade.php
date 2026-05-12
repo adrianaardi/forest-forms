@@ -29,7 +29,7 @@
             <div class="section-label">Maklumat Pemohon</div>
             <div class="field-row">
                 <div class="field">
-                    <label>No. Tiket</label>
+                    <label>No. Rujukan</label>
                     <input type="text" value="{{ $permohonan->no_tiket }}" disabled>
                 </div>
                 <div class="field">

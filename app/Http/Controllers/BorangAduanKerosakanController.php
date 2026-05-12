@@ -77,7 +77,7 @@ class BorangAduanKerosakanController extends Controller
 
         return redirect('/')->with(
             'success',
-            'Aduan ICT anda telah berjaya dihantar! Anda akan menerima e-mel dengan No. tiket: ' . $complaint->no_tiket
+            'Aduan ICT anda telah berjaya dihantar! Anda akan menerima e-mel dengan No. Rujukan: ' . $complaint->no_tiket
         );
 
     }

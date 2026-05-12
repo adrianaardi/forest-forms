@@ -70,7 +70,7 @@
     <div class="hero-search">
         <form method="POST" action="/semak-tiket">
             @csrf
-            <label>Masukkan nombor tiket anda untuk semak status</label>
+            <label>Masukkan No. Rujukan anda untuk semak status</label>
             <div class="hero-search-row">
                 <input type="text" name="no_tiket"
                     value="{{ old('no_tiket', $tiket ?? '') }}"
@@ -122,14 +122,14 @@
 <div class="ticket-modal-overlay" id="ticketModal" onclick="if(event.target===this)closeTicketModal()">
     <div class="ticket-modal">
         <div class="ticket-modal-header">
-            <h3>Status Tiket — {{ $tiket }}</h3>
+            <h3>Status No. Rujukan — {{ $tiket }}</h3>
             <button class="ticket-modal-close" onclick="closeTicketModal()">×</button>
         </div>
         <div class="ticket-modal-body">
             @if($result)
                 <div class="ticket-field-row">
                     <div class="ticket-field">
-                        <label>No. Tiket</label>
+                        <label>No. Rujukan</label>
                         <p>{{ $result->no_tiket }}</p>
                     </div>
                     <div class="ticket-field">
@@ -186,7 +186,7 @@
                 <div class="ticket-not-found">
                     <p style="font-size:32px; margin-bottom:0.5rem;">🔍</p>
                     <p>Tiket <strong>{{ $tiket }}</strong> tidak dijumpai.</p>
-                    <p style="color:#777; margin-top:0.25rem;">Sila semak semula nombor tiket anda.</p>
+                    <p style="color:#777; margin-top:0.25rem;">Sila semak semula No. Rujukan anda.</p>
                 </div>
             @endif
         </div>

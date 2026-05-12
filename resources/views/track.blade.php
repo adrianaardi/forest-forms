@@ -24,14 +24,14 @@
     <div class="form-card">
         <div class="form-card-header">
             <h2>Semak Status Tiket</h2>
-            <p>Masukkan nombor tiket anda untuk menyemak status permohonan.</p>
+            <p>Masukkan No. Rujukan anda untuk menyemak status permohonan.</p>
         </div>
 
         <div class="form-section">
             <form method="POST" action="/semak-tiket">
                 @csrf
                 <div class="field">
-                    <label>Nombor Tiket</label>
+                    <label>No. Rujukan</label>
                     <input type="text" name="no_tiket" value="{{ old('no_tiket', $tiket ?? '') }}" placeholder="Cth: JHS/ICT/A/2026(1)" required>
                 </div>
                 <div style="margin-top: 0.75rem;">
@@ -47,7 +47,7 @@
 
                     <div class="field-row">
                         <div class="field">
-                            <label>No. Tiket</label>
+                            <label>No. Rujukan</label>
                             <input type="text" value="{{ $result->no_tiket }}" disabled>
                         </div>
                         <div class="field">
@@ -105,7 +105,7 @@
                 </div>
             @else
                 <div class="form-section">
-                    <p style="color:#a32d2d; font-size:13px;">Tiket <strong>{{ $tiket }}</strong> tidak dijumpai. Sila semak semula nombor tiket anda.</p>
+                    <p style="color:#a32d2d; font-size:13px;">Tiket <strong>{{ $tiket }}</strong> tidak dijumpai. Sila semak semula No. Rujukan anda.</p>
                 </div>
             @endif
         @endif

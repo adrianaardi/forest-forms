@@ -72,9 +72,9 @@
 
         <!-- SAME STYLE AS SUBMISSION -->
         <div class="ticket-box">
-            <p>Nombor Tiket Anda</p>
+            <p>No. Rujukan Anda</p>
             <h2 style="cursor:pointer; user-select:all;">{{ $aduan->no_tiket }}</h2>
-            <p style="font-size:11px; color:#777; margin-top:4px;">Klik nombor tiket untuk memilih</p>
+            <p style="font-size:11px; color:#777; margin-top:4px;">Klik No. Rujukan untuk memilih</p>
         </div>
 
         <div class="detail-row">
@@ -117,7 +117,7 @@
             </div>
         @endif
 
-        <p style="margin-top:1rem;">Anda boleh menyemak status terkini menggunakan nombor tiket ini.</p>
+        <p style="margin-top:1rem;">Anda boleh menyemak status terkini menggunakan No. Rujukan ini.</p>
 
         <a href="{{ url('/semak-tiket') }}" class="btn">Semak Status Aduan</a>
 
