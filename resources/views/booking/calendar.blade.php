@@ -314,9 +314,9 @@
             @if($bilik)
                 @auth('booking_user')
                     <a href="/booking/book" class="btn-submit" style="text-decoration:none; font-size:12px; padding:6px 14px;">+ Tempah</a>
-                @else
-                    <button onclick="openModal('loginModal')" style="font-size:12px; padding:6px 14px; background:#97a4b1; color:#fff; border:none; border-radius:6px; cursor:pointer;">Log Masuk untuk Tempah</button>
-                @endauth
+                    @else
+                        <button onclick="openModal('loginModal')" style="font-size:12px; padding:6px 14px; background:#194169; color:#fff; border:none; border-radius:6px; cursor:pointer;">Log Masuk untuk Tempah</button>
+                    @endauth
             @endif
         </div>
 
@@ -651,43 +651,35 @@ function openBookSlot(date, time) {
     openModal('bookModal');
 }
 
+// AJAX login form
 document.getElementById('login-form').addEventListener('submit', async function(e) {
     e.preventDefault();
-    const btn     = document.getElementById('login-btn');
-    const errorEl = document.getElementById('login-error');
+    const btn = document.getElementById('login-btn');
+    btn.disabled = true;
+    btn.textContent = 'Memproses…';
 
-    btn.disabled    = true;
-    btn.textContent = 'Proses...';
+    const errorEl = document.getElementById('login-error');
     errorEl.style.display = 'none';
 
     const formData = new FormData(this);
 
     try {
-        const res = await fetch('{{ route("booking.login.post") }}', {
+        const res  = await fetch('{{ route("booking.login.post") }}', {
             method:  'POST',
-            headers: {
-                'X-Requested-With': 'XMLHttpRequest',
-                'Accept':           'application/json',
-            },
-            body: formData,
+            headers: { 'X-Requested-With': 'XMLHttpRequest' },
+            body:    formData,
         });
-
         const data = await res.json();
 
         if (res.ok && data.success) {
-            if (data.redirect) {
-                window.location.href = data.redirect;
-            } else {
-                window.location.reload();
-            }
+            window.location.reload();
             return;
         }
 
-        errorEl.textContent   = data.message ?? 'Ralat tidak diketahui.';
+        errorEl.textContent  = data.message ?? 'Ralat tidak diketahui.';
         errorEl.style.display = 'block';
-
-    } catch(err) {
-        errorEl.textContent   = 'Gagal berhubung dengan pelayan.';
+    } catch {
+        errorEl.textContent  = 'Gagal berhubung dengan pelayan.';
         errorEl.style.display = 'block';
     }
 

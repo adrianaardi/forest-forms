@@ -22,10 +22,13 @@ class BookingAuthController extends Controller
             'password' => 'required',
         ]);
 
-        // check booking admin first
+        // check booking admin
         $admin = \App\Models\User::where('email', $request->email)->first();
         if ($admin && Hash::check($request->password, $admin->password) && $admin->email === 'admin.booking@sarawak.gov.my') {
             Auth::guard('web')->login($admin);
+            if ($request->ajax()) {
+                return response()->json(['success' => true, 'redirect' => '/booking/admin/dashboard']);
+            }
             return redirect('/booking/admin/dashboard');
         }
 
@@ -33,15 +36,23 @@ class BookingAuthController extends Controller
         $user = BookingUser::where('email', $request->email)->first();
         if ($user && Hash::check($request->password, $user->password)) {
             if ($user->status === 'pending') {
+                if ($request->ajax()) return response()->json(['message' => 'Akaun anda masih menunggu kelulusan admin.'], 422);
                 return back()->with('error', 'Akaun anda masih menunggu kelulusan admin.');
             }
             if ($user->status === 'rejected') {
-                return back()->with('error', 'Akaun anda telah ditolak. Hubungi admin untuk maklumat lanjut.');
+                if ($request->ajax()) return response()->json(['message' => 'Akaun anda telah ditolak.'], 422);
+                return back()->with('error', 'Akaun anda telah ditolak.');
             }
             Auth::guard('booking_user')->login($user);
+            if ($request->ajax()) {
+                return response()->json(['success' => true, 'redirect' => url()->current()]);
+            }
             return redirect()->intended('/booking/calendar');
         }
 
+        if ($request->ajax()) {
+            return response()->json(['message' => 'Emel atau kata laluan tidak sah.'], 422);
+        }
         return back()->with('error', 'Emel atau kata laluan tidak sah.')->withInput();
     }
 
