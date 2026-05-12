@@ -9,43 +9,115 @@
     <link rel="icon" href="{{ asset('images/logo-icon.png')}}">
     <link rel="stylesheet" href="{{ asset('style.css') }}">
     <style>
+        /* ── overlay ── */
         .ticket-modal-overlay {
-            display: none; position: fixed; inset: 0;
-            background: rgba(0,0,0,0.4);
+            display: flex;
+            position: fixed; inset: 0;
+            background: rgba(0, 0, 0, 0);
             justify-content: center; align-items: center;
             z-index: 999;
+            pointer-events: none;
+            transition: background 0.3s ease;
         }
-        .ticket-modal-overlay.active { display: flex; }
+        .ticket-modal-overlay.active {
+            background: rgba(0, 0, 0, 0.45);
+            pointer-events: auto;
+        }
+
+        /* ── modal ── */
         .ticket-modal {
-            background: #fff; border-radius: 12px;
-            padding: 0; width: 100%; max-width: 480px;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.15);
-            transform: translateY(20px) scale(0.97);
+            background: #fff;
+            border-radius: 14px;
+            padding: 0;
+            width: 100%;
+            max-width: 480px;
+            box-shadow: 0 16px 48px rgba(0, 0, 0, 0);
+            transform: translateY(24px) scale(0.96);
             opacity: 0;
-            transition: transform 0.25s ease, opacity 0.25s ease;
+            transition:
+                transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+                opacity   0.3s ease,
+                box-shadow 0.3s ease;
             overflow: hidden;
         }
         .ticket-modal-overlay.active .ticket-modal {
             transform: translateY(0) scale(1);
             opacity: 1;
+            box-shadow: 0 16px 48px rgba(0, 0, 0, 0.18);
         }
+
+        /* ── header ── */
         .ticket-modal-header {
-            background: #1a4731; padding: 1rem 1.25rem;
-            display: flex; justify-content: space-between; align-items: center;
+            background: #1a4731;
+            padding: 1rem 1.25rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
-        .ticket-modal-header h3 { color: #fff; font-size: 14px; margin: 0; font-weight: 500; }
+        .ticket-modal-header h3 {
+            color: #fff;
+            font-size: 14px;
+            margin: 0;
+            font-weight: 500;
+        }
         .ticket-modal-close {
-            background: none; border: none; color: rgba(255,255,255,0.7);
-            font-size: 20px; cursor: pointer; line-height: 1; padding: 0;
-            transition: color 0.15s;
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 22px;
+            cursor: pointer;
+            line-height: 1;
+            padding: 0;
+            transition: color 0.2s ease, transform 0.2s ease;
+            display: flex; align-items: center;
         }
-        .ticket-modal-close:hover { color: #fff; }
+        .ticket-modal-close:hover {
+            color: #fff;
+            transform: rotate(90deg) scale(1.1);
+        }
+
+        /* ── body ── */
         .ticket-modal-body { padding: 1.25rem; }
+
         .ticket-field { margin-bottom: 0.75rem; }
-        .ticket-field label { font-size: 11px; color: #999; display: block; margin-bottom: 3px; text-transform: uppercase; letter-spacing: 0.05em; }
-        .ticket-field p { font-size: 13px; color: #222; margin: 0; font-weight: 500; }
+        .ticket-field label {
+            font-size: 11px;
+            color: #999;
+            display: block;
+            margin-bottom: 3px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .ticket-field p {
+            font-size: 13px;
+            color: #222;
+            margin: 0;
+            font-weight: 500;
+        }
+
         .ticket-field-row { display: flex; gap: 1rem; }
         .ticket-field-row .ticket-field { flex: 1; }
+
+        /* ── field fade-in stagger ── */
+        .ticket-modal-overlay.active .ticket-field,
+        .ticket-modal-overlay.active .ticket-field-row {
+            animation: fieldFadeUp 0.35s ease both;
+        }
+        .ticket-modal-overlay.active .ticket-field:nth-child(1),
+        .ticket-modal-overlay.active .ticket-field-row:nth-child(1) { animation-delay: 0.12s; }
+        .ticket-modal-overlay.active .ticket-field:nth-child(2),
+        .ticket-modal-overlay.active .ticket-field-row:nth-child(2) { animation-delay: 0.18s; }
+        .ticket-modal-overlay.active .ticket-field:nth-child(3),
+        .ticket-modal-overlay.active .ticket-field-row:nth-child(3) { animation-delay: 0.24s; }
+        .ticket-modal-overlay.active .ticket-field:nth-child(4),
+        .ticket-modal-overlay.active .ticket-field-row:nth-child(4) { animation-delay: 0.30s; }
+
+        @keyframes fieldFadeUp {
+            from { opacity: 0; transform: translateY(6px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ── not found ── */
         .ticket-not-found { text-align: center; padding: 1rem 0; }
         .ticket-not-found p { color: #a32d2d; font-size: 13px; }
     </style>
@@ -65,7 +137,11 @@
 <div class="hero">
     <div class="hero-text">
         <h2>Selamat Datang ke Portal Perkhidmatan</h2>
-        <p>Portal ini menyediakan perkhidmatan dalaman untuk kakitangan Jabatan Hutan Sarawak. Sila pilih perkhidmatan yang diperlukan di bawah.</p>
+        <p>
+            Gerbang digital rasmi bagi warga Jabatan Hutan Sarawak. 
+            Sila pilih perkhidmatan di bawah untuk urusan pendigitalan borang, 
+            aduan teknikal, dan tempahan ruang kerja yang lebih efisien.
+        </p>
     </div>
     <div class="hero-search">
         <form method="POST" action="/semak-tiket">
@@ -89,25 +165,30 @@
         </div>
     @endif
 
-    <p class="section-title">Perkhidmatan Yang Ditawarkan</p>
+    <p class="section-title">Perkhidmatan Yang Disediakan</p>
     <div class="cards">
+        <!-- Aduan ICT -->
         <a href="/forms/ict-aduan" class="card">
             <div class="card-icon icon-ict">💻</div>
-            <h3>Borang Aduan ICT</h3>
-            <p>Laporkan kerosakan atau masalah berkaitan peralatan ICT dan digital di pejabat anda.</p>
-            <span class="card-link">Hantar aduan →</span>
+            <h3>Aplikasi Aduan ICT</h3>
+            <p>Saluran pantas untuk melaporkan isu teknikal atau kerosakan aset ICT bagi memastikan kelancaran operasi harian anda.</p>
+            <span class="card-link">Hantar Aduan →</span>
         </a>
+
+        <!-- Muat Naik Portal -->
         <a href="/forms/portal-upload" class="card">
             <div class="card-icon icon-upload">📂</div>
-            <h3>Borang Permohonan Muat Naik Portal</h3>
-            <p>Hantar permohonan untuk memuat naik kandungan baharu ke portal rasmi jabatan.</p>
-            <span class="card-link">Hantar permohonan →</span>
+            <h3>Aplikasi Muat Naik Portal</h3>
+            <p>Permudahkan proses pengemaskinian maklumat jabatan dengan menghantar permohonan muat naik kandungan ke portal rasmi.</p>
+            <span class="card-link">Hantar Permohonan →</span>
         </a>
+
+        <!-- Tempahan Bilik -->
         <a href="/booking/calendar" class="card">
             <div class="card-icon icon-track">📅</div>
-            <h3>Tempah Bilik Mesyuarat</h3>
-            <p>Lihat kekosongan dan tempah bilik mesyuarat di sini.</p>
-            <span class="card-link">Tempah sekarang →</span>
+            <h3>Aplikasi Menempah Bilik Mesyuarat</h3>
+            <p>Sistem pengurusan ruang mesyuarat secara real-time untuk koordinasi perbincangan dan acara jabatan yang lebih teratur.</p>
+            <span class="card-link">Tempah Sekarang →</span>
         </a>
     </div>
 </div>
@@ -120,10 +201,10 @@
 {{-- Ticket result modal --}}
 @isset($tiket)
 <div class="ticket-modal-overlay" id="ticketModal" onclick="if(event.target===this)closeTicketModal()">
-    <div class="ticket-modal">
+    <div class="ticket-modal" role="dialog" aria-modal="true" aria-labelledby="ticketModalTitle">
         <div class="ticket-modal-header">
-            <h3>Status No. Rujukan — {{ $tiket }}</h3>
-            <button class="ticket-modal-close" onclick="closeTicketModal()">×</button>
+            <h3 id="ticketModalTitle">Status No. Rujukan — {{ $tiket }}</h3>
+            <button class="ticket-modal-close" onclick="closeTicketModal()" aria-label="Tutup">×</button>
         </div>
         <div class="ticket-modal-body">
             @if($result)
@@ -194,18 +275,33 @@
 </div>
 
 <script>
-    // auto open on page load if ticket was searched
-    window.addEventListener('DOMContentLoaded', function() {
-        document.getElementById('ticketModal').classList.add('active');
-    });
+    const overlay = document.getElementById('ticketModal');
+    const modal   = overlay.querySelector('.ticket-modal');
+
+    function openTicketModal() {
+        overlay.classList.add('active');
+        // trap focus inside modal
+        modal.querySelector('.ticket-modal-close')?.focus();
+    }
 
     function closeTicketModal() {
-        const overlay = document.getElementById('ticketModal');
-        const modal   = overlay.querySelector('.ticket-modal');
-        modal.style.transform = 'translateY(10px) scale(0.97)';
-        modal.style.opacity   = '0';
-        setTimeout(() => { overlay.classList.remove('active'); }, 220);
+        overlay.classList.remove('active');
     }
+
+    // close on Escape
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && overlay.classList.contains('active')) {
+            closeTicketModal();
+        }
+    });
+
+    // auto-open after a short delay so the entry animation is visible
+    window.addEventListener('DOMContentLoaded', function() {
+        // slight delay lets the page paint first, making the animation feel intentional
+        requestAnimationFrame(function() {
+            setTimeout(openTicketModal, 80);
+        });
+    });
 </script>
 @endisset
 

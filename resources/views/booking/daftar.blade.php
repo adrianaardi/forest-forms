@@ -58,7 +58,7 @@
                 </div>
             </div>
             <div class="form-footer">
-                <a href="{{ route('booking.login') }}" class="btn-back">← Log Masuk</a>
+                <a href="/booking/calendar">← Kembali ke Kalendar</a>
                 <button type="submit" class="btn-submit" style="background:#194169;">Daftar</button>
             </div>
         </form>

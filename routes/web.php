@@ -97,7 +97,7 @@ Route::prefix('booking')->name('booking.')->group(function () {
     Route::post('/book', [BookingController::class, 'storeBook'])->name('book.store');
 
     // auth
-    Route::get('/login',  [BookingAuthController::class, 'showLogin'])->name('login');
+Route::get('/login', fn() => redirect('/booking/calendar'))->name('login');
     Route::post('/login', [BookingAuthController::class, 'login'])->name('login.post');
     Route::get('/daftar', [BookingAuthController::class, 'showRegister'])->name('daftar');
     Route::post('/daftar',[BookingAuthController::class, 'register'])->name('daftar.post');

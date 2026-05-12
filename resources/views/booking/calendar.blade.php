@@ -155,6 +155,20 @@
         }
         .btn-secondary:hover { background: #eaeaea; }
 
+        /* ── booking modal error/success banners ── */
+        #bk-error, #bk-success {
+            display: none;
+            border-radius: 8px;
+            padding: 0.75rem 1rem;
+            margin-bottom: 0.75rem;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+        #bk-error   { background: #fdf0f0; border: 1px solid #f5c1c1; color: #a32d2d; }
+        #bk-success { background: #eaf3de; border: 1px solid #c0dd97; color: #27500a; }
+        #bk-error ul   { margin: 0; padding-left: 1.2rem; }
+        #bk-submit-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
         @media (max-width: 700px) { .bk-sidebar { display: none; } }
     </style>
 </head>
@@ -301,7 +315,7 @@
                 @auth('booking_user')
                     <a href="/booking/book" class="btn-submit" style="text-decoration:none; font-size:12px; padding:6px 14px;">+ Tempah</a>
                 @else
-                    <a href="/booking/login" style="text-decoration:none; font-size:12px; padding:6px 14px; background:#888; color:#fff; border-radius:6px;">Log Masuk untuk Tempah</a>
+                    <button onclick="openModal('loginModal')" style="font-size:12px; padding:6px 14px; background:#97a4b1; color:#fff; border:none; border-radius:6px; cursor:pointer;">Log Masuk untuk Tempah</button>
                 @endauth
             @endif
         </div>
@@ -411,16 +425,23 @@
 </div>
 
 {{-- Book modal --}}
-<div class="modal-overlay" id="bookModal" onclick="if(event.target===this)closeBookModal()">
+<div class="modal-overlay" id="bookModal">
     <div class="modal" style="max-width:480px;">
         <div class="modal-header">
             <h2 style="font-size:14px;">Buat Tempahan</h2>
             <button class="modal-close" onclick="closeBookModal()">×</button>
         </div>
         <div class="modal-body">
-            <form method="POST" action="{{ route('booking.book.store') }}">
-            @csrf
-            <input type="hidden" name="bilik_id" value="{{ $bilik?->id }}">
+
+            {{-- Error banner (shown on validation/conflict errors) --}}
+            <div id="bk-error"></div>
+
+            {{-- Success banner (briefly shown before page reloads) --}}
+            <div id="bk-success"></div>
+
+            <form id="bk-form">
+                @csrf
+                <input type="hidden" name="bilik_id" value="{{ $bilik?->id }}">
                 <div class="form-section">
                     @if($bilik)
                     <div style="background:#f0f4f1; border:1px solid #dde8e1; border-radius:8px; padding:0.6rem 0.9rem; margin-bottom:0.75rem; font-size:12px; color:#555; display:flex; align-items:center; gap:6px;">
@@ -452,7 +473,7 @@
                     </div>
                 </div>
                 <div class="form-footer" style="margin-top:0.5rem;">
-                    <button type="submit" class="btn-submit">Sahkan Tempahan</button>
+                    <button type="submit" id="bk-submit-btn" class="btn-submit">Sahkan Tempahan</button>
                 </div>
             </form>
         </div>
@@ -464,7 +485,38 @@
     <div>© <?php echo date("Y"); ?> Jabatan Hutan Sarawak. Hak Cipta Terpelihara.</div>
 </footer>
 
+{{-- Login modal --}}
+@include('booking._login-modal')
+
 <script>
+// ── modal open/close ────────────────────────────────────────────────────────
+
+function openModal(id) {
+    document.getElementById(id).classList.add('active');
+}
+
+function closeModal(id) {
+    const overlay = document.getElementById(id);
+    const modal   = overlay.querySelector('.modal');
+    modal.style.transform = 'translateY(10px) scale(0.97)';
+    modal.style.opacity   = '0';
+    setTimeout(() => {
+        overlay.classList.remove('active');
+        modal.style.transform = '';
+        modal.style.opacity   = '';
+    }, 220);
+}
+
+function closeEvent()     { closeModal('eventModal'); }
+function closeBookModal() {
+    closeModal('bookModal');
+    // clear banners when closing
+    setBkError(null);
+    setBkSuccess(null);
+}
+
+// ── book slot (click on grid cell) ─────────────────────────────────────────
+
 function openBookSlot(date, time) {
     const wrap    = document.querySelector('.bk-grid-wrap');
     const isAuth  = wrap?.dataset.auth === '1';
@@ -480,8 +532,12 @@ function openBookSlot(date, time) {
     const endH = String(Math.min(parseInt(h) + 1, 17)).padStart(2, '0');
     document.getElementById('bk-tamat').value = endH + ':00';
 
+    setBkError(null);
+    setBkSuccess(null);
     openModal('bookModal');
 }
+
+// ── event detail modal ──────────────────────────────────────────────────────
 
 function showEvent(tajuk, nama, bahagian, mula, tamat, tarikh, remarks, bookingId, cancelToken, isOwn) {
     document.getElementById('ev-tajuk').textContent    = tajuk;
@@ -503,25 +559,137 @@ function showEvent(tajuk, nama, bahagian, mula, tamat, tarikh, remarks, bookingI
     openModal('eventModal');
 }
 
-function openModal(id) {
-    const overlay = document.getElementById(id);
-    overlay.classList.add('active');
+// ── banner helpers ──────────────────────────────────────────────────────────
+
+function setBkError(msg) {
+    const el = document.getElementById('bk-error');
+    if (!msg) { el.style.display = 'none'; el.innerHTML = ''; return; }
+    el.innerHTML = msg;
+    el.style.display = 'block';
+    el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 }
 
-function closeEvent()     { closeModal('eventModal'); }
-function closeBookModal() { closeModal('bookModal'); }
-
-function closeModal(id) {
-    const overlay = document.getElementById(id);
-    const modal   = overlay.querySelector('.modal');
-    modal.style.transform = 'translateY(10px) scale(0.97)';
-    modal.style.opacity   = '0';
-    setTimeout(() => {
-        overlay.classList.remove('active');
-        modal.style.transform = '';
-        modal.style.opacity   = '';
-    }, 220);
+function setBkSuccess(msg) {
+    const el = document.getElementById('bk-success');
+    if (!msg) { el.style.display = 'none'; el.textContent = ''; return; }
+    el.textContent = msg;
+    el.style.display = 'block';
 }
+
+// ── AJAX form submit ────────────────────────────────────────────────────────
+
+document.getElementById('bk-form').addEventListener('submit', async function(e) {
+    e.preventDefault();
+
+    const btn = document.getElementById('bk-submit-btn');
+    btn.disabled    = true;
+    btn.textContent = 'Proses...';
+    setBkError(null);
+    setBkSuccess(null);
+
+    const formData = new FormData(this);
+
+    try {
+        const res = await fetch('{{ route("booking.book.store") }}', {
+            method:  'POST',
+            headers: { 'X-Requested-With': 'XMLHttpRequest' },
+            body:    formData,
+        });
+
+        const data = await res.json();
+
+        if (res.ok && data.success) {
+            // show success briefly, then reload calendar to the booked week
+            setBkSuccess(data.message ?? 'Tempahan berjaya!');
+            setTimeout(() => {
+                window.location = data.redirect ?? window.location.href;
+            }, 1200);
+            return; // keep button disabled during redirect
+        }
+
+        // validation errors (422) or business-logic error (e.g. 409 conflict)
+        if (data.errors) {
+            const items = Object.values(data.errors).flat();
+            setBkError('<ul>' + items.map(m => `<li>${m}</li>`).join('') + '</ul>');
+        } else if (data.message) {
+            setBkError(data.message);
+        } else {
+            setBkError('Ralat tidak diketahui. Sila cuba lagi.');
+        }
+
+    } catch (err) {
+        setBkError('Gagal berhubung dengan pelayan. Sila semak sambungan anda.');
+    }
+
+    btn.disabled    = false;
+    btn.textContent = 'Sahkan Tempahan';
+});
+
+function closeLoginModal() { closeModal('loginModal'); }
+
+// replace all "Log Masuk untuk Tempah" redirects with modal
+function openBookSlot(date, time) {
+    const wrap    = document.querySelector('.bk-grid-wrap');
+    const isAuth  = wrap?.dataset.auth === '1';
+    const bilikId = wrap?.dataset.bilik;
+
+    if (!bilikId) return;
+    if (!isAuth) { openModal('loginModal'); return; } // ← open modal instead of redirect
+
+    document.getElementById('bk-tarikh').value = date;
+    document.getElementById('bk-mula').value   = time;
+    const [h] = time.split(':');
+    const endH = String(Math.min(parseInt(h) + 1, 17)).padStart(2, '0');
+    document.getElementById('bk-tamat').value = endH + ':00';
+
+    setBkError(null);
+    setBkSuccess(null);
+    openModal('bookModal');
+}
+
+document.getElementById('login-form').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const btn     = document.getElementById('login-btn');
+    const errorEl = document.getElementById('login-error');
+
+    btn.disabled    = true;
+    btn.textContent = 'Proses...';
+    errorEl.style.display = 'none';
+
+    const formData = new FormData(this);
+
+    try {
+        const res = await fetch('{{ route("booking.login.post") }}', {
+            method:  'POST',
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'Accept':           'application/json',
+            },
+            body: formData,
+        });
+
+        const data = await res.json();
+
+        if (res.ok && data.success) {
+            if (data.redirect) {
+                window.location.href = data.redirect;
+            } else {
+                window.location.reload();
+            }
+            return;
+        }
+
+        errorEl.textContent   = data.message ?? 'Ralat tidak diketahui.';
+        errorEl.style.display = 'block';
+
+    } catch(err) {
+        errorEl.textContent   = 'Gagal berhubung dengan pelayan.';
+        errorEl.style.display = 'block';
+    }
+
+    btn.disabled    = false;
+    btn.textContent = 'Log Masuk';
+});
 </script>
 
 </body>
