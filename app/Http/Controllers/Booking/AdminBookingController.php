@@ -16,7 +16,6 @@ class AdminBookingController extends Controller
             'total'         => BookingRequest::where('status', 'confirmed')->count(),
             'today'         => BookingRequest::where('status', 'confirmed')->where('tarikh', today())->count(),
             'total_users'   => BookingUser::count(),
-            'pending_users' => BookingUser::where('status', 'pending')->count(),
         ];
 
         $recentBookings = BookingRequest::with(['user', 'bilik'])

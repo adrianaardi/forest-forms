@@ -35,13 +35,13 @@ class BookingAuthController extends Controller
         $user = BookingUser::where('email', $request->email)->first();
         if ($user && Hash::check($request->password, $user->password)) {
             if ($user->status === 'pending') {
-                if ($request->expectsJson()) return response()->json(['message' => 'Akaun anda masih menunggu kelulusan admin.'], 422);
-                return back()->with('error', 'Akaun anda masih menunggu kelulusan admin.');
-            }
-            if ($user->status === 'rejected') {
-                if ($request->expectsJson()) return response()->json(['message' => 'Akaun anda telah ditolak.'], 422);
-                return back()->with('error', 'Akaun anda telah ditolak.');
-            }
+            if ($request->expectsJson()) return response()->json(['message' => 'Akaun anda masih menunggu kelulusan admin.'], 422);
+            return back()->with('error', 'Akaun anda masih menunggu kelulusan admin.');
+        }
+        if ($user->status === 'rejected') {
+            if ($request->expectsJson()) return response()->json(['message' => 'Akaun anda telah ditolak.'], 422);
+            return back()->with('error', 'Akaun anda telah ditolak.');
+        }
             Auth::guard('booking_user')->login($user);
             if ($request->expectsJson()) {
                 return response()->json(['success' => true, 'reload' => true]);
@@ -74,11 +74,11 @@ class BookingAuthController extends Controller
             'email'    => $request->email,
             'password' => Hash::make($request->password),
             'bahagian' => $request->bahagian,
-            'status'   => 'pending',
+            'status'   => 'approved',
         ]);
 
         return redirect('/booking/login')
-            ->with('success', 'Pendaftaran berjaya! Sila tunggu kelulusan admin sebelum log masuk.');
+            ->with('success', 'Pendaftaran berjaya! Anda boleh log masuk sekarang');
     }
 
     public function logout()
