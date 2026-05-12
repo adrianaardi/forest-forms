@@ -54,6 +54,10 @@
                     <label>Bahagian / Unit</label>
                     <input type="text" name="bahagian" value="{{ old('bahagian', $user->bahagian) }}" placeholder="Cth: Bahagian ICT">
                 </div>
+                <div class="field">
+                    <label>No. Telefon</label>
+                    <input type="text" name="phone" value="{{ old('phone', $user->phone) }}" placeholder="Cth: 0123456789">
+                </div>
             </div>
             <div class="form-footer">
                 <a href="/booking/calendar" class="btn-back">← Kembali</a>

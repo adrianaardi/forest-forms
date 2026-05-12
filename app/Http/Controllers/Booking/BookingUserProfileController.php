@@ -35,11 +35,13 @@ class BookingUserProfileController extends Controller
             'name'     => 'required|string|max:255',
             'email'    => 'required|email|unique:booking_users,email,' . $user->id,
             'bahagian' => 'nullable|string|max:255',
+            'phone'    => 'nullable|string|max:20',
         ]);
 
         $user->name     = $request->name;
         $user->email    = $request->email;
         $user->bahagian = $request->bahagian;
+        $user->phone    = $request->phone;
         $user->save();
 
         return back()->with('success', 'Profil berjaya dikemaskini.');

@@ -46,6 +46,10 @@
                     <label>Bahagian / Unit</label>
                     <input type="text" name="bahagian" value="{{ old('bahagian') }}" placeholder="Cth: Bahagian ICT">
                 </div>
+                <div class="field">
+                    <label>No. Telefon</label>
+                    <input type="text" name="phone" value="{{ old('phone') }}" placeholder="Cth: 0123456789">
+                </div>
                 <div class="field-row">
                     <div class="field">
                         <label>Kata Laluan <span class="required">*</span></label>

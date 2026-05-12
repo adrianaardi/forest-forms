@@ -64,6 +64,7 @@ class BookingAuthController extends Controller
             'email'    => $request->email,
             'password' => Hash::make($request->password),
             'bahagian' => $request->bahagian,
+            'phone'    => $request->phone,
             'status'   => 'pending',
         ]);
 
