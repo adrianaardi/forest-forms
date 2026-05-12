@@ -32,12 +32,6 @@ class BookingAuthController extends Controller
         // check booking user
         $user = BookingUser::where('email', $request->email)->first();
         if ($user && Hash::check($request->password, $user->password)) {
-            if ($user->status === 'pending') {
-                return back()->with('error', 'Akaun anda masih menunggu kelulusan admin.');
-            }
-            if ($user->status === 'rejected') {
-                return back()->with('error', 'Akaun anda telah ditolak. Hubungi admin untuk maklumat lanjut.');
-            }
             Auth::guard('booking_user')->login($user);
             return redirect()->intended('/booking/calendar');
         }
@@ -64,11 +58,11 @@ class BookingAuthController extends Controller
             'email'    => $request->email,
             'password' => Hash::make($request->password),
             'bahagian' => $request->bahagian,
-            'status'   => 'pending',
+            'status'   => 'approved',
         ]);
 
         return redirect('/booking/login')
-            ->with('success', 'Pendaftaran berjaya! Sila tunggu kelulusan admin sebelum log masuk.');
+            ->with('success', 'Pendaftaran berjaya! Anda boleh log masuk sekarang');
     }
 
     public function logout()
