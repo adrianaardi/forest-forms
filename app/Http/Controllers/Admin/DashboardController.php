@@ -101,7 +101,13 @@ class DashboardController extends Controller
 
         $bahagianList = \App\Models\BahagianSupervisor::orderBy('nama_bahagian')->get();
 
-        return view('admin.portal-upload', compact('requests', 'stats', 'bahagianList'));
+        $chartData = [
+            'Pending'       => \App\Models\BorangMuatNaikBahan::where('status', 'Pending')->count(),
+            'Dalam Semakan' => \App\Models\BorangMuatNaikBahan::where('status', 'Dalam Semakan')->count(),
+            'Diluluskan'    => \App\Models\BorangMuatNaikBahan::where('status', 'Diluluskan')->count(),
+        ];
+
+        return view('admin.portal-upload', compact('requests', 'stats', 'bahagianList', 'chartData'));
     }
     
     public function ictAduanDetail($id)

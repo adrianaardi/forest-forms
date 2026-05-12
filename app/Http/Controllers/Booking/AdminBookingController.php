@@ -12,22 +12,32 @@ class AdminBookingController extends Controller
 {
     public function dashboard()
     {
+        $today = \Carbon\Carbon::today();
         $stats = [
-            'total'         => BookingRequest::where('status', 'confirmed')->count(),
-            'today'         => BookingRequest::where('status', 'confirmed')->where('tarikh', today())->count(),
-            'total_users'   => BookingUser::count(),
-            'pending_users' => BookingUser::where('status', 'pending')->count(),
+            'total'          => BookingRequest::where('status', 'confirmed')->count(),
+            'today'          => BookingRequest::where('status', 'confirmed')->where('tarikh', $today)->count(),
+            'this_week'      => BookingRequest::where('status', 'confirmed')
+                                ->whereBetween('tarikh', [$today->startOfWeek(), $today->copy()->endOfWeek()])->count(),
+            'total_users'    => BookingUser::where('status', 'approved')->count(),
+            'pending_users'  => BookingUser::where('status', 'pending')->count(),
+            'total_bilik'    => \App\Models\BookingBilik::count(),
         ];
 
         $recentBookings = BookingRequest::with(['user', 'bilik'])
             ->where('status', 'confirmed')
-            ->where('tarikh', '>=', today())
+            ->where('tarikh', '>=', \Carbon\Carbon::today())
             ->orderBy('tarikh')
             ->orderBy('masa_mula')
-            ->take(5)
+            ->take(10)
             ->get();
 
-        return view('booking.admin.dashboard', compact('stats', 'recentBookings'));
+        $todayBookings = BookingRequest::with(['user', 'bilik'])
+            ->where('status', 'confirmed')
+            ->where('tarikh', \Carbon\Carbon::today()->toDateString())
+            ->orderBy('masa_mula')
+            ->get();
+
+        return view('booking.admin.dashboard', compact('stats', 'recentBookings', 'todayBookings'));
     }
 
     public function users(Request $request)
