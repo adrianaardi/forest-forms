@@ -74,7 +74,8 @@ class BookingAuthController extends Controller
             'email'    => $request->email,
             'password' => Hash::make($request->password),
             'bahagian' => $request->bahagian,
-            'status'   => 'approved',
+            'phone'    => $request->phone,
+            'status'   => 'pending',
         ]);
 
         return redirect('/booking/login')

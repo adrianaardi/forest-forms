@@ -362,6 +362,7 @@
                                             @json($b->tajuk_mesyuarat),
                                             @json($b->user->name),
                                             @json($b->user->bahagian ?? "-"),
+                                            @json($b->user->phone ?? "-"),
                                             @json(substr($b->masa_mula,0,5)),
                                             @json(substr($b->masa_tamat,0,5)),
                                             @json($day->translatedFormat("d F Y")),
@@ -402,11 +403,13 @@
                     <div class="detail-field"><label>Masa</label><p id="ev-masa"></p></div>
                     <div class="detail-field"><label>Pemohon</label><p id="ev-nama"></p></div>
                 </div>
+
                 <div class="detail-row">
                     <div class="detail-field"><label>Bahagian</label><p id="ev-bahagian"></p></div>
+                    <div class="detail-field"><label>No. Telefon</label><p id="ev-phone"></p></div>
                 </div>
                 <div class="detail-field" style="margin-top:0.5rem;">
-                    <label>Remarks</label>
+                    <label>Catatan</label>
                     <p id="ev-remarks" style="color:#555;"></p>
                 </div>
             </div>
@@ -454,7 +457,7 @@
                         <input type="text" name="tajuk_mesyuarat" placeholder="Cth: Mesyuarat Jabatan Q2" required>
                     </div>
                     <div class="field">
-                        <label>Remarks</label>
+                        <label>Catatan</label>
                         <textarea name="remarks" rows="2" style="resize:none;"></textarea>
                     </div>
                     <div class="field">
@@ -539,10 +542,11 @@ function openBookSlot(date, time) {
 
 // ── event detail modal ──────────────────────────────────────────────────────
 
-function showEvent(tajuk, nama, bahagian, mula, tamat, tarikh, remarks, bookingId, cancelToken, isOwn) {
+function showEvent(tajuk, nama, bahagian, phone, mula, tamat, tarikh, remarks, bookingId, cancelToken, isOwn) {
     document.getElementById('ev-tajuk').textContent    = tajuk;
     document.getElementById('ev-nama').textContent     = nama;
     document.getElementById('ev-bahagian').textContent = bahagian;
+    document.getElementById('ev-phone').textContent    = phone;
     document.getElementById('ev-masa').textContent     = mula + ' – ' + tamat;
     document.getElementById('ev-tarikh').textContent   = tarikh;
     document.getElementById('ev-remarks').textContent  = remarks || '-';

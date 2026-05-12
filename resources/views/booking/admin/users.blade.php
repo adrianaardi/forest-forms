@@ -91,6 +91,7 @@
             <th>Nama</th>
             <th>Emel</th>
             <th>Bahagian</th>
+            <th>No. Telefon</th>
             <th>Tarikh Daftar</th>
             <th>Status</th>
             <th>Tindakan</th>
@@ -100,6 +101,7 @@
             <td>{{ $user->name }}</td>
             <td>{{ $user->email }}</td>
             <td>{{ $user->bahagian ?? '-' }}</td>
+            <td>{{ $user->phone ?? '-' }}</td>
             <td>{{ \Carbon\Carbon::parse($user->created_at)->format('d/m/Y') }}</td>
             <td>
                 @if($user->status === 'pending')
