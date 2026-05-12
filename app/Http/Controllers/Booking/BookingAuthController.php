@@ -17,41 +17,31 @@ class BookingAuthController extends Controller
 
     public function login(Request $request)
     {
-        $validated = $request->validate([
+        $request->validate([
             'email'    => 'required|email',
             'password' => 'required',
         ]);
 
-        // check booking admin
+        // check booking admin first
         $admin = \App\Models\User::where('email', $request->email)->first();
         if ($admin && Hash::check($request->password, $admin->password) && $admin->email === 'admin.booking@sarawak.gov.my') {
             Auth::guard('web')->login($admin);
-            if ($request->expectsJson()) {
-                return response()->json(['success' => true, 'redirect' => '/booking/admin/dashboard']);
-            }
             return redirect('/booking/admin/dashboard');
         }
 
+        // check booking user
         $user = BookingUser::where('email', $request->email)->first();
         if ($user && Hash::check($request->password, $user->password)) {
             if ($user->status === 'pending') {
-                if ($request->expectsJson()) return response()->json(['message' => 'Akaun anda masih menunggu kelulusan admin.'], 422);
                 return back()->with('error', 'Akaun anda masih menunggu kelulusan admin.');
             }
             if ($user->status === 'rejected') {
-                if ($request->expectsJson()) return response()->json(['message' => 'Akaun anda telah ditolak.'], 422);
-                return back()->with('error', 'Akaun anda telah ditolak.');
+                return back()->with('error', 'Akaun anda telah ditolak. Hubungi admin untuk maklumat lanjut.');
             }
             Auth::guard('booking_user')->login($user);
-            if ($request->expectsJson()) {
-                return response()->json(['success' => true, 'reload' => true]);
-            }
             return redirect()->intended('/booking/calendar');
         }
 
-        if ($request->expectsJson()) {
-            return response()->json(['message' => 'Emel atau kata laluan tidak sah.'], 422);
-        }
         return back()->with('error', 'Emel atau kata laluan tidak sah.')->withInput();
     }
 
@@ -74,11 +64,11 @@ class BookingAuthController extends Controller
             'email'    => $request->email,
             'password' => Hash::make($request->password),
             'bahagian' => $request->bahagian,
-            'status'   => 'approved',
+            'status'   => 'pending',
         ]);
 
         return redirect('/booking/login')
-            ->with('success', 'Pendaftaran berjaya! Anda boleh log masuk sekarang');
+            ->with('success', 'Pendaftaran berjaya! Sila tunggu kelulusan admin sebelum log masuk.');
     }
 
     public function logout()

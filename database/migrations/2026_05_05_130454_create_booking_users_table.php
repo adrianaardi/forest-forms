@@ -14,7 +14,7 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->string('password');
             $table->string('bahagian')->nullable();
-            $table->enum('status', ['approved', 'rejected'])->default('approved');
+            $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending');
             $table->timestamps();
         });
     }
