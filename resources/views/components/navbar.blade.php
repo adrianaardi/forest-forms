@@ -51,7 +51,7 @@
 
     {{-- Booking user --}}
     @auth('booking_user')
-        <a href="/booking/calendar" class="{{ request()->is('booking/calendar*') ? 'active' : '' }}">Kalendar</a>
+        <a href="/booking/calendar" class="{{ request()->is('booking/calendar*') ? 'active' : '' }}">Tempah Bilik</a>
         <div style="margin-left:auto; display:flex; align-items:center; gap:1rem;">
             <a href="/booking/profile"
                class="{{ request()->is('booking/profile*') ? 'active' : '' }}"
