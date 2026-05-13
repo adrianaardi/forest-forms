@@ -7,6 +7,15 @@
     <link rel="stylesheet" href="{{ asset('style.css') }}">
     <link rel="icon" href="{{ asset('images/logo-icon.png')}}">
     <style>
+        /* 🌿 EMERALD LUXURY PALETTE */
+        :root {
+            --emerald: #284139;
+            --wasabi: #808976;
+            --khaki: #F8D794;
+            --earth: #B86830;
+            --noir: #111A19;
+        }
+
         .dash-wrap {
             display: flex; flex-direction: column; gap: 1.25rem;
         }
@@ -17,24 +26,30 @@
         .dash-row-1 { grid-template-columns: 1fr; }
 
         .dash-card {
-            background: #fff; border: 1px solid #eee;
+            background: #fff; border: 1px solid rgba(40,65,57,0.1);
             border-radius: 14px; padding: 1.25rem;
+            box-shadow: 0 4px 15px rgba(17,26,25,0.05);
         }
         .dash-card-title {
             font-size: 12px; font-weight: 600;
             text-transform: uppercase; letter-spacing: 0.05em;
-            color: #999; margin-bottom: 1rem;
+            color: var(--wasabi); margin-bottom: 1rem;
             display: flex; justify-content: space-between; align-items: center;
         }
         .dash-card-title span {
             font-size: 18px; font-weight: 600;
-            color: #1a1a1a; text-transform: none; letter-spacing: 0;
+            color: var(--noir); text-transform: none; letter-spacing: 0;
         }
         .dash-total-badge {
-            background: #eaf3de; color: #27500a;
-            font-size: 11px; padding: 3px 10px;
-            border-radius: 20px; font-weight: 500;
+            background: var(--khaki); color: var(--emerald);
+            font-size: 11px; padding: 4px 12px;
+            border-radius: 20px; font-weight: 700;
         }
+
+        /* Legend Styling */
+        .db-chart-legend { display: flex; flex-direction: column; gap: 8px; }
+        .db-chart-legend-item { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--noir); }
+        .db-chart-legend-dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
 
         @media (max-width: 700px) {
             .dash-row-2 { grid-template-columns: 1fr; }
@@ -52,24 +67,23 @@
 </header>
 <x-navbar />
 
-<div class="dashboard-body">
+<div class="dashboard-body" style="padding: 1.5rem;">
 
-    <div class="db-greeting" style="margin-bottom:1.5rem;">
+    <div class="db-greeting" style="margin-bottom:1.5rem; display: flex; justify-content: space-between; align-items: center;">
         <div>
-            <h2 class="db-greeting-title">Dashboard Portal Muat Naik 📊</h2>
-            <p class="db-greeting-sub">{{ \Carbon\Carbon::now()->translatedFormat('l, d F Y') }}</p>
+            <h2 class="db-greeting-title" style="margin:0; color: var(--emerald);">Dashboard Aduan ICT 📊</h2>
+            <p class="db-greeting-sub" style="margin:5px 0 0; color: var(--wasabi);">{{ \Carbon\Carbon::now()->translatedFormat('l, d F Y') }}</p>
         </div>
-        <span class="dash-total-badge">{{ $total }} jumlah permohonan</span>
+        <span class="dash-total-badge">{{ $total }} JUMLAH ADUAN</span>
     </div>
 
     <div class="dash-wrap">
 
-        {{-- Row 1: monthly + pengemaskinian --}}
+        {{-- Row 1: monthly + kategori --}}
         <div class="dash-row dash-row-2">
-
             <div class="dash-card">
                 <div class="dash-card-title">
-                    Permohonan Mengikut Bulan
+                    Aduan Mengikut Bulan
                     <span>{{ $months->sum('count') }}</span>
                 </div>
                 <canvas id="monthChart" style="max-height:220px;"></canvas>
@@ -80,9 +94,8 @@
                     Kategori Masalah
                     <span>{{ array_sum($kategori) }}</span>
                 </div>
-                <canvas id="kategoriChart"></canvas>
+                <canvas id="kategoriChart" style="max-height:220px;"></canvas>
             </div>
-
         </div>
 
         {{-- Row 2: by bahagian --}}
@@ -96,28 +109,26 @@
             </div>
         </div>
 
-        {{-- Row 3: status + jenis kandungan --}}
+        {{-- Row 3: status + wilayah --}}
         <div class="dash-row dash-row-2">
-
             <div class="dash-card">
-                <div class="dash-card-title">Status Permohonan</div>
+                <div class="dash-card-title">Status Aduan</div>
                 <div style="display:flex; align-items:center; gap:1.5rem; flex-wrap:wrap;">
                     <canvas id="statusChart" style="max-height:180px; max-width:180px;"></canvas>
-                    <div id="statusLegend" class="db-chart-legend" style="flex-direction:column; gap:8px;"></div>
+                    <div id="statusLegend" class="db-chart-legend"></div>
                 </div>
             </div>
 
             <div class="dash-card">
                 <div class="dash-card-title">Aduan Mengikut Wilayah</div>
-                    <canvas id="wilayahChart"></canvas>
-                    <div id="wilayahLegend"></div>
+                <div style="display:flex; align-items:center; gap:1.5rem; flex-wrap:wrap;">
+                    <canvas id="wilayahChart" style="max-height:180px; max-width:180px;"></canvas>
+                    <div id="wilayahLegend" class="db-chart-legend"></div>
                 </div>
             </div>
-
         </div>
 
     </div>
-
 </div>
 
 <footer>
@@ -127,16 +138,12 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <script>
-const green  = '#1a4731';
-const teal   = '#2d7a55';
-const sage   = '#7ec99a';
-const blue   = '#194169';
-const sky    = '#4a90d9';
-const amber  = '#f0a541';
-const orange = '#c47a1e';
-const rose   = '#e05c5c';
-const slate  = '#8fa3b1';
-const muted  = '#c5d5de';
+/* Colors from image_566d1e.jpg */
+const emerald = '#284139';
+const wasabi  = '#808976';
+const khaki   = '#F8D794';
+const earth   = '#B86830';
+const noir    = '#111A19';
 
 const barDefaults = {
     borderRadius: 6,
@@ -149,9 +156,9 @@ new Chart(document.getElementById('monthChart'), {
     data: {
         labels: @json($months->pluck('label')),
         datasets: [{
-            label: 'Permohonan',
+            label: 'Aduan', /* Fixes "undefined" tooltip */
             data:  @json($months->pluck('count')),
-            backgroundColor: [sage, teal, green],
+            backgroundColor: emerald,
             ...barDefaults,
         }]
     },
@@ -164,21 +171,22 @@ new Chart(document.getElementById('monthChart'), {
     }
 });
 
-
+// ── kategori chart ──
 new Chart(document.getElementById('kategoriChart'), {
     type: 'bar',
     data: {
         labels: @json(array_keys($kategori)),
         datasets: [{
+            label: 'Bilangan', /* Fixes "undefined" tooltip */
             data: @json(array_values($kategori)),
-            backgroundColor: [blue, sky, muted],
-            borderRadius: 6,
+            backgroundColor: [wasabi, earth, khaki, emerald],
+            ...barDefaults,
         }]
     },
     options: {
         plugins: { legend: { display: false } },
         scales: {
-            y: { beginAtZero: true },
+            y: { beginAtZero: true, ticks: { stepSize: 1 } },
             x: { grid: { display: false } }
         }
     }
@@ -188,13 +196,12 @@ new Chart(document.getElementById('kategoriChart'), {
 new Chart(document.getElementById('bahagianChart'), {
     type: 'bar',
     data: {
-        labels: @json($byBahagian->pluck('bahagian_nama')),
+        labels: @json($byBahagian->pluck('bahagian')),
         datasets: [{
-            label: 'Permohonan',
+            label: 'Aduan', /* Fixes "undefined" tooltip */
             data:  @json($byBahagian->pluck('count')),
-            backgroundColor: green,
-            borderRadius: 4,
-            borderSkipped: false,
+            backgroundColor: wasabi,
+            ...barDefaults,
         }]
     },
     options: {
@@ -207,27 +214,24 @@ new Chart(document.getElementById('bahagianChart'), {
     }
 });
 
-// ── status pie chart ──
+// ── pie chart helper ──
 function makePie(canvasId, legendId, labels, counts, colors) {
     new Chart(document.getElementById(canvasId), {
         type: 'doughnut',
         data: {
             labels,
             datasets: [{
+                label: 'Jumlah', /* Fixes "undefined" tooltip */
                 data: counts,
                 backgroundColor: colors,
                 borderWidth: 2,
                 borderColor: '#fff',
-                hoverOffset: 6,
             }]
         },
         options: {
-            cutout: '58%',
+            cutout: '65%',
             plugins: {
                 legend: { display: false },
-                tooltip: {
-                    callbacks: { label: ctx => ` ${ctx.label}: ${ctx.parsed}` }
-                }
             }
         }
     });
@@ -245,17 +249,15 @@ makePie(
     'statusChart', 'statusLegend',
     @json(array_keys($status)),
     @json(array_values($status)),
-    [amber, sky, sage]
+    [emerald, khaki, wasabi]
 );
 
 makePie(
     'wilayahChart', 'wilayahLegend',
     @json(array_keys($wilayah)),
     @json(array_values($wilayah)),
-    [green, teal, blue, amber, rose, slate]
+    [emerald, wasabi, earth, khaki]
 );
-
 </script>
-
 </body>
 </html>
