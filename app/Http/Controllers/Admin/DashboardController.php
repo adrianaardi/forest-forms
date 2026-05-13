@@ -109,6 +109,58 @@ class DashboardController extends Controller
 
         return view('admin.portal-upload', compact('requests', 'stats', 'bahagianList', 'chartData'));
     }
+
+    public function dashboardMohon()
+    {
+        if (Auth::user()->email !== 'admin.mohon@sarawak.gov.my') abort(403);
+
+        // permohonan by month (last 3 months)
+        $months = collect(range(2, 0))->map(function($i) {
+            $month = \Carbon\Carbon::now()->subMonths($i);
+            return [
+                'label' => $month->translatedFormat('M Y'),
+                'count' => \App\Models\BorangMuatNaikBahan::whereYear('created_at', $month->year)
+                            ->whereMonth('created_at', $month->month)
+                            ->count(),
+            ];
+        });
+
+        // jenis pengemaskinian
+        $pengemaskinian = [
+            'Maklumat Baru'  => \App\Models\BorangMuatNaikBahan::where('jenis_pengemaskinian', 'Maklumat Baru')->count(),
+            'Pembetulan'     => \App\Models\BorangMuatNaikBahan::where('jenis_pengemaskinian', 'Pembetulan')->count(),
+            'Lain-lain'      => \App\Models\BorangMuatNaikBahan::where('jenis_pengemaskinian', 'Lain-lain')->count(),
+        ];
+
+        // permohonan by bahagian
+        $byBahagian = \App\Models\BorangMuatNaikBahan::selectRaw('bahagian_nama, count(*) as count')
+            ->groupBy('bahagian_nama')
+            ->orderByDesc('count')
+            ->get();
+
+        // status
+        $status = [
+            'Pending'       => \App\Models\BorangMuatNaikBahan::where('status', 'Pending')->count(),
+            'Dalam Semakan' => \App\Models\BorangMuatNaikBahan::where('status', 'Dalam Semakan')->count(),
+            'Diluluskan'    => \App\Models\BorangMuatNaikBahan::where('status', 'Diluluskan')->count(),
+        ];
+
+        // jenis kandungan
+        $kandungan = [
+            'Pengumuman'     => \App\Models\BorangMuatNaikBahan::where('jenis_kandungan', 'Pengumuman')->count(),
+            'Foto'           => \App\Models\BorangMuatNaikBahan::where('jenis_kandungan', 'Foto')->count(),
+            'Event'          => \App\Models\BorangMuatNaikBahan::where('jenis_kandungan', 'Event')->count(),
+            'Banner/Poster'  => \App\Models\BorangMuatNaikBahan::where('jenis_kandungan', 'Banner/Poster')->count(),
+            'Jawatan Kosong' => \App\Models\BorangMuatNaikBahan::where('jenis_kandungan', 'Jawatan Kosong')->count(),
+            'Lain-lain'      => \App\Models\BorangMuatNaikBahan::where('jenis_kandungan', 'Lain-lain')->count(),
+        ];
+
+        $total = \App\Models\BorangMuatNaikBahan::count();
+
+        return view('admin.dashboard-mohon', compact(
+            'months', 'pengemaskinian', 'byBahagian', 'status', 'kandungan', 'total'
+        ));
+    }
     
     public function ictAduanDetail($id)
     {

@@ -29,6 +29,7 @@
 
         {{-- Portal Upload admin (UNCHANGED) --}}
         @if($email === 'admin.mohon@sarawak.gov.my')
+            <a href="/admin/dashboard-mohon" class="{{ request()->is('admin/dashboard-mohon') ? 'active' : '' }}">Dashboard</a>
             <a href="/admin/portal-upload" class="{{ request()->is('admin/portal-upload*') ? 'active' : '' }}">Muat Naik</a>
             <a href="/admin/bahagian" class="{{ request()->is('admin/bahagian') ? 'active' : '' }}">Bahagian</a>
         @endif

@@ -68,6 +68,7 @@ class BookingAuthController extends Controller
             'email'    => 'required|email|unique:booking_users,email',
             'password' => 'required|min:8|confirmed',
             'bahagian' => 'nullable|string|max:255',
+            'phone'    => 'nullable|string|max:20',
         ]);
 
         BookingUser::create([
@@ -79,8 +80,8 @@ class BookingAuthController extends Controller
             'status'   => 'pending',
         ]);
 
-        return redirect('/booking/login')
-            ->with('success', 'Pendaftaran berjaya! Sila tunggu kelulusan admin sebelum log masuk.');
+        return redirect('/booking/calendar')
+            ->with('daftar_success', true);
     }
 
     public function logout()

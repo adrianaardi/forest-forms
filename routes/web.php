@@ -24,6 +24,7 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::post('/ict-aduan/delete',     [DashboardController::class, 'deleteIct'])->name('ict-aduan.delete');
 
     // portal upload
+    Route::get('/dashboard-mohon', [DashboardController::class, 'dashboardMohon'])->name('dashboard-mohon');
     Route::get('/portal-upload',              [DashboardController::class, 'portalUpload'])->name('portal-upload');
     Route::get('/portal-upload/{id}',         [DashboardController::class, 'portalUploadDetail'])->name('portal-upload.detail');
     Route::post('/portal-upload/{id}/status', [DashboardController::class, 'updateUploadStatus'])->name('portal-upload.status');

@@ -182,6 +182,28 @@
     </div>
 </header>
 <x-navbar />
+@if(session('daftar_success'))
+<div id="daftar-modal" style="position:fixed; inset:0; background:rgba(0,0,0,0.4); display:flex; justify-content:center; align-items:center; z-index:9999;">
+    <div style="background:#fff; border-radius:14px; padding:2rem; max-width:400px; width:90%; text-align:center; box-shadow:0 8px 32px rgba(0,0,0,0.15); animation:slideUp 0.3s ease;">
+        <div style="font-size:42px; margin-bottom:0.75rem;">🎉</div>
+        <h3 style="font-size:15px; font-weight:500; margin-bottom:0.5rem; color:#1a1a1a;">Pendaftaran Berjaya!</h3>
+        <p style="font-size:13px; color:#666; line-height:1.6; margin-bottom:1.25rem;">
+            Akaun anda telah didaftarkan. Sila tunggu kelulusan admin sebelum anda boleh membuat tempahan.
+            Anda akan dihubungi melalui emel apabila akaun diluluskan.
+        </p>
+        <button onclick="document.getElementById('daftar-modal').remove()"
+            style="background:#1a4731; color:#fff; border:none; padding:10px 24px; border-radius:8px; font-size:13px; cursor:pointer; transition:background 0.15s;">
+            Faham, Terima Kasih
+        </button>
+    </div>
+</div>
+<style>
+@keyframes slideUp {
+    from { transform: translateY(20px) scale(0.97); opacity: 0; }
+    to   { transform: translateY(0) scale(1); opacity: 1; }
+}
+</style>
+@endif
 
 @if(session('success') || session('info'))
     <div id="flash-msg" style="position:fixed; top:1rem; right:1rem; z-index:9999; padding:0.75rem 1.25rem; border-radius:8px; font-size:13px; font-weight:500; box-shadow:0 4px 16px rgba(0,0,0,0.12); transition:opacity 0.5s, transform 0.5s; transform:translateY(0);
@@ -387,7 +409,7 @@
 </div>
 
 {{-- Event detail modal --}}
-<div class="modal-overlay" id="eventModal" onclick="if(event.target===this)closeEvent()">
+<div class="modal-overlay" id="eventModal">
     <div class="modal" style="max-width:440px;">
         <div class="modal-header">
             <h2 id="ev-tajuk" style="font-size:14px;"></h2>

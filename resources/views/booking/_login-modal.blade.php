@@ -1,4 +1,4 @@
-<div class="modal-overlay" id="loginModal" onclick="if(event.target===this)closeLoginModal()">
+<div class="modal-overlay" id="loginModal">
     <div class="modal" style="max-width:420px;">
         <div class="modal-header">
             <h2 style="font-size:14px; color:#fff; margin:0;">Log Masuk — Sistem Tempahan</h2>

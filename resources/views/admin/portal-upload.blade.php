@@ -27,74 +27,6 @@
         </div>
     @endif
 
-    {{-- top section: stats + pie chart --}}
-    <div style="display:flex; gap:1.5rem; margin-bottom:1.75rem; align-items:flex-start; flex-wrap:wrap;">
-
-        {{-- left: greeting + stats --}}
-        <div style="flex:1; min-width:280px;">
-            <div class="db-greeting" style="margin-bottom:1.25rem;">
-                <div>
-                    <h2 class="db-greeting-title">Portal Muat Naik 📂</h2>
-                    <p class="db-greeting-sub">{{ \Carbon\Carbon::now()->translatedFormat('l, d F Y') }}</p>
-                </div>
-                @if($stats['pending'] > 0)
-                    <span class="db-alert db-alert-active">⚠ {{ $stats['pending'] }} permohonan menunggu kelulusan</span>
-                @else
-                    <span class="db-alert db-alert-clear">✓ Tiada permohonan menunggu kelulusan</span>
-                @endif
-            </div>
-
-            <div class="db-stats" style="grid-template-columns: repeat(auto-fill, minmax(130px,1fr));">
-                <div class="db-stat db-stat-blue">
-                    <div class="db-stat-icon">📋</div>
-                    <div>
-                        <div class="db-stat-num">{{ $stats['total'] }}</div>
-                        <div class="db-stat-label">Jumlah Permohonan</div>
-                    </div>
-                </div>
-                <div class="db-stat db-stat-orange">
-                    <div class="db-stat-icon">⏳</div>
-                    <div>
-                        <div class="db-stat-num">{{ $stats['pending'] }}</div>
-                        <div class="db-stat-label">Menunggu Kelulusan</div>
-                    </div>
-                </div>
-                <div class="db-stat db-stat-teal">
-                    <div class="db-stat-icon">🔍</div>
-                    <div>
-                        <div class="db-stat-num">{{ $stats['semakan'] }}</div>
-                        <div class="db-stat-label">Sedang Disemak</div>
-                    </div>
-                </div>
-                <div class="db-stat db-stat-green">
-                    <div class="db-stat-icon">✅</div>
-                    <div>
-                        <div class="db-stat-num">{{ $stats['total'] - $stats['pending'] - $stats['semakan'] }}</div>
-                        <div class="db-stat-label">Diluluskan</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        {{-- right: pie chart --}}
-        <div class="db-chart-card">
-            <div class="db-section-header" style="margin-bottom:1rem;">
-                <h3 class="db-section-title">Status Permohonan</h3>
-                <span style="font-size:11px; color:#aaa;">Keseluruhan</span>
-            </div>
-            @if($stats['total'] > 0)
-                <canvas id="statusChart" style="max-height:220px;"></canvas>
-                <div class="db-chart-legend" id="chartLegend"></div>
-            @else
-                <div class="db-empty" style="text-align:center; padding:2rem 0;">
-                    <p style="font-size:28px; margin-bottom:0.5rem;">📊</p>
-                    <p>Belum ada data permohonan.</p>
-                </div>
-            @endif
-        </div>
-
-    </div>
-
     {{-- Section header --}}
     <div class="db-section">
         <div class="db-section-header" style="margin-bottom:0.75rem;">
@@ -401,55 +333,6 @@ function submitResend() {
 }
 
 
-</script>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
-<script>
-@if($stats['total'] > 0)
-const chartData = {
-    labels: @json(array_keys($chartData)),
-    counts: @json(array_values($chartData)),
-};
-
-const palette = ['#f5d5a0', '#7ab8f5', '#7ec99a'];
-
-const ctx = document.getElementById('statusChart').getContext('2d');
-new Chart(ctx, {
-    type: 'doughnut',
-    data: {
-        labels: chartData.labels,
-        datasets: [{
-            data:            chartData.counts,
-            backgroundColor: palette,
-            borderWidth:     2,
-            borderColor:     '#fff',
-            hoverOffset:     6,
-        }]
-    },
-    options: {
-        cutout: '60%',
-        plugins: {
-            legend: { display: false },
-            tooltip: {
-                callbacks: {
-                    label: ctx => ` ${ctx.label}: ${ctx.parsed} permohonan`
-                }
-            }
-        }
-    }
-});
-
-const legend = document.getElementById('chartLegend');
-chartData.labels.forEach((label, i) => {
-    const item = document.createElement('div');
-    item.className = 'db-chart-legend-item';
-    item.innerHTML = `
-        <span class="db-chart-legend-dot" style="background:${palette[i]};"></span>
-        <span>${label} (${chartData.counts[i]})</span>
-    `;
-    legend.appendChild(item);
-});
-@endif
 </script>
 
 </body>
