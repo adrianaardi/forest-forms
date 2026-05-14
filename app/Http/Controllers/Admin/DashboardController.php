@@ -110,6 +110,73 @@ class DashboardController extends Controller
         return view('admin.portal-upload', compact('requests', 'stats', 'bahagianList', 'chartData'));
     }
 
+    public function dashboardIct()
+    {
+        $user = \Illuminate\Support\Facades\Auth::user();
+
+        $query = \App\Models\BorangAduanKerosakan::query();
+
+        // 🔒 SUB ADMIN FILTER (by wilayah)
+        if ($user->role === 'sub_admin') {
+            $wilayah = \App\Models\Wilayah::find($user->wilayah_id);
+
+            if ($wilayah) {
+                $query->where('wilayah', $wilayah->nama_wilayah);
+            }
+        }
+
+        // ── MONTHLY ──
+        $months = collect(range(2, 0))->map(function($i) use ($query) {
+            $month = \Carbon\Carbon::now()->subMonths($i);
+
+            return [
+                'label' => $month->translatedFormat('M Y'),
+                'count' => (clone $query)
+                    ->whereYear('tarikh_aduan', $month->year)
+                    ->whereMonth('tarikh_aduan', $month->month)
+                    ->count(),
+            ];
+        });
+
+        // ── KATEGORI ──
+        $kategori = (clone $query)
+            ->selectRaw('kategori_masalah, count(*) as count')
+            ->groupBy('kategori_masalah')
+            ->pluck('count', 'kategori_masalah')
+            ->toArray();
+
+        // ── BAHAGIAN ──
+        $byBahagian = (clone $query)
+            ->selectRaw('bahagian, count(*) as count')
+            ->groupBy('bahagian')
+            ->orderByDesc('count')
+            ->get();
+
+        // ── STATUS ──
+        $status = (clone $query)
+            ->selectRaw('status, count(*) as count')
+            ->groupBy('status')
+            ->pluck('count', 'status')
+            ->toArray();
+
+        // ── WILAYAH ──
+        $wilayah = (clone $query)
+            ->selectRaw('wilayah, count(*) as count')
+            ->groupBy('wilayah')
+            ->pluck('count', 'wilayah')
+            ->toArray();
+
+        $total = (clone $query)->count();
+
+        return view('admin.dashboard-ict', compact(
+            'months',
+            'kategori',
+            'byBahagian',
+            'status',
+            'wilayah',
+            'total'
+        ));
+    }
     public function dashboardMohon()
     {
         if (Auth::user()->email !== 'admin.mohon@sarawak.gov.my') abort(403);

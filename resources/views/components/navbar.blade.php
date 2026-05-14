@@ -19,7 +19,11 @@
             $email === 'admin.aduan@sarawak.gov.my' ||
             $user->role === 'sub_admin'
         )
-            <a href="/admin/ict-aduan" class="{{ request()->is('admin/ict-aduan*') ? 'active' : '' }}">Aduan ICT</a>
+            <a href="/admin/ict-aduan" class="{{ request()->is('admin/ict-aduan*') ? 'active' : '' }}">📋 Aduan ICT</a>
+            <a href="{{ route('admin.dashboard-ict') }}"
+                class="{{ request()->is('admin/dashboard-ict*') ? 'active' : '' }}">
+                📊 Dashboard ICT
+            </a>
         @endif
 
         {{-- ONLY admin.aduan gets Urus Akaun --}}
