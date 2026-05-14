@@ -7,15 +7,14 @@
     <link rel="icon" href="{{ asset('images/logo-icon.png')}}">
 <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:opsz,wght@6..144,1..1000&family=Source+Serif+4:ital,opsz,wght@0,8..60,537;1,8..60,537&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{{ asset('style.css') }}">    <style>
+<link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:opsz,wght@6..144,1..1000&family=Lora:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet"><link rel="stylesheet" href="{{ asset('style.css') }}">    <style>
         /* ── layout ── */
         .bk-wrap { display: flex; height: calc(100vh - 180px); overflow: hidden; }
 
         /* ── sidebar ── */
         .bk-sidebar {
             width: 210px; flex-shrink: 0;
-            background: #f9fafb;
+            background: #fafafa;
             border-right: 1px solid #e8e8e8;
             overflow-y: auto; padding: 0.75rem 0;
             transition: width 0.25s ease;
@@ -138,6 +137,7 @@
             background: rgba(0,0,0,0);
             justify-content: center; align-items: center; z-index: 999;
             transition: background 0.25s;
+            overflow: hidden;
         }
         .modal-overlay.active { display: flex; background: rgba(0,0,0,0.4); }
         .modal-overlay .modal {
