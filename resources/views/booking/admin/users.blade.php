@@ -5,15 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Urus Pengguna — Tempahan</title>
     <link rel="stylesheet" href="{{ asset('style.css') }}">
-        <link rel="icon" href="{{ asset('images/logo-icon.png')}}">
-
+    <link rel="icon" href="{{ asset('images/logo-icon.png')}}">
 </head>
 <body>
 <header>
     <div class="logo"></div>
     <div>
         <h1>Jabatan Hutan Sarawak</h1>
-        <p> Hub Aplikasi Perkhidmatan Atas Talian</p>
+        <p>Hub Aplikasi Perkhidmatan Atas Talian</p>
     </div>
 </header>
 <x-navbar />
@@ -58,9 +57,16 @@
                         <input type="text" name="bahagian" value="{{ old('bahagian') }}" placeholder="Cth: Bahagian ICT">
                     </div>
                     <div class="field">
+                        <label>No. Telefon</label>
+                        <input type="text" name="phone" value="{{ old('phone') }}" placeholder="Cth: 0123456789">
+                    </div>
+                </div>
+                <div class="field-row">
+                    <div class="field">
                         <label>Kata Laluan <span class="required">*</span></label>
                         <input type="password" name="password" placeholder="Minimum 8 aksara" required>
                     </div>
+                    <div class="field"></div>
                 </div>
             </div>
             <div class="form-footer">
@@ -81,7 +87,7 @@
                 <option value="approved" {{ request('status') == 'approved' ? 'selected' : '' }}>Diluluskan</option>
                 <option value="rejected" {{ request('status') == 'rejected' ? 'selected' : '' }}>Ditolak</option>
             </select>
-            <button type="submit" style="padding:7px 16px; background:#1a4731; color:#fff; border:none; border-radius:6px; font-size:13px; cursor:pointer;">Tapis</button>
+            <button type="submit" style="padding:7px 16px; background:#2C3E50; color:#fff; border:none; border-radius:6px; font-size:13px; cursor:pointer;">Tapis</button>
             <a href="/booking/admin/users" class="btn-reset">Set Semula</a>
         </div>
     </form>
@@ -125,6 +131,16 @@
                         <button type="submit" class="btn-tolak" style="padding:4px 12px; font-size:12px;">Tolak</button>
                     </form>
                 @endif
+                @if($user->status === 'approved')
+                    <button class="btn-view" style="padding:4px 12px; font-size:12px;"
+                        onclick="openEditModal(
+                            {{ $user->id }},
+                            '{{ addslashes($user->name) }}',
+                            '{{ addslashes($user->email) }}',
+                            '{{ addslashes($user->bahagian ?? '') }}',
+                            '{{ addslashes($user->phone ?? '') }}'
+                        )">Edit</button>
+                @endif
                 <form method="POST" action="{{ route('booking.admin.users.delete', $user->id) }}"
                     onsubmit="return confirm('Padam pengguna {{ addslashes($user->name) }}?')">
                     @csrf
@@ -134,7 +150,7 @@
             </td>
         </tr>
         @empty
-        <tr><td colspan="6" style="text-align:center; color:#999; padding:1.5rem;">Tiada pengguna.</td></tr>
+        <tr><td colspan="7" style="text-align:center; color:#999; padding:1.5rem;">Tiada pengguna.</td></tr>
         @endforelse
     </table>
 
@@ -146,5 +162,93 @@
     <div><strong>Jabatan Hutan Sarawak</strong> &nbsp;|&nbsp; Bangunan Baitul Makmur II, Medan Raya, Petra Jaya, 93050 Kuching, Sarawak</div>
     <div>© <?php echo date("Y"); ?> Jabatan Hutan Sarawak. Hak Cipta Terpelihara.</div>
 </footer>
+
+{{-- Edit modal --}}
+<div class="modal-overlay" id="editModal">
+    <div class="modal" style="max-width:480px;">
+        <div class="modal-header">
+            <h2 style="font-size:14px;">Edit Maklumat Pengguna</h2>
+            <button class="modal-close" onclick="closeEditModal()">×</button>
+        </div>
+        <div class="modal-body">
+            <form id="edit-form" method="POST">
+                @csrf
+                <div class="form-section">
+                    <div class="field">
+                        <label>Nama <span class="required">*</span></label>
+                        <input type="text" id="edit-name" name="name" required>
+                    </div>
+                    <div class="field">
+                        <label>Emel <span class="required">*</span></label>
+                        <input type="email" id="edit-email" name="email" required>
+                    </div>
+                    <div class="field">
+                        <label>Bahagian</label>
+                        <input type="text" id="edit-bahagian" name="bahagian" placeholder="Cth: Bahagian ICT">
+                    </div>
+                    <div class="field">
+                        <label>No. Telefon</label>
+                        <input type="text" id="edit-phone" name="phone" placeholder="Cth: 0123456789">
+                    </div>
+                </div>
+                <div class="form-footer">
+                    <button type="button" onclick="closeEditModal()"
+                        style="padding:8px 16px; font-size:13px; border-radius:6px; border:1px solid #ddd; background:#f5f5f5; color:#555; cursor:pointer;">
+                        Batal
+                    </button>
+                    <button type="submit" class="btn-submit">Simpan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+function openEditModal(id, name, email, bahagian, phone) {
+    document.getElementById('edit-name').value    = name;
+    document.getElementById('edit-email').value   = email;
+    document.getElementById('edit-bahagian').value = bahagian;
+    document.getElementById('edit-phone').value   = phone;
+    document.getElementById('edit-form').action   = '/booking/admin/users/' + id + '/edit';
+
+    const overlay = document.getElementById('editModal');
+    overlay.classList.add('active');
+    const modal = overlay.querySelector('.modal');
+    modal.style.transform = '';
+    modal.style.opacity   = '';
+}
+
+function closeEditModal() {
+    const overlay = document.getElementById('editModal');
+    const modal   = overlay.querySelector('.modal');
+    modal.style.transform = 'translateY(10px) scale(0.97)';
+    modal.style.opacity   = '0';
+    setTimeout(() => {
+        overlay.classList.remove('active');
+        modal.style.transform = '';
+        modal.style.opacity   = '';
+    }, 220);
+}
+</script>
+
+<style>
+.modal-overlay {
+    display: none; position: fixed; inset: 0;
+    background: rgba(0,0,0,0.4);
+    justify-content: center; align-items: center;
+    z-index: 999;
+}
+.modal-overlay.active { display: flex; }
+.modal-overlay .modal {
+    transform: translateY(20px) scale(0.97);
+    opacity: 0;
+    transition: transform 0.25s ease, opacity 0.25s ease;
+}
+.modal-overlay.active .modal {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+}
+</style>
+
 </body>
 </html>

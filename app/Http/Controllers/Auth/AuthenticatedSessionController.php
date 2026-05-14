@@ -36,7 +36,7 @@ class AuthenticatedSessionController extends Controller
 
         // Portal upload admin
         if ($user->email === 'admin.mohon@sarawak.gov.my') {
-            return redirect('/admin/portal-upload');
+            return redirect('/admin/dashboard-mohon');
         }
 
         // ICT aduan admin + subadmin

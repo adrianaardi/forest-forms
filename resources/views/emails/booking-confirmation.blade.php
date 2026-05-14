@@ -5,12 +5,12 @@
     <style>
         body { font-family: Arial, sans-serif; background: #f4f4f4; margin: 0; padding: 20px; }
         .container { max-width: 600px; margin: auto; background: #fff; border-radius: 10px; overflow: hidden; border: 1px solid #dde8e1; }
-        .header { background: #1a4731; padding: 1.25rem 1.5rem; }
+        .header { background: #2C3E50; padding: 1.25rem 1.5rem; }
         .header h1 { color: #fff; font-size: 16px; margin: 0; }
         .header p { color: rgba(255,255,255,0.65); font-size: 12px; margin: 4px 0 0; }
         .body { padding: 1.5rem; }
         .body p { font-size: 14px; color: #333; line-height: 1.6; margin-bottom: 0.75rem; }
-        .detail-box { background: #f0f4f1; border: 1px solid #dde8e1; border-radius: 8px; padding: 1rem 1.25rem; margin: 1rem 0; }
+        .detail-box { background:#ebebeb border: 1px solid #dde8e1; border-radius: 8px; padding: 1rem 1.25rem; margin: 1rem 0; }
         .detail-row { display: flex; gap: 10px; margin-bottom: 0.5rem; }
         .detail-label { font-size: 12px; color: #777; width: 140px; flex-shrink: 0; }
         .detail-value { font-size: 13px; color: #1a1a1a; font-weight: 500; }

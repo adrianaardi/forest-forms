@@ -60,6 +60,25 @@ class AdminBookingController extends Controller
         return back()->with('success', 'Status pengguna berjaya dikemaskini.');
     }
 
+    public function editUser(Request $request, $id)
+    {
+        $request->validate([
+            'name'     => 'required|string|max:255',
+            'email'    => 'required|email|unique:booking_users,email,' . $id,
+            'bahagian' => 'nullable|string|max:255',
+            'phone'    => 'nullable|string|max:20',
+        ]);
+
+        BookingUser::findOrFail($id)->update([
+            'name'     => $request->name,
+            'email'    => $request->email,
+            'bahagian' => $request->bahagian,
+            'phone'    => $request->phone,
+        ]);
+
+        return back()->with('success', 'Maklumat pengguna berjaya dikemaskini.');
+    }
+
     public function deleteUser($id)
     {
         BookingUser::findOrFail($id)->delete();

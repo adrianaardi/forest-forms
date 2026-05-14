@@ -30,8 +30,8 @@
             margin-bottom: 2px;
         }
         .bk-room-link span { font-size: 10px; color: #bbb; display: block; margin-top: 1px; }
-        .bk-room-link:hover { background: #eaf3de; color: #1a4731; transform: translateX(2px); }
-        .bk-room-link.active { background: #1a4731; color: #fff; }
+        .bk-room-link:hover { background: #eaf3de; color: #2C3E50; transform: translateX(2px); }
+        .bk-room-link.active { background: #2C3E50; color: #fff; }
         .bk-room-link.active span { color: rgba(255,255,255,0.6); }
 
         /* ── mini calendar ── */
@@ -43,7 +43,7 @@
             padding: 2px 6px; border-radius: 4px;
             transition: background 0.15s, color 0.15s;
         }
-        .mini-cal-header a:hover { background: #eaf3de; color: #1a4731; }
+        .mini-cal-header a:hover { background: #eaf3de; color: #2C3E50; }
         .mini-cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; }
         .mini-cal-dow { font-size: 9px; color: #bbb; text-align: center; padding: 2px 0; font-weight: 600; }
         .mini-cal-day {
@@ -58,7 +58,7 @@
         .mini-cal-day.available { background: #eaf3de; color: #27500a; }
         .mini-cal-day.partial { background: #fef9e7; color: #854f0b; }
         .mini-cal-day.full { background: #fdf0f0; color: #a32d2d; }
-        .mini-cal-day.today-dot { outline: 2px solid #1a4731; outline-offset: -1px; font-weight: 600; }
+        .mini-cal-day.today-dot { outline: 2px solid #2C3E50; outline-offset: -1px; font-weight: 600; }
         .mini-cal-day.in-week { outline: 2px solid #7ec99a; outline-offset: -1px; }
         .mini-cal-legend { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 8px; }
         .mini-cal-legend span { font-size: 9px; display: flex; align-items: center; gap: 3px; color: #777; }
@@ -86,7 +86,7 @@
             transition: background 0.15s, border-color 0.15s;
         }
         .bk-btn:hover { background: #f5f5f5; border-color: #ccc; }
-        .bk-btn-today { border-color: #1a4731; color: #1a4731; font-weight: 500; }
+        .bk-btn-today { border-color: #2C3E50; color: #2C3E50; font-weight: 500; }
         .bk-btn-today:hover { background: #eaf3de; }
 
         /* ── grid ── */
@@ -104,7 +104,7 @@
             line-height: 32px; border-radius: 50%; margin: 3px auto 0;
             transition: background 0.2s, color 0.2s;
         }
-        .bk-col-header .dnum.today { background: #1a4731; color: #fff; }
+        .bk-col-header .dnum.today { background: #2C3E50; color: #fff; }
         .bk-time-gutter {
             font-size: 10px; color: #ccc; text-align: right;
             padding: 2px 8px 0 0; height: 48px; border-right: 1px solid #eee;
@@ -192,7 +192,7 @@
             Anda akan dihubungi melalui emel apabila akaun diluluskan.
         </p>
         <button onclick="document.getElementById('daftar-modal').remove()"
-            style="background:#1a4731; color:#fff; border:none; padding:10px 24px; border-radius:8px; font-size:13px; cursor:pointer; transition:background 0.15s;">
+            style="background:#2C3E50; color:#fff; border:none; padding:10px 24px; border-radius:8px; font-size:13px; cursor:pointer; transition:background 0.15s;">
             Faham, Terima Kasih
         </button>
     </div>
@@ -329,7 +329,7 @@
                 {{ $weekStart->translatedFormat('d M') }} — {{ $weekEnd->translatedFormat('d M Y') }}
                 @if($bilik)
                     &nbsp;·&nbsp;
-                    <span style="color:#1a4731; font-weight:500;">{{ $bilik->nama_bilik }}</span>
+                    <span style="color:#2C3E50; font-weight:500;">{{ $bilik->nama_bilik }}</span>
                     <span style="color:#bbb; font-size:11px;"> {{ $bilik->aras }}, {{ $bilik->wing }}</span>
                 @endif
             </span>
@@ -379,7 +379,7 @@
                                 @endphp
                                 @if($startsHere)
                                     <div class="bk-event"
-                                        style="height:{{ max($h - 4, 14) }}px; background:{{ $isOwn ? '#7ec99a' : '#1a4731' }}; color:{{ $isOwn ? '#14381f' : '#fff' }};"
+                                        style="height:{{ max($h - 4, 14) }}px; background:{{ $isOwn ? '#7ec99a' : '#2C3E50' }}; color:{{ $isOwn ? '#14381f' : '#fff' }};"
                                         onclick='event.stopPropagation(); showEvent(
                                             @json($b->tajuk_mesyuarat),
                                             @json($b->user->name),

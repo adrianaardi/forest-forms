@@ -128,7 +128,7 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <script>
-const green  = '#1a4731';
+const green  = '#2C3E50';
 const teal   = '#2d7a55';
 const sage   = '#7ec99a';
 const blue   = '#194169';

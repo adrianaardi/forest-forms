@@ -16,7 +16,7 @@ body {
 
 /* ───── HEADER ───── */
 header {
-    background: #1a4731;
+    background: #2C3E50;
     color: #fff;
     padding: 1rem 2rem;
     display: flex;
@@ -135,12 +135,12 @@ nav a.active {
 }
 
 .hero-search-row input:focus {
-    border-color: #1a4731;
+    border-color:#2C3E50;
 }
 
 .hero-search-row button {
     padding: 8px 14px;
-    background: #1a4731;
+    background:#2C3E50;
     color: #fff;
     border: none;
     border-radius: 6px;
@@ -187,7 +187,7 @@ nav a.active {
 }
 
 .card:hover {
-    border-color: #1a4731;
+    border-color:#2C3E50;
 }
 
 .card-icon {
@@ -220,7 +220,7 @@ nav a.active {
 
 .card-link {
     font-size: 12px;
-    color: #1a4731;
+    color:#2C3E50;
     font-weight: 500;
 }
 
@@ -234,7 +234,7 @@ nav a.active {
 }
 
 .form-card-header {
-    background: #1a4731;
+    background:#2C3E50;
     padding: 1rem 1.5rem;
 }
 
@@ -265,7 +265,7 @@ nav a.active {
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.07em;
-    color: #1a4731;
+    color:#2C3E50;
     margin-bottom: 1rem;
     display: flex;
     align-items: center;
@@ -310,7 +310,7 @@ nav a.active {
 .field select:focus,
 .field textarea:focus {
     outline: none;
-    border-color: #1a4731;
+    border-color:#2C3E50;
     background: #fff;
 }
 
@@ -358,7 +358,7 @@ nav a.active {
 }
 
 .btn-submit {
-    background: #1a4731;
+    background:#2C3E50;
     color: #fff;
     border: none;
     padding: 10px 24px;
@@ -374,7 +374,7 @@ nav a.active {
 
 /* ───── FOOTER ───── */
 footer {
-    background: #1a4731;
+    background:#2C3E50;
     color: rgba(255,255,255,0.6);
     padding: 1.25rem 2rem;
     font-size: 12px;
@@ -482,7 +482,7 @@ footer strong {
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.07em;
-    color: #1a4731;
+    color:#2C3E50;
     margin: 0 0 0.75rem;
     display: flex;
     align-items: center;
@@ -577,7 +577,7 @@ footer strong {
 
 .toolbar button {
     padding: 7px 16px;
-    background: #1a4731;
+    background:#2C3E50;
     color: #fff;
     border: none;
     border-radius: 6px;
@@ -692,7 +692,7 @@ footer strong {
 }
 
 .modal-header {
-    background: #1a4731;
+    background:#2C3E50;
     padding: 1rem 1.25rem;
     display: flex;
     justify-content: space-between;
@@ -737,7 +737,7 @@ footer strong {
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.07em;
-    color: #1a4731;
+    color:#2C3E50;
     margin-bottom: 0.75rem;
     display: flex;
     align-items: center;
@@ -845,6 +845,6 @@ footer strong {
 input[type="checkbox"] {
     width: 15px;
     height: 15px;
-    accent-color: #1a4731;
+    accent-color:#2C3E50;
     cursor: pointer;
 }
