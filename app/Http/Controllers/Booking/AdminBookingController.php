@@ -13,31 +13,68 @@ class AdminBookingController extends Controller
     public function dashboard()
     {
         $today = \Carbon\Carbon::today();
+
+        // ── stats ──
         $stats = [
-            'total'          => BookingRequest::where('status', 'confirmed')->count(),
-            'today'          => BookingRequest::where('status', 'confirmed')->where('tarikh', $today)->count(),
-            'this_week'      => BookingRequest::where('status', 'confirmed')
-                                ->whereBetween('tarikh', [$today->startOfWeek(), $today->copy()->endOfWeek()])->count(),
-            'total_users'    => BookingUser::where('status', 'approved')->count(),
-            'pending_users'  => BookingUser::where('status', 'pending')->count(),
-            'total_bilik'    => \App\Models\BookingBilik::count(),
+            'total'         => BookingRequest::where('status', 'confirmed')->count(),
+            'today'         => BookingRequest::where('status', 'confirmed')->where('tarikh', $today->toDateString())->count(),
+            'pending_users' => BookingUser::where('status', 'pending')->count(),
+            'total_users'   => BookingUser::where('status', 'approved')->count(),
         ];
 
+        // ── weekly chart (Mon–Sun of current week) ──
+        $weekStart = $today->copy()->startOfWeek(\Carbon\Carbon::MONDAY);
+        $weeklyData = collect(range(0, 6))->map(function($i) use ($weekStart) {
+            $day = $weekStart->copy()->addDays($i);
+            return [
+                'label' => $day->translatedFormat('D, d M'),
+                'count' => BookingRequest::where('status', 'confirmed')
+                            ->where('tarikh', $day->toDateString())
+                            ->count(),
+            ];
+        });
+
+        // ── room availability today ──
+        $allBilik = \App\Models\BookingBilik::orderBy('aras')->orderBy('nama_bilik')->get();
+        $totalSlotMins = 9 * 60; // 8am-5pm
+
+        $todayBookingsAll = BookingRequest::with('bilik')
+            ->where('status', 'confirmed')
+            ->where('tarikh', $today->toDateString())
+            ->get();
+
+        $bilikStatus = $allBilik->map(function($bilik) use ($todayBookingsAll, $totalSlotMins) {
+            $bookings    = $todayBookingsAll->where('bilik_id', $bilik->id);
+            $bookedMins  = $bookings->sum(function($b) {
+                return \Carbon\Carbon::parse($b->masa_mula)->diffInMinutes(\Carbon\Carbon::parse($b->masa_tamat));
+            });
+            $ratio = $bookedMins / $totalSlotMins;
+            return [
+                'id'         => $bilik->id,
+                'nama_bilik' => $bilik->nama_bilik,
+                'aras'       => $bilik->aras,
+                'wing'       => $bilik->wing,
+                'status'     => $ratio >= 1 ? 'full' : ($ratio > 0 ? 'partial' : 'free'),
+                'ratio'      => $ratio,
+            ];
+        });
+
+        $bilikFree    = $bilikStatus->where('status', 'free');
+        $bilikPartial = $bilikStatus->where('status', 'partial');
+        $bilikFull    = $bilikStatus->where('status', 'full');
+
+        // ── 5 most recent bookings ──
         $recentBookings = BookingRequest::with(['user', 'bilik'])
             ->where('status', 'confirmed')
-            ->where('tarikh', '>=', \Carbon\Carbon::today())
-            ->orderBy('tarikh')
-            ->orderBy('masa_mula')
-            ->take(10)
+            ->orderByDesc('created_at')
+            ->take(5)
             ->get();
 
-        $todayBookings = BookingRequest::with(['user', 'bilik'])
-            ->where('status', 'confirmed')
-            ->where('tarikh', \Carbon\Carbon::today()->toDateString())
-            ->orderBy('masa_mula')
-            ->get();
-
-        return view('booking.admin.dashboard', compact('stats', 'recentBookings', 'todayBookings'));
+        return view('booking.admin.dashboard', compact(
+            'stats', 'weeklyData', 'today',
+            'bilikFree', 'bilikPartial', 'bilikFull', 'allBilik',
+            'recentBookings'
+        ));
     }
 
     public function users(Request $request)
