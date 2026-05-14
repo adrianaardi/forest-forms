@@ -80,6 +80,12 @@ class BookingAuthController extends Controller
             'status'   => 'pending',
         ]);
 
+        \App\Models\BookingActivityLog::log(
+            'user', $request->name,
+            'registered',
+            $request->name . ' mendaftar akaun baharu'
+        );
+
         return redirect('/booking/calendar')
             ->with('daftar_success', true);
     }

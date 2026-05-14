@@ -7,6 +7,7 @@ use App\Models\BookingRequest;
 use App\Models\BookingUser;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
 
 class AdminBookingController extends Controller
 {
@@ -70,10 +71,12 @@ class AdminBookingController extends Controller
             ->take(5)
             ->get();
 
+        $activityLogs = \App\Models\BookingActivityLog::latest()->take(10)->get();
+
         return view('booking.admin.dashboard', compact(
             'stats', 'weeklyData', 'today',
             'bilikFree', 'bilikPartial', 'bilikFull', 'allBilik',
-            'recentBookings'
+            'recentBookings', 'activityLogs'
         ));
     }
 
@@ -94,6 +97,16 @@ class AdminBookingController extends Controller
     {
         $request->validate(['status' => 'required|in:approved,rejected']);
         BookingUser::findOrFail($id)->update(['status' => $request->status]);
+
+        $targetUser = BookingUser::findOrFail($id);
+        $adminName  = Auth::guard('web')->user()->name;
+        $statusText = $request->status === 'approved' ? 'meluluskan' : 'menolak';
+        \App\Models\BookingActivityLog::log(
+            'admin', $adminName,
+            'updated_user_status',
+            'Admin ' . $adminName . ' ' . $statusText . ' akaun pengguna ' . $targetUser->name
+        );
+
         return back()->with('success', 'Status pengguna berjaya dikemaskini.');
     }
 
@@ -113,11 +126,27 @@ class AdminBookingController extends Controller
             'phone'    => $request->phone,
         ]);
 
+        $targetUser = BookingUser::findOrFail($id);
+        $adminName  = Auth::guard('web')->user()->name;
+        \App\Models\BookingActivityLog::log(
+            'admin', $adminName,
+            'edited_user',
+            'Admin ' . $adminName . ' mengemaskini maklumat pengguna ' . $targetUser->name
+        );
+
         return back()->with('success', 'Maklumat pengguna berjaya dikemaskini.');
     }
 
     public function deleteUser($id)
     {
+        $targetUser = BookingUser::findOrFail($id);
+        $adminName  = Auth::guard('web')->user()->name;
+        \App\Models\BookingActivityLog::log(
+            'admin', $adminName,
+            'deleted_user',
+            'Admin ' . $adminName . ' memadam pengguna ' . $targetUser->name
+        );
+
         BookingUser::findOrFail($id)->delete();
         return back()->with('success', 'Pengguna berjaya dipadam.');
     }
@@ -138,6 +167,13 @@ class AdminBookingController extends Controller
             'bahagian' => $request->bahagian,
             'status'   => 'approved',
         ]);
+
+        $adminName = Auth::guard('web')->user()->name;
+        \App\Models\BookingActivityLog::log(
+            'admin', $adminName,
+            'added_user',
+            'Admin ' . $adminName . ' menambah pengguna baharu ' . $request->name
+        );
 
         return back()->with('success', 'Pengguna berjaya ditambah.');
     }

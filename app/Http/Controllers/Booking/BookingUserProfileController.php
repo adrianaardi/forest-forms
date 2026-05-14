@@ -44,6 +44,12 @@ class BookingUserProfileController extends Controller
         $user->phone    = $request->phone;
         $user->save();
 
+        \App\Models\BookingActivityLog::log(
+            'user', $user->name,
+            'updated_profile',
+            $user->name . ' mengemaskini maklumat profil'
+        );
+
         return back()->with('success', 'Profil berjaya dikemaskini.');
     }
 
@@ -66,6 +72,12 @@ class BookingUserProfileController extends Controller
 
         $user->password = Hash::make($request->password);
         $user->save();
+
+        \App\Models\BookingActivityLog::log(
+            'user', $user->name,
+            'updated_password',
+            $user->name . ' menukar kata laluan'
+        );
 
         return back()->with('success', 'Kata laluan berjaya dikemaskini.');
     }

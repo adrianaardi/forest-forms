@@ -163,6 +163,43 @@
             </div>
         </div>
 
+        {{-- Row 3: activity log --}}
+        <div class="dash-row">
+            <div class="dash-card">
+                <div class="dash-card-title" style="margin-bottom:0.75rem;">
+                    Aktiviti Terkini
+                    <span style="font-size:11px; color:#aaa; text-transform:none; letter-spacing:0;">10 terbaru</span>
+                </div>
+                @if($activityLogs->isEmpty())
+                    <div class="db-empty">Tiada aktiviti direkodkan.</div>
+                @else
+                    <div style="display:flex; flex-direction:column; gap:0; ">
+                        @foreach($activityLogs as $log)
+                        <div style="display:flex; align-items:flex-start; gap:10px; padding:8px 0; border-bottom:1px solid #f5f5f5;">
+                            {{-- icon --}}
+                            <div style="width:30px; height:30px; border-radius:50%; flex-shrink:0; display:flex; align-items:center; justify-content:center; font-size:13px;
+                                {{ $log->actor_type === 'admin' ? 'background:#e6f1fb;' : 'background:#eaf3de;' }}">
+                                {{ $log->actor_type === 'admin' ? '🔧' : '👤' }}
+                            </div>
+                            {{-- text --}}
+                            <div style="flex:1;">
+                                <div style="font-size:12px; color:#333; line-height:1.5;">{{ $log->description }}</div>
+                                <div style="font-size:11px; color:#bbb; margin-top:2px;">
+                                    {{ $log->created_at->diffForHumans() }}
+                                </div>
+                            </div>
+                            {{-- type badge --}}
+                            <span style="font-size:10px; padding:2px 8px; border-radius:10px; flex-shrink:0; white-space:nowrap;
+                                {{ $log->actor_type === 'admin' ? 'background:#e6f1fb; color:#0c447c;' : 'background:#eaf3de; color:#27500a;' }}">
+                                {{ $log->actor_type === 'admin' ? 'Admin' : 'Pengguna' }}
+                            </span>
+                        </div>
+                        @endforeach
+                    </div>
+                @endif
+            </div>
+        </div>
+
     </div>
 </div>
 

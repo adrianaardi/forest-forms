@@ -125,6 +125,12 @@ class BookingController extends Controller
             'cancel_token'    => $token,
         ]);
 
+        \App\Models\BookingActivityLog::log(
+            'user', $user->name,
+            'created_booking',
+            $user->name . ' membuat tempahan untuk ' . $bilik->nama_bilik . ' pada ' . \Carbon\Carbon::parse($request->tarikh)->format('d/m/Y') . ' (' . substr($request->masa_mula,0,5) . '–' . substr($request->masa_tamat,0,5) . ')'
+        );
+
         $cancelUrl = url('/booking/cancel/' . $token);
         \App\Mail\BrevoMailer::send(
             $user->email,
@@ -158,6 +164,12 @@ class BookingController extends Controller
         }
 
         $booking->update(['status' => 'cancelled']);
+
+        \App\Models\BookingActivityLog::log(
+            'user', $booking->user->name,
+            'cancelled_booking',
+            $booking->user->name . ' membatalkan tempahan untuk ' . $booking->bilik->nama_bilik . ' pada ' . \Carbon\Carbon::parse($booking->tarikh)->format('d/m/Y')
+        );
 
         return redirect('/booking/calendar?bilik=' . $booking->bilik_id)
             ->with('success', 'Tempahan berjaya dibatalkan.');

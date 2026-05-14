@@ -1,0 +1,28 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    public function up(): void
+    {
+        Schema::create('booking_activity_logs', function (Blueprint $table) {
+            $table->id();
+            $table->string('actor_type'); // 'user' or 'admin'
+            $table->string('actor_name');
+            $table->string('action'); // e.g. 'created_booking', 'cancelled_booking', 'updated_profile'
+            $table->string('description'); // full readable string
+            $table->timestamps();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('booking_activity_logs');
+    }
+};
