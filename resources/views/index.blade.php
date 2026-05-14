@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Jabatan Hutan Sarawak — Portal Perkhidmatan</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500&display=swap" rel="stylesheet"/>
-    <link rel="icon" href="{{ asset('images/logo-icon.png')}}">
+    <title>Hub Aplikasi Perkhidmatan</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:opsz,wght@6..144,1..1000&family=Source+Serif+4:ital,opsz,wght@0,8..60,537;1,8..60,537&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('style.css') }}">
     <style>
         /* ── overlay ── */
@@ -178,7 +178,7 @@
         <!-- Muat Naik Portal -->
         <a href="/forms/portal-upload" class="card">
             <div class="card-icon icon-upload">📂</div>
-            <h3>Aplikasi Muat Naik Portal</h3>
+            <h3>Pengurusan Laman Web</h3>
             <p>Permudahkan proses pengemaskinian maklumat jabatan dengan menghantar permohonan muat naik kandungan ke portal rasmi.</p>
             <span class="card-link">Hantar Permohonan →</span>
         </a>

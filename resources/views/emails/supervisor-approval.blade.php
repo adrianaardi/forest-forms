@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <style>
-        body { font-family: Arial, sans-serif; background: #f4f4f4; margin: 0; padding: 20px; }
+        body {font-family: "Google Sans Flex", sans-serif; background: #f4f4f4; margin: 0; padding: 20px; }
         .container { max-width: 600px; margin: auto; background:#f7f4f4; border-radius: 10px; overflow: hidden; border: 1px solid #dde8e1; }
         .header { background: #2C3E50; padding: 1.25rem 1.5rem; }
         .header h1 { color:#f7f4f4; font-size: 16px; margin: 0; }
