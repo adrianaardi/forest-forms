@@ -23,7 +23,7 @@
         .bk-sidebar-section { padding: 0 0.75rem; margin-bottom: 0.75rem; }
         .bk-sidebar-label {
             font-size: 10px; font-weight: 600; text-transform: uppercase;
-            letter-spacing: 0.07em; color: #bbb; margin-bottom: 0.4rem; display: block;
+            letter-spacing: 0.07em; color: #313e69; margin-bottom: 0.4rem; display: block;
         }
         .bk-room-link {
             display: block; padding: 6px 10px; border-radius: 8px;
@@ -31,7 +31,7 @@
             transition: background 0.15s, color 0.15s, transform 0.1s;
             margin-bottom: 2px;
         }
-        .bk-room-link span { font-size: 10px; color: #bbb; display: block; margin-top: 1px; }
+        .bk-room-link span { font-size: 10px; color: #8b7979; display: block; margin-top: 1px; }
         .bk-room-link:hover { background: #eaf3de; color: #2C3E50; transform: translateX(2px); }
         .bk-room-link.active { background: #2C3E50; color:#f7f4f4; }
         .bk-room-link.active span { color: rgba(255,255,255,0.6); }

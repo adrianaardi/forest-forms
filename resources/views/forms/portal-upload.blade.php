@@ -37,7 +37,7 @@
 
     <div class="form-card">
         <div class="form-card-header">
-            <h2>Borang Permohonan Muat Naik Portal</h2>
+            <h2>Pengurusan Muat Naik ke Laman Web</h2>
             <p>Sila isi semua maklumat yang diperlukan dengan tepat.</p>
         </div>
 
