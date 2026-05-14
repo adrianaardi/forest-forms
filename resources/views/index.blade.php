@@ -26,7 +26,7 @@
 
         /* ── modal ── */
         .ticket-modal {
-            background: #fff;
+            background:#f7f4f4;
             border-radius: 14px;
             padding: 0;
             width: 100%;
@@ -55,7 +55,7 @@
             align-items: center;
         }
         .ticket-modal-header h3 {
-            color: #fff;
+            color:#f7f4f4;
             font-size: 14px;
             margin: 0;
             font-weight: 500;
@@ -72,7 +72,7 @@
             display: flex; align-items: center;
         }
         .ticket-modal-close:hover {
-            color: #fff;
+            color:#f7f4f4;
             transform: rotate(90deg) scale(1.1);
         }
 

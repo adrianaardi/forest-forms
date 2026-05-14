@@ -17,7 +17,7 @@
         .dash-row-1 { grid-template-columns: 1fr; }
 
         .dash-card {
-            background: #fff; border: 1px solid #eee;
+            background:#f7f4f4; border: 1px solid #eee;
             border-radius: 14px; padding: 1.25rem;
         }
         .dash-card-title {
@@ -130,7 +130,7 @@
 <script>
 const green  = '#2C3E50';
 const teal   = '#2d7a55';
-const sage   = '#7ec99a';
+const sage   = '#7ec0c9';
 const blue   = '#194169';
 const sky    = '#4a90d9';
 const amber  = '#f0a541';

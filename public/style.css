@@ -6,7 +6,7 @@
 
 body {
     font-family: Arial, sans-serif;
-    background: #f0f4f1;
+    background: #f0f0f0;
     color: #1a1a1a;
     font-size: 14px;
     min-height: 100vh;
@@ -17,7 +17,7 @@ body {
 /* ───── HEADER ───── */
 header {
     background: #2C3E50;
-    color: #fff;
+    color: #f7f4f4;
     padding: 1rem 2rem;
     display: flex;
     align-items: center;
@@ -50,7 +50,7 @@ header p {
 
 /* ───── NAV ───── */
 nav {
-    background: #14381f;
+    background: #202c38;
     padding: 0 2rem;
     display: flex;
     gap: 1.5rem;
@@ -68,8 +68,8 @@ nav a {
 }
 
 nav a.active {
-    color: #fff;
-    border-bottom-color: #7ec99a;
+    color:#f7f4f4;
+    border-bottom-color: #7ec0c9;
 }
 
 /* ───── PAGE BODY ───── */
@@ -81,7 +81,7 @@ nav a.active {
 
 /* ───── HERO ───── */
 .hero {
-    background: #fff;
+    background:#f7f4f4;
     border-bottom: 1px solid #dde8e1;
     padding: 1.75rem 2rem;
     display: flex;
@@ -141,7 +141,7 @@ nav a.active {
 .hero-search-row button {
     padding: 8px 14px;
     background:#2C3E50;
-    color: #fff;
+    color:#f7f4f4;
     border: none;
     border-radius: 6px;
     font-size: 13px;
@@ -151,7 +151,7 @@ nav a.active {
 }
 
 .hero-search-row button:hover {
-    background: #14381f;
+    background: #202c38;
 }
 
 /* ───── HOMEPAGE SECTION ───── */
@@ -176,7 +176,7 @@ nav a.active {
 }
 
 .card {
-    background: #fff;
+    background:#f7f4f4;
     border: 1px solid #dde8e1;
     border-radius: 12px;
     padding: 1.25rem;
@@ -226,7 +226,7 @@ nav a.active {
 
 /* ───── FORM CARD ───── */
 .form-card {
-    background: #fff;
+    background:#f7f4f4;
     border-radius: 12px;
     overflow: hidden;
     border: 1px solid #dde8e1;
@@ -239,7 +239,7 @@ nav a.active {
 }
 
 .form-card-header h2 {
-    color: #fff;
+    color:#f7f4f4;
     font-size: clamp(14px, 2vw, 16px);
     font-weight: 500;
     margin: 0;
@@ -311,7 +311,7 @@ nav a.active {
 .field textarea:focus {
     outline: none;
     border-color:#2C3E50;
-    background: #fff;
+    background:#f7f4f4;
 }
 
 .field select {
@@ -359,7 +359,7 @@ nav a.active {
 
 .btn-submit {
     background:#2C3E50;
-    color: #fff;
+    color:#f7f4f4;
     border: none;
     padding: 10px 24px;
     border-radius: 8px;
@@ -369,7 +369,7 @@ nav a.active {
 }
 
 .btn-submit:hover {
-    background: #14381f;
+    background: #202c38;
 }
 
 /* ───── FOOTER ───── */
@@ -386,7 +386,7 @@ footer {
 }
 
 footer strong {
-    color: #fff;
+    color:#f7f4f4;
 }
 
 /* ───── RESPONSIVE ───── */
@@ -457,7 +457,7 @@ footer strong {
 .stat-card {
     border-radius: 10px;
     padding: 1rem 1.25rem;
-    color: #fff;
+    color:#f7f4f4;
     text-align: center;
 }
 
@@ -502,7 +502,7 @@ footer strong {
 .data-table {
     width: 100%;
     border-collapse: collapse;
-    background: #fff;
+    background:#f7f4f4;
     border-radius: 10px;
     overflow: hidden;
     border: 1px solid #dde8e1;
@@ -572,13 +572,13 @@ footer strong {
     border: 1px solid #ccc;
     border-radius: 6px;
     font-size: 13px;
-    background: #fff;
+    background:#f7f4f4;
 }
 
 .toolbar button {
     padding: 7px 16px;
     background:#2C3E50;
-    color: #fff;
+    color:#f7f4f4;
     border: none;
     border-radius: 6px;
     font-size: 13px;
@@ -586,7 +586,7 @@ footer strong {
 }
 
 .toolbar button:hover {
-    background: #14381f;
+    background: #202c38;
 }
 
 .btn-reset {
@@ -674,7 +674,7 @@ footer strong {
 }
 
 .modal {
-    background: #fff;
+    background:#f7f4f4;
     border-radius: 12px;
     width: 90%;
     max-width: 620px;
@@ -703,7 +703,7 @@ footer strong {
 }
 
 .modal-header h2 {
-    color: #fff;
+    color:#f7f4f4;
     font-size: 14px;
     font-weight: 500;
     margin: 0;
@@ -721,7 +721,7 @@ footer strong {
 }
 
 .modal-close:hover {
-    color: #fff;
+    color:#f7f4f4;
 }
 
 .modal-body {

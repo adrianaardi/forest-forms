@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <style>
         body { font-family: Arial, sans-serif; background: #f4f4f4; margin: 0; padding: 20px; }
-        .container { max-width: 600px; margin: auto; background: #fff; border-radius: 10px; overflow: hidden; border: 1px solid #dde8e1; }
+        .container { max-width: 600px; margin: auto; background:#f7f4f4; border-radius: 10px; overflow: hidden; border: 1px solid #dde8e1; }
         .header { background: #2C3E50; padding: 1.25rem 1.5rem; }
-        .header h1 { color: #fff; font-size: 16px; margin: 0; }
+        .header h1 { color:#f7f4f4; font-size: 16px; margin: 0; }
         .header p { color: rgba(255,255,255,0.65); font-size: 12px; margin: 4px 0 0; }
         .body { padding: 1.5rem; }
         .body p { font-size: 14px; color: #333; line-height: 1.6; margin-bottom: 0.75rem; }
@@ -16,7 +16,7 @@
         .status-lulus { display: inline-block; padding: 4px 14px; border-radius: 20px; font-size: 12px; font-weight: 600; background: #eaf3de; color: #27500a; }
         .status-semakan { display: inline-block; padding: 4px 14px; border-radius: 20px; font-size: 12px; font-weight: 600; background: #e6f1fb; color: #0c447c; }
         .remarks-box { background: #f9f9f9; border-left: 3px solid #2C3E50; padding: 0.75rem 1rem; border-radius: 0 6px 6px 0; margin: 0.75rem 0; font-size: 13px; color: #333; }
-        .btn { display: inline-block; margin-top: 1.25rem; padding: 10px 24px; background: #2C3E50; color: #fff; text-decoration: none; border-radius: 8px; font-size: 13px; }
+        .btn { display: inline-block; margin-top: 1.25rem; padding: 10px 24px; background: #2C3E50; color:#f7f4f4; text-decoration: none; border-radius: 8px; font-size: 13px; }
         .footer { background: #f9fafb; padding: 1rem 1.5rem; font-size: 11px; color: #999; border-top: 1px solid #eee; }
     </style>
         <link rel="icon" href="{{ asset('images/logo-icon.png')}}">

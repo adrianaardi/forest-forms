@@ -31,7 +31,7 @@
         }
         .bk-room-link span { font-size: 10px; color: #bbb; display: block; margin-top: 1px; }
         .bk-room-link:hover { background: #eaf3de; color: #2C3E50; transform: translateX(2px); }
-        .bk-room-link.active { background: #2C3E50; color: #fff; }
+        .bk-room-link.active { background: #2C3E50; color:#f7f4f4; }
         .bk-room-link.active span { color: rgba(255,255,255,0.6); }
 
         /* ── mini calendar ── */
@@ -59,7 +59,7 @@
         .mini-cal-day.partial { background: #fef9e7; color: #854f0b; }
         .mini-cal-day.full { background: #fdf0f0; color: #a32d2d; }
         .mini-cal-day.today-dot { outline: 2px solid #2C3E50; outline-offset: -1px; font-weight: 600; }
-        .mini-cal-day.in-week { outline: 2px solid #7ec99a; outline-offset: -1px; }
+        .mini-cal-day.in-week { outline: 2px solid #7ec0c9; outline-offset: -1px; }
         .mini-cal-legend { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 8px; }
         .mini-cal-legend span { font-size: 9px; display: flex; align-items: center; gap: 3px; color: #777; }
         .mini-cal-legend .dot { width: 8px; height: 8px; border-radius: 2px; flex-shrink: 0; }
@@ -67,7 +67,7 @@
         /* ── guide ── */
         .bk-guide-text {
             font-size: 11px; color: #777; line-height: 1.5;
-            background: #f3f7f2; border-left: 3px solid #7ec99a;
+            background: #f3f7f2; border-left: 3px solid #7ec0c9;
             padding: 8px 10px; border-radius: 0 6px 6px 0;
         }
 
@@ -76,12 +76,12 @@
         .bk-toolbar {
             display: flex; align-items: center; gap: 0.6rem;
             padding: 0.75rem 1rem; border-bottom: 1px solid #e8e8e8;
-            background: #fff; flex-shrink: 0; flex-wrap: wrap;
+            background:#f7f4f4; flex-shrink: 0; flex-wrap: wrap;
         }
         .bk-toolbar-title { font-size: 13px; font-weight: 500; flex: 1; color: #333; }
         .bk-btn {
             padding: 5px 12px; border: 1px solid #e0e0e0; border-radius: 6px;
-            background: #fff; font-size: 12px; cursor: pointer;
+            background:#f7f4f4; font-size: 12px; cursor: pointer;
             text-decoration: none; color: #555;
             transition: background 0.15s, border-color 0.15s;
         }
@@ -95,7 +95,7 @@
         .bk-col-header {
             text-align: center; padding: 8px 2px;
             border-bottom: 2px solid #e8e8e8; border-right: 1px solid #f0f0f0;
-            font-size: 11px; background: #fff;
+            font-size: 11px; background:#f7f4f4;
             position: sticky; top: 0; z-index: 2;
         }
         .bk-col-header .dname { color: #aaa; font-weight: 400; font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; }
@@ -104,7 +104,7 @@
             line-height: 32px; border-radius: 50%; margin: 3px auto 0;
             transition: background 0.2s, color 0.2s;
         }
-        .bk-col-header .dnum.today { background: #2C3E50; color: #fff; }
+        .bk-col-header .dnum.today { background: #2C3E50; color:#f7f4f4; }
         .bk-time-gutter {
             font-size: 10px; color: #ccc; text-align: right;
             padding: 2px 8px 0 0; height: 48px; border-right: 1px solid #eee;
@@ -116,7 +116,7 @@
         }
         .bk-cell:not(.past-cell) { cursor: pointer; }
         .bk-cell:not(.past-cell):hover { background: #f0f9f4 !important; }
-        .row-light { background: #fff; }
+        .row-light { background:#f7f4f4; }
         .row-dark { background: #fafafa; }
         .past-cell { background: #f7f7f7 !important; cursor: not-allowed; opacity: 0.5; }
 
@@ -379,7 +379,7 @@
                                 @endphp
                                 @if($startsHere)
                                     <div class="bk-event"
-                                        style="height:{{ max($h - 4, 14) }}px; background:{{ $isOwn ? '#7ec99a' : '#2C3E50' }}; color:{{ $isOwn ? '#14381f' : '#fff' }};"
+                                        style="height:{{ max($h - 4, 14) }}px; background:{{ $isOwn ? '#7ec0c9' : '#2C3E50' }}; color:{{ $isOwn ? '#202c38' : '#fff' }};"
                                         onclick='event.stopPropagation(); showEvent(
                                             @json($b->tajuk_mesyuarat),
                                             @json($b->user->name),

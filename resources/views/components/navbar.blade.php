@@ -1,4 +1,4 @@
-<nav style="background:#14381f; padding:0 1.5rem; display:flex; align-items:center; gap:1.5rem; overflow-x:auto;">
+<nav style="background:#202c38; padding:0 1.5rem; display:flex; align-items:center; gap:1.5rem; overflow-x:auto;">
 
     <a href="/" class="{{ request()->is('/') ? 'active' : '' }}">Hub Aplikasi</a>
 

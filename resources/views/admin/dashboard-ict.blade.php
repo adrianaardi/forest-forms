@@ -26,7 +26,7 @@
         .dash-row-1 { grid-template-columns: 1fr; }
 
         .dash-card {
-            background: #fff; border: 1px solid rgba(40,65,57,0.1);
+            background:#f7f4f4; border: 1px solid rgba(40,65,57,0.1);
             border-radius: 14px; padding: 1.25rem;
             box-shadow: 0 4px 15px rgba(17,26,25,0.05);
         }
