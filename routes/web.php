@@ -110,19 +110,11 @@ Route::get('/login', fn() => redirect('/booking/calendar'))->name('login');
     Route::post('/profile',          [\App\Http\Controllers\Booking\BookingUserProfileController::class, 'update'])->name('user.profile.update');
     Route::post('/profile/password', [\App\Http\Controllers\Booking\BookingUserProfileController::class, 'updatePassword'])->name('user.profile.password');
 
-    // Forgot password
-    Route::get('/forgot-password', [PasswordResetLinkController::class, 'create'])
-        ->name('password.request');
-
-    Route::post('/forgot-password', [PasswordResetLinkController::class, 'store'])
-        ->name('password.email');
-
-    // Reset password
-    Route::get('/reset-password/{token}', [NewPasswordController::class, 'create'])
-        ->name('password.reset');
-
-    Route::post('/reset-password', [NewPasswordController::class, 'store'])
-        ->name('password.store');
+// password reset
+Route::get('/forgot-password',         [\App\Http\Controllers\Booking\BookingPasswordController::class, 'showForgot'])->name('password.request');
+Route::post('/forgot-password',        [\App\Http\Controllers\Booking\BookingPasswordController::class, 'sendReset'])->name('password.email');
+Route::get('/reset-password/{token}',  [\App\Http\Controllers\Booking\BookingPasswordController::class, 'showReset'])->name('password.reset');
+Route::post('/reset-password',         [\App\Http\Controllers\Booking\BookingPasswordController::class, 'resetPassword'])->name('password.store');
     
     // booking admin
     Route::middleware('booking.admin')->prefix('admin')->name('admin.')->group(function () {
