@@ -38,8 +38,7 @@
                     <a href="{{ route('booking.daftar') }}" style="font-size:13px;">Belum ada akaun? Daftar</a>
                     <div style="display:flex; flex-direction:column; align-items:flex-end; gap:4px;">
                         <button type="submit" id="login-btn" class="btn-submit">Log Masuk</button>
-                        <a href="{{ route('booking.password.request') }}" style="font-size:11px; color:#aaa;">Lupa kata laluan?</a>
-                    </div>
+                        <a href="{{ route('booking.password.request') }}" style="font-size:11px; color:#aaa;">Lupa kata laluan?</a>                    </div>
                 </div>
             </form>
         </div>

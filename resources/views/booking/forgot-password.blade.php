@@ -23,8 +23,7 @@
             <h2>Lupa Kata Laluan</h2>
             <p>Masukkan emel anda dan kami akan hantar pautan reset.</p>
         </div>
-        <form method="POST" action="{{ route('booking.password.email') }}">
-            @csrf
+<form method="POST" action="{{ route('booking.password.email') }}">            @csrf
             <div class="form-section">
                 @if(session('success'))
                     <div style="background:#eaf3de; border:1px solid #c0dd97; color:#3b6d11; padding:0.75rem 1rem; border-radius:8px; margin-bottom:1rem; font-size:13px;">

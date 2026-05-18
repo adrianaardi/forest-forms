@@ -23,8 +23,8 @@
             <h2>Reset Kata Laluan</h2>
             <p>Masukkan kata laluan baharu anda.</p>
         </div>
-        <form method="POST" action="{{ route('booking.password.store') }}">
-            @csrf
+<form method="POST" action="{{ route('booking.password.store') }}">
+                @csrf
             <input type="hidden" name="token" value="{{ $token }}">
             <div class="form-section">
                 @if(session('error'))
