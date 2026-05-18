@@ -16,7 +16,7 @@
     <style>
         /* Slate & Crimson Theme */
         header, .form-card-header, .btn-submit {
-            background-color: #9b2226 !important; /* Deep Crimson Red */
+            background-color: #881a1e !important; /* Deep Crimson Red */
             color: white !important;
         }
 
