@@ -15,7 +15,7 @@
 
     <style>
         header, .form-card-header, .btn-submit {
-            background-color: #9b2226 !important; 
+            background-color: #881a1e !important; 
             color: white !important;
         }
 
