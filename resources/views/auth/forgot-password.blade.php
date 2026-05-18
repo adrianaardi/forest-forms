@@ -13,6 +13,35 @@
     <link rel="stylesheet" href="{{ asset('style.css') }}">
     <link rel="icon" href="{{ asset('images/logo-icon.png')}}">
 
+    <style>
+        /* Slate & Crimson Theme */
+        header, .form-card-header, .btn-submit {
+            background-color: #9b2226 !important; /* Deep Crimson Red */
+            color: white !important;
+        }
+
+        nav, footer {
+            background-color: #6e1b11 !important; /* Deepest Slate Black */
+            color: white !important;
+        }
+
+        .form-card-header p {
+            color: #e9d8d6 !important; /* Soft rose-gray subtext */
+        }
+
+        .form-footer a {
+            color: #a12a1d !important;
+            font-weight: 600 !important;
+        }
+
+        .btn-submit:hover {
+            background-color: #ae2012 !important;
+        }
+
+        body {
+            background-color: #f8f9fa !important; /* Pure clean background */
+        }
+    </style>
 </head>
 <body>
 
