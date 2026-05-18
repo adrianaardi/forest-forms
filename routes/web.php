@@ -122,7 +122,7 @@ Route::get('/login', fn() => redirect('/booking/calendar'))->name('login');
         ->name('password.reset');
 
     Route::post('/reset-password', [NewPasswordController::class, 'store'])
-        ->name('password.update');
+        ->name('password.store');
     
     // booking admin
     Route::middleware('booking.admin')->prefix('admin')->name('admin.')->group(function () {

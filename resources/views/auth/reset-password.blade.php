@@ -36,14 +36,9 @@
             <h2>Reset Kata Laluan</h2>
             <p>Masukkan kata laluan baharu anda</p>
         </div>
-
-        <form method="POST" action="{{ route('password.update') }}">
-            @csrf
-
-            {{-- TOKEN --}}
-            <input type="hidden" name="token" value="{{ request()->route('token') }}">
-
-            <div class="form-section">
+<form method="POST" action="{{ route('password.store') }}">
+    @csrf
+    <input type="hidden" name="token" value="{{ request()->route('token') }}">            <div class="form-section">
 
                 {{-- ERROR MESSAGE --}}
                 @if ($errors->any())
