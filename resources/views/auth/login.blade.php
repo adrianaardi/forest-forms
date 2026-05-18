@@ -60,7 +60,7 @@
             </div>
 
             <div class="form-footer">
-                <span></span>
+                <a href="{{ route('password.request') }}">Lupa kata laluan?</a>
                 <button type="submit" class="btn-submit">Log Masuk</button>
             </div>
         </form>

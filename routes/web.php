@@ -9,6 +9,8 @@ use App\Http\Controllers\Admin\BahagianController;
 use App\Http\Controllers\Booking\BookingController;
 use App\Http\Controllers\Booking\BookingAuthController;
 use App\Http\Controllers\Booking\AdminBookingController;
+use App\Http\Controllers\Auth\PasswordResetLinkController;
+use App\Http\Controllers\Auth\NewPasswordController;
 use Illuminate\Support\Facades\Route;
 
 // ── Homepage ──────────────────────────────────────────────
@@ -108,6 +110,19 @@ Route::get('/login', fn() => redirect('/booking/calendar'))->name('login');
     Route::post('/profile',          [\App\Http\Controllers\Booking\BookingUserProfileController::class, 'update'])->name('user.profile.update');
     Route::post('/profile/password', [\App\Http\Controllers\Booking\BookingUserProfileController::class, 'updatePassword'])->name('user.profile.password');
 
+    // Forgot password
+    Route::get('/forgot-password', [PasswordResetLinkController::class, 'create'])
+        ->name('password.request');
+
+    Route::post('/forgot-password', [PasswordResetLinkController::class, 'store'])
+        ->name('password.email');
+
+    // Reset password
+    Route::get('/reset-password/{token}', [NewPasswordController::class, 'create'])
+        ->name('password.reset');
+
+    Route::post('/reset-password', [NewPasswordController::class, 'store'])
+        ->name('password.update');
     
     // booking admin
     Route::middleware('booking.admin')->prefix('admin')->name('admin.')->group(function () {

@@ -36,6 +36,7 @@
                 </div>
                 <div class="form-footer">
                     <a href="{{ route('booking.daftar') }}" style="font-size:13px; ">Belum ada akaun? Daftar</a>
+                    <a href="{{ route('password.request') }}">Lupa kata laluan?</a>
                     <button type="submit" id="login-btn" class="btn-submit" >Log Masuk</button>
                 </div>
             </form>
