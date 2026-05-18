@@ -18,9 +18,8 @@
     </div>
 </header>
 
-<x-navbar />
-
-<div class="pg-body">
+<x-navbar :breadcrumbs="[['label' => 'Portal Muat Naik', 'url' => '/admin/portal-upload'], ['label' => 'Urus Bahagian']]" />
+    <div class="pg-body">
 
     @if(session('success'))
         <div style="background:#eaf3de; border:1px solid #c0dd97; color:#3b6d11; padding:0.75rem 1rem; border-radius:8px; margin-bottom:1rem; font-size:13px;">

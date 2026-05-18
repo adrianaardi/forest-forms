@@ -20,8 +20,7 @@
     </div>
 </header>
 
-<x-navbar />
-
+<x-navbar :breadcrumbs="[['label' => 'Aduan ICT']]" />    
 <div class="pg-body">
 
     @if($errors->any())

@@ -19,9 +19,7 @@
         <p>Hub Aplikasi Perkhidmatan Atas Talian</p>
     </div>
 </header>
-<x-navbar />
-
-<div class="pg-body" style="max-width:420px;">
+<x-navbar :breadcrumbs="[['label' => 'Tempah Bilik Mesyuarat', 'url' => '/booking/calendar'], ['label' => 'Lupa Kata Laluan']]" />    <div class="pg-body" style="max-width:420px;">
     <div class="form-card">
         <div class="form-card-header" style="background:#194169;">
             <h2>Lupa Kata Laluan</h2>

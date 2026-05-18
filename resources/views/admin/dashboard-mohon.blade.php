@@ -51,8 +51,8 @@
         <p>Hub Aplikasi Perkhidmatan Atas Talian</p>
     </div>
 </header>
-<x-navbar />
-
+<x-navbar :breadcrumbs="[['label' => 'Portal Muat Naik', 'url' => '/admin/portal-upload'], ['label' => 'Dashboard']]" />
+    
 <div class="dashboard-body">
 
     <div class="db-greeting" style="margin-bottom:1.5rem;">

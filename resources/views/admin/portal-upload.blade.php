@@ -18,8 +18,7 @@
     </div>
 </header>
 
-<x-navbar />
-
+<x-navbar :breadcrumbs="[['label' => 'Portal Muat Naik', 'url' => '/admin/portal-upload'], ['label' => 'Senarai Permohonan']]" />
 <div class="dashboard-body">
 
     @if(session('success'))

@@ -18,8 +18,8 @@
     </div>
 </header>
 
-<x-navbar />
 
+<x-navbar :breadcrumbs="[['label' => 'Aduan ICT', 'url' => '/admin/ict-aduan'], ['label' => 'Urus Akaun']]" />
 <div class="pg-body">
 
     @if(session('success'))

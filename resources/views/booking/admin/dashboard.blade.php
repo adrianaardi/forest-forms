@@ -43,8 +43,7 @@
         <p>Hub Aplikasi Perkhidmatan Atas Talian</p>
     </div>
 </header>
-<x-navbar />
-
+<x-navbar :breadcrumbs="[['label' => 'Tempahan Bilik', 'url' => '/booking/admin/dashboard'], ['label' => 'Dashboard']]" />
 <div class="dashboard-body">
 
     {{-- date + alert --}}

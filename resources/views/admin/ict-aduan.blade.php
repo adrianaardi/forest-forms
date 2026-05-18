@@ -18,8 +18,7 @@
     </div>
 </header>
 
-<x-navbar />
-
+<x-navbar :breadcrumbs="[['label' => 'Aduan ICT', 'url' => '/admin/ict-aduan'], ['label' => 'Senarai Aduan']]" />
 <div class="dashboard-body">
 
     <div style="margin-bottom: 1rem;">

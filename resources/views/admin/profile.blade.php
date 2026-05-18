@@ -18,8 +18,7 @@
     </div>
 </header>
 
-<x-navbar />
-
+<x-navbar :breadcrumbs="[['label' => 'Profil']]" />
 <div class="pg-body" style="width: 80%;">
 
     @if(session('success'))

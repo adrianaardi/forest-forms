@@ -183,8 +183,8 @@
         <p> Hub Aplikasi Perkhidmatan Atas Talian</p>
     </div>
 </header>
-<x-navbar />
-@if(session('daftar_success'))
+<x-navbar :breadcrumbs="[['label' => 'Tempah Bilik Mesyuarat', 'url' => '/booking/calendar'], ['label' => $bilik?->nama_bilik ?? 'Kalendar']]" />
+        @if(session('daftar_success'))
 <div id="daftar-modal" style="position:fixed; inset:0; background:rgba(0,0,0,0.4); display:flex; justify-content:center; align-items:center; z-index:9999;">
     <div style="background:#fff; border-radius:14px; padding:2rem; max-width:400px; width:90%; text-align:center; box-shadow:0 8px 32px rgba(0,0,0,0.15); animation:slideUp 0.3s ease;">
         <div style="font-size:42px; margin-bottom:0.75rem;">🎉</div>

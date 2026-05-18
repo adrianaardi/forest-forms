@@ -17,7 +17,7 @@
         <p> Hub Aplikasi Perkhidmatan Atas Talian</p>
     </div>
 </header>
-<x-navbar />
+<x-navbar :breadcrumbs="[['label' => 'Tempah Bilik Mesyuarat', 'url' => '/booking/calendar'], ['label' => 'Profil Saya']]" />
 
 <div class="pg-body" style="max-width:560px;">
 

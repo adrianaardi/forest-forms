@@ -66,8 +66,7 @@
         <p>Hub Aplikasi Perkhidmatan Atas Talian</p>
     </div>
 </header>
-<x-navbar />
-
+<x-navbar :breadcrumbs="[['label' => 'Aduan ICT', 'url' => '/admin/ict-aduan'], ['label' => 'Dashboard']]" />
 <div class="dashboard-body" style="padding: 1.5rem;">
 
     <div class="db-greeting" style="margin-bottom:1.5rem; display: flex; justify-content: space-between; align-items: center;">
