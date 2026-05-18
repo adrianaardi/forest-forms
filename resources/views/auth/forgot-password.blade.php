@@ -14,32 +14,55 @@
     <link rel="icon" href="{{ asset('images/logo-icon.png')}}">
 
     <style>
-        /* Slate & Crimson Theme */
-        header, .form-card-header, .btn-submit {
-            background-color: #881a1e !important; /* Deep Crimson Red */
+        /* 1. Main Page Header */
+        header {
+            background-color: #b07d7d !important; 
             color: white !important;
         }
 
-        nav, footer {
-            background-color: #6e1b11 !important; /* Deepest Slate Black */
-            color: white !important;
+        nav {
+            background-color: #966666 !important; 
         }
 
+        /* 2. Form Card Header - Now matches the button color */
+        .form-card-header {
+            background-color: #b07d7d !important; 
+            border-bottom: none !important;
+            color: white !important; /* Changed to white so text is readable on pink */
+        }
+        
         .form-card-header p {
-            color: #e9d8d6 !important; /* Soft rose-gray subtext */
+            color: #fce4e6 !important; /* Light pink for the sub-text */
         }
 
-        .form-footer a {
-            color: #a12a1d !important;
-            font-weight: 600 !important;
+        /* 3. The Submit Button */
+        .btn-submit {
+            background-color: #b07d7d !important;
+            border: none !important;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1) !important;
         }
 
         .btn-submit:hover {
-            background-color: #ae2012 !important;
+            background-color: #8e6262 !important;
         }
 
+        /* 4. Link inside the form */
+        .form-footer a {
+            color: #b07d7d !important;
+            font-weight: 500 !important;
+        }
+
+        /* 5. The Page Footer (The bottom address bar) */
+        footer {
+            background-color: #b07d7d !important;
+            color: white !important;
+            padding: 20px 0 !important;
+            border-top: 3px solid #966666 !important;
+        }
+
+        /* 6. Page Background */
         body {
-            background-color: #f8f9fa !important; /* Pure clean background */
+            background-color: #f8f1f1 !important;
         }
     </style>
 </head>

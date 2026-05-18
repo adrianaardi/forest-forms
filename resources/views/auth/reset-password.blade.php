@@ -13,45 +13,47 @@
 
     <style>
         header, .form-card-header, .btn-submit {
-            background-color: #881a1e !important; 
+            background-color: #b07d7d !important; 
             color: white !important;
         }
 
         nav {
-            background-color: #6e1b11 !important; 
+            background-color: #966666 !important; 
         }
 
         .form-card-header {
+            background-color: #b07d7d !important; 
             border-bottom: none !important;
         }
         
         .form-card-header p {
-            color: #e9d8d6 !important; /* Soft rose-gray subtext */
+            color: #fce4e6 !important; /* Soft rose-gray subtext */
         }
 
         .btn-submit {
+            background-color: #b07d7d !important;
             border: none !important;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.2) !important;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1) !important;
         }
 
         .btn-submit:hover {
-            background-color: #ae2012 !important;
+            background-color: #8e6262 !important;
         }
 
         .form-footer a {
-            color: #a12a1d !important;
-            font-weight: 600 !important;
+            color: #b07d7d !important;
+            font-weight: 500 !important;
         }
 
         footer {
-            background-color: #6e1b11 !important;
+            background-color: #b07d7d !important;
             color: white !important;
             padding: 20px 0 !important;
-            border-top: 3px solid #9b2226 !important;
+            border-top: 3px solid #966666 !important;
         }
 
         body {
-            background-color: #f8f9fa !important;
+            background-color: #f8f1f1 !important;
         }
     </style>
 </head>
