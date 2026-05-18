@@ -159,12 +159,6 @@
 </div>
 
 <div class="section">
-    @if(session('success'))
-        <div style="background:#eaf3de; border:1px solid #c0dd97; color:#3b6d11; padding:0.75rem 1rem; border-radius:8px; margin-bottom:1rem; font-size:14px;">
-            {{ session('success') }}
-        </div>
-    @endif
-
     <p class="section-title">Perkhidmatan Yang Disediakan</p>
     <div class="cards">
         <!-- Aduan ICT -->
@@ -304,6 +298,52 @@
     });
 </script>
 @endisset
+
+@if(session('new_tiket'))
+<div class="ticket-modal-overlay" id="newTicketModal">
+    <div class="ticket-modal" role="dialog">
+        <div class="ticket-modal-header">
+            <h3>Permohonan Berjaya Dihantar!</h3>
+            <button class="ticket-modal-close" onclick="closeNewTicket()" aria-label="Tutup">×</button>
+        </div>
+        <div class="ticket-modal-body" style="text-align:center; padding:1.5rem 1.25rem;">
+            <div style="font-size:36px; margin-bottom:0.75rem;">✅</div>
+            <p style="font-size:13px; color:#555; line-height:1.7; margin-bottom:1rem;">
+                Permohonan anda telah berjaya dihantar. Sila simpan No. Rujukan berikut untuk semakan dan rujukan anda.
+            </p>
+            <div style="background:#f0f4f1; border:1px solid #dde8e1; border-radius:10px; padding:1rem 1.5rem; display:inline-block;">
+                <div style="font-size:11px; color:#999; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:4px;">No. Rujukan</div>
+                <div style="font-size:18px; font-weight:700; color:#1a4731; letter-spacing:0.03em;">{{ session('new_tiket') }}</div>
+            </div>
+            <p style="font-size:12px; color:#aaa; margin-top:1rem;">Simpan nombor ini untuk semak status permohonan anda pada masa hadapan.</p>
+            <button onclick="closeNewTicket()"
+                style="margin-top:1.25rem; background:#1a1d47; color:#fff; border:none; padding:10px 28px; border-radius:8px; font-size:13px; cursor:pointer; transition:background 0.15s;">
+                Tutup
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+    const newTicketOverlay = document.getElementById('newTicketModal');
+
+    function closeNewTicket() {
+        newTicketOverlay.classList.remove('active');
+    }
+
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') closeNewTicket();
+    });
+
+    window.addEventListener('DOMContentLoaded', function() {
+        requestAnimationFrame(function() {
+            setTimeout(function() {
+                newTicketOverlay.classList.add('active');
+            }, 80);
+        });
+    });
+</script>
+@endif
 
 </body>
 </html>

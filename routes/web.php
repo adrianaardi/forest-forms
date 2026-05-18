@@ -58,7 +58,6 @@ Route::post('/forms/portal-upload', [BorangMuatNaikBahanController::class, 'stor
 
 // ── Ticket Tracking ───────────────────────────────────────
 Route::get('/semak-tiket', fn() => view('track'))->name('track');
-
 Route::post('/semak-tiket', function (\Illuminate\Http\Request $request) {
     $tiket  = strtoupper(trim($request->no_tiket));
     $result = null;

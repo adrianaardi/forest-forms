@@ -75,10 +75,7 @@ class BorangAduanKerosakanController extends Controller
         Mail::to($complaint->emel)
             ->send(new ICTSubmissionMail($complaint));
 
-        return redirect('/')->with(
-            'success',
-            'Aduan ICT anda telah berjaya dihantar! Anda akan menerima e-mel dengan No. Rujukan: ' . $complaint->no_tiket
-        );
+        return redirect('/')->with('new_tiket', $complaint->no_tiket);
 
     }
 

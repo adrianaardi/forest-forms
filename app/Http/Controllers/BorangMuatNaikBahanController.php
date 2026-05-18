@@ -74,7 +74,7 @@ class BorangMuatNaikBahanController extends Controller
             );
         }
 
-        return redirect('/')->with('success', 'Permohonan berjaya dihantar! Sila semak emel anda. No. Rujukan: ' . $upload->no_tiket);
+        return redirect('/')->with('new_tiket', $upload->no_tiket);
     }
 
     public function supervisorView($token)
