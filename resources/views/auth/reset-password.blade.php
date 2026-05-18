@@ -13,6 +13,49 @@
     <link rel="stylesheet" href="{{ asset('style.css') }}">
     <link rel="icon" href="{{ asset('images/logo-icon.png')}}">
 
+    <style>
+        header, .form-card-header, .btn-submit {
+            background-color: #9b2226 !important; 
+            color: white !important;
+        }
+
+        nav {
+            background-color: #6e1b11 !important; 
+        }
+
+        .form-card-header {
+            border-bottom: none !important;
+        }
+        
+        .form-card-header p {
+            color: #e9d8d6 !important; /* Soft rose-gray subtext */
+        }
+
+        .btn-submit {
+            border: none !important;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2) !important;
+        }
+
+        .btn-submit:hover {
+            background-color: #ae2012 !important;
+        }
+
+        .form-footer a {
+            color: #a12a1d !important;
+            font-weight: 600 !important;
+        }
+
+        footer {
+            background-color: #6e1b11 !important;
+            color: white !important;
+            padding: 20px 0 !important;
+            border-top: 3px solid #9b2226 !important;
+        }
+
+        body {
+            background-color: #f8f9fa !important;
+        }
+    </style>
 </head>
 <body>
 
