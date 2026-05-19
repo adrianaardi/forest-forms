@@ -26,11 +26,11 @@
         }
         .bk-room-link {
             display: block; padding: 6px 10px; border-radius: 8px;
-            font-size: 12px; text-decoration: none; color: #555;
+            font-size: 12px; text-decoration: none; color: #000000;
             transition: background 0.15s, color 0.15s, transform 0.1s;
             margin-bottom: 2px;
         }
-        .bk-room-link span { font-size: 10px; color: #8b7979; display: block; margin-top: 1px; }
+        .bk-room-link span { font-size: 10px; color: #000000; display: block; margin-top: 1px; }
         .bk-room-link:hover { background: #eaf3de; color: #2C3E50; transform: translateX(2px); }
         .bk-room-link.active { background: #2C3E50; color:#f7f4f4; }
         .bk-room-link.active span { color: rgba(255,255,255,0.6); }
@@ -57,17 +57,17 @@
         .mini-cal-day.empty { cursor: default; }
         .mini-cal-day.past { color: #ddd; cursor: default; }
         .mini-cal-day.available { background: #eaf3de; color: #27500a; }
-        .mini-cal-day.partial { background: #fef9e7; color: #854f0b; }
-        .mini-cal-day.full { background: #fdf0f0; color: #a32d2d; }
+        .mini-cal-day.partial { background: #fff2c4; color: #854f0b; }
+        .mini-cal-day.full { background: #ffe0e0; color: #a32d2d; }
         .mini-cal-day.today-dot { outline: 2px solid #2C3E50; outline-offset: -1px; font-weight: 600; }
         .mini-cal-day.in-week { outline: 2px solid #7ec0c9; outline-offset: -1px; }
         .mini-cal-legend { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 8px; }
-        .mini-cal-legend span { font-size: 9px; display: flex; align-items: center; gap: 3px; color: #777; }
+        .mini-cal-legend span { font-size: 9px; display: flex; align-items: center; gap: 3px; color: #000000; }
         .mini-cal-legend .dot { width: 8px; height: 8px; border-radius: 2px; flex-shrink: 0; }
 
         /* ── guide ── */
         .bk-guide-text {
-            font-size: 11px; color: #777; line-height: 1.5;
+            font-size: 11px; color: #535353; line-height: 1.5;
             background: #f3f7f2; border-left: 3px solid #7ec0c9;
             padding: 8px 10px; border-radius: 0 6px 6px 0;
         }
@@ -83,7 +83,7 @@
         .bk-btn {
             padding: 5px 12px; border: 1px solid #e0e0e0; border-radius: 6px;
             background:#f7f4f4; font-size: 12px; cursor: pointer;
-            text-decoration: none; color: #555;
+            text-decoration: none; color: #000000;
             transition: background 0.15s, border-color 0.15s;
         }
         .bk-btn:hover { background: #f5f5f5; border-color: #ccc; }
@@ -99,7 +99,7 @@
             font-size: 11px; background:#f7f4f4;
             position: sticky; top: 0; z-index: 2;
         }
-        .bk-col-header .dname { color: #aaa; font-weight: 400; font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; }
+        .bk-col-header .dname { color: #777777; font-weight: 400; font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; }
         .bk-col-header .dnum {
             font-size: 18px; font-weight: 500; width: 32px; height: 32px;
             line-height: 32px; border-radius: 50%; margin: 3px auto 0;
@@ -107,7 +107,7 @@
         }
         .bk-col-header .dnum.today { background: #2C3E50; color:#f7f4f4; }
         .bk-time-gutter {
-            font-size: 10px; color: #ccc; text-align: right;
+            font-size: 10px; color: #5c5c5c; text-align: right;
             padding: 2px 8px 0 0; height: 48px; border-right: 1px solid #eee;
         }
         .bk-cell {
@@ -152,7 +152,7 @@
 
         .btn-secondary {
             padding: 8px 16px; font-size: 13px; border-radius: 6px;
-            border: 1px solid #ddd; background: #f5f5f5; color: #555; cursor: pointer;
+            border: 1px solid #ddd; background: #f5f5f5; color: #000000; cursor: pointer;
             transition: background 0.15s;
         }
         .btn-secondary:hover { background: #eaeaea; }
@@ -166,7 +166,7 @@
             font-size: 13px;
             line-height: 1.5;
         }
-        #bk-error   { background: #fdf0f0; border: 1px solid #f5c1c1; color: #a32d2d; }
+        #bk-error   { background: #ffe1e1; border: 1px solid #f5c1c1; color: #a32d2d; }
         #bk-success { background: #eaf3de; border: 1px solid #c0dd97; color: #27500a; }
         #bk-error ul   { margin: 0; padding-left: 1.2rem; }
         #bk-submit-btn:disabled { opacity: 0.6; cursor: not-allowed; }
@@ -295,8 +295,8 @@
             </div>
             <div class="mini-cal-legend">
                 <span><span class="dot" style="background:#eaf3de;"></span>Tersedia</span>
-                <span><span class="dot" style="background:#fef9e7;"></span>Sebahagian</span>
-                <span><span class="dot" style="background:#fdf0f0;"></span>Penuh</span>
+                <span><span class="dot" style="background:#fff0b8;"></span>Sebahagian</span>
+                <span><span class="dot" style="background:#ffd3d3;"></span>Penuh</span>
             </div>
         </div>
         @endif
@@ -332,7 +332,7 @@
                 @if($bilik)
                     &nbsp;·&nbsp;
                     <span style="color:#2C3E50; font-weight:500;">{{ $bilik->nama_bilik }}</span>
-                    <span style="color:#bbb; font-size:11px;"> {{ $bilik->aras }}, {{ $bilik->wing }}</span>
+                    <span style="color:#727272; font-size:11px;"> {{ $bilik->aras }}, {{ $bilik->wing }}</span>
                 @endif
             </span>
             @if($bilik)
@@ -434,7 +434,7 @@
                 </div>
                 <div class="detail-field" style="margin-top:0.5rem;">
                     <label>Catatan</label>
-                    <p id="ev-remarks" style="color:#555;"></p>
+                    <p id="ev-remarks" style="color:#000000;"></p>
                 </div>
             </div>
             <div id="ev-cancel-wrap" style="display:none; margin-top:1rem; padding-top:1rem; border-top:1px solid #f0f0f0;">
@@ -471,7 +471,7 @@
                 <input type="hidden" name="bilik_id" value="{{ $bilik?->id }}">
                 <div class="form-section">
                     @if($bilik)
-                    <div style="background:#f0f4f1; border:1px solid #dde8e1; border-radius:8px; padding:0.6rem 0.9rem; margin-bottom:0.75rem; font-size:12px; color:#555; display:flex; align-items:center; gap:6px;">
+                    <div style="background:#f0f4f1; border:1px solid #dde8e1; border-radius:8px; padding:0.6rem 0.9rem; margin-bottom:0.75rem; font-size:12px; color:#000000; display:flex; align-items:center; gap:6px;">
                         <span style="font-size:15px;">🌿</span>
                         <span><strong>{{ $bilik->nama_bilik }}</strong> — {{ $bilik->aras }}, {{ $bilik->wing }}</span>
                     </div>
