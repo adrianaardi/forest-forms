@@ -82,6 +82,7 @@
                 <div class="nav-dropdown-section">Tempahan Bilik</div>
                 <a href="/booking/calendar" class="{{ request()->is('booking/calendar*') ? 'nav-dropdown-active' : '' }}">📅 Lihat Kalendar</a>
                 <a href="/booking/book" class="{{ request()->is('booking/book*') ? 'nav-dropdown-active' : '' }}">➕ Buat Tempahan</a>
+                <a href="/booking/my-bookings" class="{{ request()->is('booking/my-bookings*') ? 'nav-dropdown-active' : '' }}">📋 Tempahan Saya</a>
                 <div class="nav-dropdown-divider"></div>
                 <a href="/booking/profile" class="{{ request()->is('booking/profile*') ? 'nav-dropdown-active' : '' }}">✏️ Edit Profil</a>
                 <form method="POST" action="{{ route('booking.logout') }}">

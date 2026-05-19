@@ -58,26 +58,29 @@ class BookingAuthController extends Controller
 
     public function showRegister()
     {
-        return view('booking.daftar');
+        $wilayahs = \App\Models\Wilayah::orderBy('nama_wilayah')->get();
+        return view('booking.daftar', compact('wilayahs'));
     }
 
     public function register(Request $request)
     {
         $request->validate([
-            'name'     => 'required|string|max:255',
-            'email'    => 'required|email|unique:booking_users,email',
-            'password' => 'required|min:8|confirmed',
-            'bahagian' => 'nullable|string|max:255',
-            'phone'    => 'nullable|string|max:20',
+            'name'       => 'required|string|max:255',
+            'email'      => 'required|email|unique:booking_users,email',
+            'password'   => 'required|min:8|confirmed',
+            'bahagian'   => 'nullable|string|max:255',
+            'phone'      => 'nullable|string|max:20',
+            'wilayah_id' => 'required|exists:wilayahs,id',
         ]);
 
         BookingUser::create([
-            'name'     => $request->name,
-            'email'    => $request->email,
-            'password' => Hash::make($request->password),
-            'bahagian' => $request->bahagian,
-            'phone'    => $request->phone,
-            'status'   => 'pending',
+            'name'       => $request->name,
+            'email'      => $request->email,
+            'password'   => Hash::make($request->password),
+            'bahagian'   => $request->bahagian,
+            'phone'      => $request->phone,
+            'wilayah_id' => $request->wilayah_id,
+            'status'     => 'pending',
         ]);
 
         \App\Models\BookingActivityLog::log(

@@ -174,4 +174,27 @@ class BookingController extends Controller
         return redirect('/booking/calendar?bilik=' . $booking->bilik_id)
             ->with('success', 'Tempahan berjaya dibatalkan.');
     }
+
+    public function myBookings()
+    {
+        $user = Auth::guard('booking_user')->user();
+        if (!$user) return redirect('/booking/calendar');
+
+        $upcoming = BookingRequest::with('bilik')
+            ->where('user_id', $user->id)
+            ->where('status', 'confirmed')
+            ->where('tarikh', '>=', \Carbon\Carbon::today()->toDateString())
+            ->orderBy('tarikh')
+            ->orderBy('masa_mula')
+            ->get();
+
+        $past = BookingRequest::with('bilik')
+            ->where('user_id', $user->id)
+            ->whereIn('status', ['confirmed', 'cancelled'])
+            ->where('tarikh', '<', \Carbon\Carbon::today()->toDateString())
+            ->orderByDesc('tarikh')
+            ->paginate(10);
+
+        return view('booking.my-bookings', compact('upcoming', 'past'));
+    }
 }

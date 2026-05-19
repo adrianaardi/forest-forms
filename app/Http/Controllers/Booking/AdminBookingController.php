@@ -82,15 +82,16 @@ class AdminBookingController extends Controller
 
     public function users(Request $request)
     {
-        $query = BookingUser::query();
+    $query = BookingUser::with('wilayah');
 
         if ($request->filled('status')) {
             $query->where('status', $request->status);
         }
 
-        $users = $query->latest()->paginate(20)->withQueryString();
+        $users    = $query->latest()->paginate(20)->withQueryString();
+        $wilayahs = \App\Models\Wilayah::orderBy('nama_wilayah')->get();
 
-        return view('booking.admin.users', compact('users'));
+        return view('booking.admin.users', compact('users', 'wilayahs'));
     }
 
     public function updateUserStatus(Request $request, $id)
@@ -113,18 +114,20 @@ class AdminBookingController extends Controller
     public function editUser(Request $request, $id)
     {
         $request->validate([
-            'name'     => 'required|string|max:255',
-            'email'    => 'required|email|unique:booking_users,email,' . $id,
-            'bahagian' => 'nullable|string|max:255',
-            'phone'    => 'nullable|string|max:20',
-        ]);
+        'name'       => 'required|string|max:255',
+        'email'      => 'required|email|unique:booking_users,email,' . $id,
+        'bahagian'   => 'nullable|string|max:255',
+        'phone'      => 'nullable|string|max:20',
+        'wilayah_id' => 'nullable|exists:wilayahs,id',
+    ]);
 
-        BookingUser::findOrFail($id)->update([
-            'name'     => $request->name,
-            'email'    => $request->email,
-            'bahagian' => $request->bahagian,
-            'phone'    => $request->phone,
-        ]);
+    BookingUser::findOrFail($id)->update([
+        'name'       => $request->name,
+        'email'      => $request->email,
+        'bahagian'   => $request->bahagian,
+        'phone'      => $request->phone,
+        'wilayah_id' => $request->wilayah_id,
+    ]);
 
         $targetUser = BookingUser::findOrFail($id);
         $adminName  = Auth::guard('web')->user()->name;
@@ -154,18 +157,20 @@ class AdminBookingController extends Controller
     public function storeUser(Request $request)
     {
         $request->validate([
-            'name'     => 'required|string|max:255',
-            'email'    => 'required|email|unique:booking_users,email',
-            'password' => 'required|min:8',
-            'bahagian' => 'nullable|string|max:255',
+            'name'       => 'required|string|max:255',
+            'email'      => 'required|email|unique:booking_users,email',
+            'password'   => 'required|min:8',
+            'bahagian'   => 'nullable|string|max:255',
+            'wilayah_id' => 'nullable|exists:wilayahs,id',
         ]);
 
-        \App\Models\BookingUser::create([
-            'name'     => $request->name,
-            'email'    => $request->email,
-            'password' => \Illuminate\Support\Facades\Hash::make($request->password),
-            'bahagian' => $request->bahagian,
-            'status'   => 'approved',
+        BookingUser::create([
+            'name'       => $request->name,
+            'email'      => $request->email,
+            'password'   => Hash::make($request->password),
+            'bahagian'   => $request->bahagian,
+            'status'     => 'approved',
+            'wilayah_id' => $request->wilayah_id,
         ]);
 
         $adminName = Auth::guard('web')->user()->name;

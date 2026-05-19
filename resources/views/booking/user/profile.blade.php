@@ -56,6 +56,17 @@
                     <input type="text" name="bahagian" value="{{ old('bahagian', $user->bahagian) }}" placeholder="Cth: Bahagian ICT">
                 </div>
                 <div class="field">
+                    <label>Wilayah <span class="required">*</span></label>
+                    <select name="wilayah_id" required>
+                        <option value="">-- Pilih Wilayah --</option>
+                        @foreach($wilayahs as $w)
+                            <option value="{{ $w->id }}" {{ old('wilayah_id', $user->wilayah_id) == $w->id ? 'selected' : '' }}>
+                                {{ $w->nama_wilayah }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="field">
                     <label>No. Telefon</label>
                     <input type="text" name="phone" value="{{ old('phone', $user->phone) }}" placeholder="Cth: 0123456789">
                 </div>

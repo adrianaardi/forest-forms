@@ -21,10 +21,12 @@ class BookingSeeder extends Seeder
             ['nama_bilik' => 'Belian',        'aras' => 'Aras 15', 'wing' => 'Left Wing'],
         ];
 
+        $ibuPejabat = \App\Models\Wilayah::where('nama_wilayah', 'Ibu Pejabat')->first();
+
         foreach ($rooms as $room) {
             BookingBilik::updateOrCreate(
                 ['nama_bilik' => $room['nama_bilik']],
-                $room
+                array_merge($room, ['wilayah_id' => $ibuPejabat?->id])
             );
         }
     }

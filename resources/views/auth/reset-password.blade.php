@@ -67,10 +67,8 @@
     </div>
 </header>
 
-<nav>
-    <a href="/">Hub Aplikasi</a>
-    <a href="/login" class="active" style="margin-left: auto;">Admin</a>
-</nav>
+<x-navbar :breadcrumbs="[['label' => 'Reset Password']]" />
+
 
 <div class="pg-body">
     <div class="form-card">

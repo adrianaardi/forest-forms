@@ -63,10 +63,20 @@
                 </div>
                 <div class="field-row">
                     <div class="field">
+                        <label>Wilayah</label>
+                        <select name="wilayah_id" required>
+                            <option value="">-- Pilih Wilayah --</option>
+                            @foreach($wilayahs as $w)
+                                <option value="{{ $w->id }}" {{ old('wilayah_id') == $w->id ? 'selected' : '' }}>
+                                    {{ $w->nama_wilayah }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="field">
                         <label>Kata Laluan <span class="required">*</span></label>
                         <input type="password" name="password" placeholder="Minimum 8 aksara" required>
                     </div>
-                    <div class="field"></div>
                 </div>
             </div>
             <div class="form-footer">
@@ -97,6 +107,7 @@
             <th>Nama</th>
             <th>Emel</th>
             <th>Bahagian</th>
+            <th>Wilayah</th>
             <th>No. Telefon</th>
             <th>Tarikh Daftar</th>
             <th>Status</th>
@@ -107,6 +118,7 @@
             <td>{{ $user->name }}</td>
             <td>{{ $user->email }}</td>
             <td>{{ $user->bahagian ?? '-' }}</td>
+            <td>{{ $user->wilayah?->nama_wilayah ?? '-' }}</td>
             <td>{{ $user->phone ?? '-' }}</td>
             <td>{{ \Carbon\Carbon::parse($user->created_at)->format('d/m/Y') }}</td>
             <td>
@@ -138,8 +150,10 @@
                             '{{ addslashes($user->name) }}',
                             '{{ addslashes($user->email) }}',
                             '{{ addslashes($user->bahagian ?? '') }}',
-                            '{{ addslashes($user->phone ?? '') }}'
-                        )">Edit</button>
+                            '{{ addslashes($user->phone ?? '') }}',
+                            '{{ $user->wilayah_id ?? '' }}'
+                        )">Edit
+                    </button>
                 @endif
                 <form method="POST" action="{{ route('booking.admin.users.delete', $user->id) }}"
                     onsubmit="return confirm('Padam pengguna {{ addslashes($user->name) }}?')">
@@ -187,6 +201,15 @@
                         <input type="text" id="edit-bahagian" name="bahagian" placeholder="Cth: Bahagian ICT">
                     </div>
                     <div class="field">
+                        <label>Wilayah</label>
+                        <select id="edit-wilayah" name="wilayah_id">
+                            <option value="">-- Pilih Wilayah --</option>
+                            @foreach($wilayahs as $w)
+                                <option value="{{ $w->id }}">{{ $w->nama_wilayah }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="field">
                         <label>No. Telefon</label>
                         <input type="text" id="edit-phone" name="phone" placeholder="Cth: 0123456789">
                     </div>
@@ -204,12 +227,13 @@
 </div>
 
 <script>
-function openEditModal(id, name, email, bahagian, phone) {
-    document.getElementById('edit-name').value    = name;
-    document.getElementById('edit-email').value   = email;
+function openEditModal(id, name, email, bahagian, phone, wilayahId) {
+    document.getElementById('edit-name').value     = name;
+    document.getElementById('edit-email').value    = email;
     document.getElementById('edit-bahagian').value = bahagian;
-    document.getElementById('edit-phone').value   = phone;
-    document.getElementById('edit-form').action   = '/booking/admin/users/' + id + '/edit';
+    document.getElementById('edit-phone').value    = phone;
+    document.getElementById('edit-wilayah').value  = wilayahId;
+    document.getElementById('edit-form').action    = '/booking/admin/users/' + id + '/edit';
 
     const overlay = document.getElementById('editModal');
     overlay.classList.add('active');

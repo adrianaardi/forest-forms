@@ -20,7 +20,8 @@ class BookingUserProfileController extends Controller
             return redirect('/booking/login');
         }
         $user = $this->guard()->user();
-        return view('booking.user.profile', compact('user'));
+        $wilayahs = \App\Models\Wilayah::orderBy('nama_wilayah')->get();
+        return view('booking.user.profile', compact('user', 'wilayahs'));
     }
 
     public function update(Request $request)
@@ -36,14 +37,16 @@ class BookingUserProfileController extends Controller
             'email'    => 'required|email|unique:booking_users,email,' . $user->id,
             'bahagian' => 'nullable|string|max:255',
             'phone'    => 'nullable|string|max:20',
+            'wilayah_id' => 'required|exists:wilayahs,id',
         ]);
 
         $user->name     = $request->name;
         $user->email    = $request->email;
         $user->bahagian = $request->bahagian;
         $user->phone    = $request->phone;
+        $user->wilayah_id = $request->wilayah_id;
         $user->save();
-
+        
         \App\Models\BookingActivityLog::log(
             'user', $user->name,
             'updated_profile',
