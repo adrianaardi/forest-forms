@@ -57,7 +57,7 @@
                 @endif
 
                 <div class="nav-dropdown-divider"></div>
-                <a href="/admin/profile" class="{{ request()->is('admin/profile*') ? 'nav-dropdown-active' : '' }}">✏️ Edit Profil</a>
+                <a href="/admin/profile" class="{{ request()->is('admin/profile*') ? 'nav-dropdown-active' : '' }}">✏️ Edit Profile</a>
                 <form method="POST" action="{{ $email === 'admin.booking@sarawak.gov.my' ? route('booking.admin.logout') : route('logout') }}">
                     @csrf
                     <button type="submit">🚪 Log Keluar</button>
@@ -84,7 +84,7 @@
                 <a href="/booking/book" class="{{ request()->is('booking/book*') ? 'nav-dropdown-active' : '' }}">➕ Buat Tempahan</a>
                 <a href="/booking/my-bookings" class="{{ request()->is('booking/my-bookings*') ? 'nav-dropdown-active' : '' }}">📋 Tempahan Saya</a>
                 <div class="nav-dropdown-divider"></div>
-                <a href="/booking/profile" class="{{ request()->is('booking/profile*') ? 'nav-dropdown-active' : '' }}">✏️ Edit Profil</a>
+                <a href="/booking/profile" class="{{ request()->is('booking/profile*') ? 'nav-dropdown-active' : '' }}">✏️ Edit Profile</a>
                 <form method="POST" action="{{ route('booking.logout') }}">
                     @csrf
                     <button type="submit">🚪 Log Keluar</button>

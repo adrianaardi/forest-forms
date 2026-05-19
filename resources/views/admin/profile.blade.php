@@ -29,7 +29,7 @@
 
     <div class="form-card">
         <div class="form-card-header">
-            <h2>Profil Saya</h2>
+            <h2>Profile Saya</h2>
             <p>Kemaskini kata laluan akaun anda.</p>
         </div>
 

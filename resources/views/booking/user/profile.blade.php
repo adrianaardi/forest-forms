@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Profil Saya — Sistem Tempahan</title>
+    <title>Profile Saya — Sistem Tempahan</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:opsz,wght@6..144,1..1000&family=Lora:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet"><link rel="stylesheet" href="{{ asset('style.css') }}">        <link rel="icon" href="{{ asset('images/logo-icon.png')}}">
@@ -17,7 +17,7 @@
         <p> Hub Aplikasi Perkhidmatan Atas Talian</p>
     </div>
 </header>
-<x-navbar :breadcrumbs="[['label' => 'Tempah Bilik Mesyuarat', 'url' => '/booking/calendar'], ['label' => 'Profil Saya']]" />
+<x-navbar :breadcrumbs="[['label' => 'Tempah Bilik Mesyuarat', 'url' => '/booking/calendar'], ['label' => 'Profile Saya']]" />
 
 <div class="pg-body" style="max-width:560px;">
 
@@ -30,7 +30,7 @@
     {{-- Profile info --}}
     <div class="form-card" style="margin-bottom:1.5rem;">
         <div class="form-card-header">
-            <h2>Profil Saya</h2>
+            <h2>Profile Saya</h2>
             <p>Kemaskini maklumat akaun anda.</p>
         </div>
         <form method="POST" action="{{ route('booking.user.profile.update') }}">

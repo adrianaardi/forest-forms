@@ -78,20 +78,35 @@
                         min="{{ \Carbon\Carbon::today()->toDateString() }}" required>
                 </div>
 
-                <div class="field-row">
-                    <div class="field">
-                        <label>Masa Mula <span class="required">*</span></label>
-                        <input type="time" name="masa_mula"
-                            value="{{ old('masa_mula', request('masa_mula', '08:00')) }}"
-                            min="08:00" max="17:00" required>
+                    <div class="field-row">
+                        <div class="field">
+                            <label>Masa Mula <span class="required">*</span></label>
+                            <select id="bk-mula" name="masa_mula" required>
+                                @for ($hour = 8; $hour <= 16; $hour++)
+                                    @foreach (['00', '30'] as $minute)
+                                        @php
+                                            $time = sprintf('%02d:%s', $hour, $minute);
+                                        @endphp
+                                        <option value="{{ $time }}">{{ $time }}</option>
+                                    @endforeach
+                                @endfor
+                            </select>
+                        </div>
+
+                        <div class="field">
+                            <label>Masa Tamat <span class="required">*</span></label>
+                            <select id="bk-tamat" name="masa_tamat" required>
+                                @for ($hour = 8; $hour <= 17; $hour++)
+                                    @foreach (['00', '30'] as $minute)
+                                        @php
+                                            $time = sprintf('%02d:%s', $hour, $minute);
+                                        @endphp
+                                        <option value="{{ $time }}">{{ $time }}</option>
+                                    @endforeach
+                                @endfor
+                            </select>
+                        </div>
                     </div>
-                    <div class="field">
-                        <label>Masa Tamat <span class="required">*</span></label>
-                        <input type="time" name="masa_tamat"
-                            value="{{ old('masa_tamat', '09:00') }}"
-                            min="08:00" max="17:00" required>
-                    </div>
-                </div>
 
             </div>
             <div class="form-footer">

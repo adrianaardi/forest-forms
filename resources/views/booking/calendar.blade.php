@@ -15,7 +15,7 @@
         .bk-sidebar {
             width: 210px; flex-shrink: 0;
             background: #fafafa;
-            border-right: 1px solid #e8e8e8;
+            border-right: 1px solid #c0c0c0;
             overflow-y: auto; padding: 0.75rem 0;
             transition: width 0.25s ease;
         }
@@ -36,7 +36,7 @@
         .bk-room-link.active span { color: rgba(255,255,255,0.6); }
 
         /* ── mini calendar ── */
-        .mini-cal { padding: 0.75rem; border-bottom: 1px solid #eee; margin-bottom: 0.75rem; }
+        .mini-cal { padding: 0.75rem; border-bottom: 1px solid #c0c0c0; margin-bottom: 0.75rem; }
         .mini-cal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; }
         .mini-cal-header span { font-size: 12px; font-weight: 500; color: #333; }
         .mini-cal-header a {
@@ -56,7 +56,7 @@
         .mini-cal-day:not(.empty):not(.past):hover { transform: scale(1.15); opacity: 0.85; }
         .mini-cal-day.empty { cursor: default; }
         .mini-cal-day.past { color: #ddd; cursor: default; }
-        .mini-cal-day.available { background: #eaf3de; color: #27500a; }
+        .mini-cal-day.available { background: #deeccb; color: #27500a; }
         .mini-cal-day.partial { background: #fff2c4; color: #854f0b; }
         .mini-cal-day.full { background: #ffe0e0; color: #a32d2d; }
         .mini-cal-day.today-dot { outline: 2px solid #2C3E50; outline-offset: -1px; font-weight: 600; }
@@ -76,7 +76,7 @@
         .bk-main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
         .bk-toolbar {
             display: flex; align-items: center; gap: 0.6rem;
-            padding: 0.75rem 1rem; border-bottom: 1px solid #e8e8e8;
+            padding: 0.75rem 1rem; border-bottom: 1px solid #c0c0c0;
             background:#f7f4f4; flex-shrink: 0; flex-wrap: wrap;
         }
         .bk-toolbar-title { font-size: 13px; font-weight: 500; flex: 1; color: #333; }
@@ -95,7 +95,7 @@
         .bk-grid { display: grid; grid-template-columns: 48px repeat(7, 1fr); min-width: 600px; }
         .bk-col-header {
             text-align: center; padding: 8px 2px;
-            border-bottom: 2px solid #e8e8e8; border-right: 1px solid #f0f0f0;
+            border-bottom: 2px solid #c0c0c0; border-right: 1px solid #c0c0c0;
             font-size: 11px; background:#f7f4f4;
             position: sticky; top: 0; z-index: 2;
         }
@@ -108,10 +108,10 @@
         .bk-col-header .dnum.today { background: #2C3E50; color:#f7f4f4; }
         .bk-time-gutter {
             font-size: 10px; color: #5c5c5c; text-align: right;
-            padding: 2px 8px 0 0; height: 48px; border-right: 1px solid #eee;
+            padding: 2px 8px 0 0; height: 48px; border-right: 1px solid #c0c0c0;
         }
         .bk-cell {
-            border-right: 1px solid #f0f0f0; border-bottom: 1px solid #f8f8f8;
+            border-right: 1px solid #c0c0c0; border-bottom: 1px solid #c0c0c0;
             height: 48px; position: relative;
             transition: background 0.1s;
         }
@@ -294,9 +294,9 @@
                 @endfor
             </div>
             <div class="mini-cal-legend">
-                <span><span class="dot" style="background:#eaf3de;"></span>Tersedia</span>
-                <span><span class="dot" style="background:#fff0b8;"></span>Sebahagian</span>
-                <span><span class="dot" style="background:#ffd3d3;"></span>Penuh</span>
+                <span><span class="dot" style="background:#d5e6c0; border-radius: 50%;"></span>Tersedia</span>
+                <span><span class="dot" style="background:#fff0b8; border-radius: 50%;"></span>Sebahagian</span>
+                <span><span class="dot" style="background:#ffd3d3; border-radius: 50%;"></span>Penuh</span>
             </div>
         </div>
         @endif
@@ -488,32 +488,34 @@
                         <label>Tarikh <span class="required">*</span></label>
                         <input type="date" id="bk-tarikh" name="tarikh" min="{{ \Carbon\Carbon::today()->toDateString() }}" required>
                     </div>
-                    <div class="field">
-                        <label>Masa Mula <span class="required">*</span></label>
-                        <select id="bk-mula" name="masa_mula" required>
-                            @for ($hour = 8; $hour <= 17; $hour++)
-                                @foreach (['00', '30'] as $minute)
-                                    @php
-                                        $time = sprintf('%02d:%s', $hour, $minute);
-                                    @endphp
-                                    <option value="{{ $time }}">{{ $time }}</option>
-                                @endforeach
-                            @endfor
-                        </select>
-                    </div>
+                    <div class="field-row">
+                        <div class="field">
+                            <label>Masa Mula <span class="required">*</span></label>
+                            <select id="bk-mula" name="masa_mula" required>
+                                @for ($hour = 8; $hour <= 16; $hour++)
+                                    @foreach (['00', '30'] as $minute)
+                                        @php
+                                            $time = sprintf('%02d:%s', $hour, $minute);
+                                        @endphp
+                                        <option value="{{ $time }}">{{ $time }}</option>
+                                    @endforeach
+                                @endfor
+                            </select>
+                        </div>
 
-                    <div class="field">
-                        <label>Masa Tamat <span class="required">*</span></label>
-                        <select id="bk-tamat" name="masa_tamat" required>
-                            @for ($hour = 8; $hour <= 17; $hour++)
-                                @foreach (['00', '30'] as $minute)
-                                    @php
-                                        $time = sprintf('%02d:%s', $hour, $minute);
-                                    @endphp
-                                    <option value="{{ $time }}">{{ $time }}</option>
-                                @endforeach
-                            @endfor
-                        </select>
+                        <div class="field">
+                            <label>Masa Tamat <span class="required">*</span></label>
+                            <select id="bk-tamat" name="masa_tamat" required>
+                                @for ($hour = 8; $hour <= 17; $hour++)
+                                    @foreach (['00', '30'] as $minute)
+                                        @php
+                                            $time = sprintf('%02d:%s', $hour, $minute);
+                                        @endphp
+                                        <option value="{{ $time }}">{{ $time }}</option>
+                                    @endforeach
+                                @endfor
+                            </select>
+                        </div>
                     </div>
                 </div>
                 <div class="form-footer" style="margin-top:0.5rem;">

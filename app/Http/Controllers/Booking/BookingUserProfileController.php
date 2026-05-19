@@ -46,11 +46,11 @@ class BookingUserProfileController extends Controller
         $user->phone    = $request->phone;
         $user->wilayah_id = $request->wilayah_id;
         $user->save();
-        
+
         \App\Models\BookingActivityLog::log(
             'user', $user->name,
             'updated_profile',
-            $user->name . ' mengemaskini maklumat profil'
+            $user->name . ' mengemaskini maklumat profile'
         );
 
         return back()->with('success', 'Profil berjaya dikemaskini.');
