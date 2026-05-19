@@ -36,7 +36,7 @@ body textarea{
 
 /* ───── HEADER ───── */
 header {
-    background: #2C3E50;
+    background: #194169;
     color: #f7f4f4;
     padding: 1rem 2rem;
     display: flex;
@@ -72,7 +72,7 @@ header p {
 
 /* ───── NAV ───── */
 nav {
-    background: #202c38;
+    background: #213458;
     padding: 0 2rem;
     display: flex;
     gap: 1.5rem;
@@ -156,12 +156,12 @@ nav a.active {
 }
 
 .hero-search-row input:focus {
-    border-color:#2C3E50;
+    border-color:#194169;
 }
 
 .hero-search-row button {
     padding: 8px 14px;
-    background:#2C3E50;
+    background:#194169;
     color:#f7f4f4;
     border: none;
     border-radius: 6px;
@@ -172,7 +172,7 @@ nav a.active {
 }
 
 .hero-search-row button:hover {
-    background: #202c38;
+    background: #213458;
 }
 
 /* ───── HOMEPAGE SECTION ───── */
@@ -208,7 +208,7 @@ nav a.active {
 }
 
 .card:hover {
-    border-color:#2C3E50;
+    border-color:#194169;
 }
 
 .card-icon {
@@ -241,7 +241,7 @@ nav a.active {
 
 .card-link {
     font-size: 12px;
-    color:#2C3E50;
+    color:#194169;
     font-weight: 500;
 }
 
@@ -255,7 +255,7 @@ nav a.active {
 }
 
 .form-card-header {
-    background:#2C3E50;
+    background:#194169;
     padding: 1rem 1.5rem;
 }
 
@@ -286,7 +286,7 @@ nav a.active {
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.07em;
-    color:#2C3E50;
+    color:#194169;
     margin-bottom: 1rem;
     display: flex;
     align-items: center;
@@ -331,7 +331,7 @@ nav a.active {
 .field select:focus,
 .field textarea:focus {
     outline: none;
-    border-color:#2C3E50;
+    border-color:#194169;
     background:#f7f4f4;
 }
 
@@ -379,7 +379,7 @@ nav a.active {
 }
 
 .btn-submit {
-    background:#2C3E50;
+    background:#194169;
     color:#f7f4f4;
     border: none;
     padding: 10px 24px;
@@ -390,12 +390,12 @@ nav a.active {
 }
 
 .btn-submit:hover {
-    background: #202c38;
+    background: #213458;
 }
 
 /* ───── FOOTER ───── */
 footer {
-    background:#2C3E50;
+    background:#194169;
     color: rgba(255,255,255,0.6);
     padding: 1.25rem 2rem;
     font-size: 12px;
@@ -503,7 +503,7 @@ footer strong {
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.07em;
-    color:#2C3E50;
+    color:#194169;
     margin: 0 0 0.75rem;
     display: flex;
     align-items: center;
@@ -598,7 +598,7 @@ footer strong {
 
 .toolbar button {
     padding: 7px 16px;
-    background:#2C3E50;
+    background:#194169;
     color:#f7f4f4;
     border: none;
     border-radius: 6px;
@@ -607,7 +607,7 @@ footer strong {
 }
 
 .toolbar button:hover {
-    background: #202c38;
+    background: #213458;
 }
 
 .btn-reset {
@@ -713,7 +713,7 @@ footer strong {
 }
 
 .modal-header {
-    background:#2C3E50;
+    background:#194169;
     padding: 1rem 1.25rem;
     display: flex;
     justify-content: space-between;
@@ -758,7 +758,7 @@ footer strong {
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.07em;
-    color:#2C3E50;
+    color:#194169;
     margin-bottom: 0.75rem;
     display: flex;
     align-items: center;
@@ -866,6 +866,6 @@ footer strong {
 input[type="checkbox"] {
     width: 15px;
     height: 15px;
-    accent-color:#2C3E50;
+    accent-color:#194169;
     cursor: pointer;
 }

@@ -1,6 +1,6 @@
 @props(['breadcrumbs' => []])
 
-<nav style="background:#202c38; padding:0 1.5rem; display:flex; align-items:center; gap:1.5rem; position:relative;">
+<nav style="background:#213458; padding:0 1.5rem; display:flex; align-items:center; gap:1.5rem; position:relative;">
 
     {{-- Hub Aplikasi always shows --}}
     <a href="/" style="color:{{ count($breadcrumbs) > 0 || request()->is('admin*') || request()->is('booking*') ? 'rgba(255,255,255,0.5)' : '#fff' }}; text-decoration:none; font-size:13px; white-space:nowrap;">Hub Aplikasi</a>

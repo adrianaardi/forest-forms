@@ -21,7 +21,7 @@
 <x-navbar :breadcrumbs="[['label' => 'Tempah Bilik Mesyuarat', 'url' => '/booking/calendar'], ['label' => 'Reset Kata Laluan']]" />
     <div class="pg-body" style="max-width:420px;">
     <div class="form-card">
-        <div class="form-card-header" style="background:#194169;">
+        <div class="form-card-header">
             <h2>Reset Kata Laluan</h2>
             <p>Masukkan kata laluan baharu anda.</p>
         </div>
@@ -57,7 +57,7 @@
             </div>
             <div class="form-footer">
                 <span></span>
-                <button type="submit" class="btn-submit" style="background:#194169;">Reset Kata Laluan</button>
+                <button type="submit" class="btn-submit">Reset Kata Laluan</button>
             </div>
         </form>
     </div>

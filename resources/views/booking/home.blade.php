@@ -49,8 +49,8 @@
     @guest('booking_user')
         @guest('web')
             <div style="background:#f0f4f1; border:1px solid #dde8e1; border-radius:10px; padding:1.25rem; margin-top:1.5rem; text-align:center; font-size:13px; color:#555;">
-                Sila <a href="/booking/login" style="color:#2C3E50; font-weight:500;">log masuk</a> atau
-                <a href="/booking/daftar" style="color:#2C3E50; font-weight:500;">daftar</a> untuk membuat tempahan.
+                Sila <a href="/booking/login" style="color:#194169; font-weight:500;">log masuk</a> atau
+                <a href="/booking/daftar" style="color:#194169; font-weight:500;">daftar</a> untuk membuat tempahan.
             </div>
         @endguest
     @endguest

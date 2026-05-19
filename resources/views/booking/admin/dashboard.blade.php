@@ -216,7 +216,7 @@ new Chart(document.getElementById('weeklyChart'), {
         datasets: [{
             label:           'Tempahan',
             data:            @json($weeklyData->pluck('count')),
-            backgroundColor: @json($weeklyData->map(fn($d) => $d['count'] > 0 ? '#2C3E50' : '#eaf3de')),
+            backgroundColor: @json($weeklyData->map(fn($d) => $d['count'] > 0 ? '#194169' : '#eaf3de')),
             borderRadius:    6,
             borderSkipped:   false,
         }]

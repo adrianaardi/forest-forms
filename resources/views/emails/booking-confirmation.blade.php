@@ -5,7 +5,7 @@
     <style>
         body {font-family: "Google Sans Flex", sans-serif; background: #f4f4f4; margin: 0; padding: 20px; }
         .container { max-width: 600px; margin: auto; background:#f7f4f4; border-radius: 10px; overflow: hidden; border: 1px solid #dde8e1; }
-        .header { background: #2C3E50; padding: 1.25rem 1.5rem; }
+        .header { background: #194169; padding: 1.25rem 1.5rem; }
         .header h1 { color:#f7f4f4; font-size: 16px; margin: 0; }
         .header p { color: rgba(255,255,255,0.65); font-size: 12px; margin: 4px 0 0; }
         .body { padding: 1.5rem; }

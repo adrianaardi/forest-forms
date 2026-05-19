@@ -97,7 +97,7 @@
                 <option value="approved" {{ request('status') == 'approved' ? 'selected' : '' }}>Diluluskan</option>
                 <option value="rejected" {{ request('status') == 'rejected' ? 'selected' : '' }}>Ditolak</option>
             </select>
-            <button type="submit" style="padding:7px 16px; background:#2C3E50; color:#fff; border:none; border-radius:6px; font-size:13px; cursor:pointer;">Tapis</button>
+            <button type="submit" style="padding:7px 16px; background:#194169; color:#fff; border:none; border-radius:6px; font-size:13px; cursor:pointer;">Tapis</button>
             <a href="/booking/admin/users" class="btn-reset">Set Semula</a>
         </div>
     </form>

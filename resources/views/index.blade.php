@@ -48,7 +48,7 @@
 
         /* ── header ── */
         .ticket-modal-header {
-            background: #2C3E50;
+            background: #194169;
             padding: 1rem 1.25rem;
             display: flex;
             justify-content: space-between;

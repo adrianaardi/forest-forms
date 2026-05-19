@@ -21,7 +21,7 @@
 </header>
 <x-navbar :breadcrumbs="[['label' => 'Tempah Bilik Mesyuarat', 'url' => '/booking/calendar'], ['label' => 'Lupa Kata Laluan']]" />    <div class="pg-body" style="max-width:420px;">
     <div class="form-card">
-        <div class="form-card-header" style="background:#194169;">
+        <div class="form-card-header">
             <h2>Lupa Kata Laluan</h2>
             <p>Masukkan emel anda dan kami akan hantar pautan reset.</p>
         </div>
@@ -43,8 +43,8 @@
                 </div>
             </div>
             <div class="form-footer">
-                <a href="/booking/calendar" style="font-size:13px; color:#194169;">← Kembali</a>
-                <button type="submit" class="btn-submit" style="background:#194169;">Hantar Pautan Reset</button>
+                <a href="/booking/calendar">← Kembali</a>
+                <button type="submit" class="btn-submit">Hantar Pautan Reset</button>
             </div>
         </form>
     </div>

@@ -51,7 +51,7 @@
                         </option>
                     @endforeach
                 </select>
-                <button type="submit" style="padding:7px 16px; background:#2C3E50; color:#fff; border:none; border-radius:6px; font-size:13px; cursor:pointer;">Tapis</button>
+                <button type="submit" style="padding:7px 16px; background:#194169; color:#fff; border:none; border-radius:6px; font-size:13px; cursor:pointer;">Tapis</button>
                 <a href="/admin/portal-upload" style="padding:7px 16px; background:#f0f0f0; color:#444; border-radius:6px; font-size:13px; text-decoration:none;">Set Semula</a>
             </div>
         </form>

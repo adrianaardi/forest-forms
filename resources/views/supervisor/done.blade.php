@@ -25,7 +25,7 @@
         </div>
         <div class="form-section" style="text-align:center; padding:2rem;">
             <div style="font-size:40px; margin-bottom:1rem;">✅</div>
-            <p style="font-size:15px; font-weight:500; color:#2C3E50; margin-bottom:0.5rem;">
+            <p style="font-size:15px; font-weight:500; color:#194169; margin-bottom:0.5rem;">
                 Permohonan {{ $permohonan->no_tiket }} telah diluluskan.
             </p>
             <p style="font-size:13px; color:#666; margin-bottom:1rem;">
