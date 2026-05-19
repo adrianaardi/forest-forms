@@ -15,7 +15,7 @@
         .bk-sidebar {
             width: 210px; flex-shrink: 0;
             background: #fafafa;
-            border-right: 1px solid #c0c0c0;
+            border-right: 1px solid #e0e0e0;
             overflow-y: auto; padding: 0.75rem 0;
             transition: width 0.25s ease;
         }
@@ -36,7 +36,7 @@
         .bk-room-link.active span { color: rgba(255,255,255,0.6); }
 
         /* ── mini calendar ── */
-        .mini-cal { padding: 0.75rem; border-bottom: 1px solid #c0c0c0; margin-bottom: 0.75rem; }
+        .mini-cal { padding: 0.75rem; border-bottom: 1px solid #e0e0e0; margin-bottom: 0.75rem; }
         .mini-cal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; }
         .mini-cal-header span { font-size: 12px; font-weight: 500; color: #333; }
         .mini-cal-header a {
@@ -76,7 +76,7 @@
         .bk-main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
         .bk-toolbar {
             display: flex; align-items: center; gap: 0.6rem;
-            padding: 0.75rem 1rem; border-bottom: 1px solid #c0c0c0;
+            padding: 0.75rem 1rem; border-bottom: 1px solid #e0e0e0;
             background:#f7f4f4; flex-shrink: 0; flex-wrap: wrap;
         }
         .bk-toolbar-title { font-size: 13px; font-weight: 500; flex: 1; color: #333; }
@@ -95,7 +95,7 @@
         .bk-grid { display: grid; grid-template-columns: 48px repeat(7, 1fr); min-width: 600px; }
         .bk-col-header {
             text-align: center; padding: 8px 2px;
-            border-bottom: 2px solid #c0c0c0; border-right: 1px solid #c0c0c0;
+            border-bottom: 2px solid #e0e0e0; border-right: 1px solid #e0e0e0;
             font-size: 11px; background:#f7f4f4;
             position: sticky; top: 0; z-index: 2;
         }
@@ -108,10 +108,10 @@
         .bk-col-header .dnum.today { background: #2C3E50; color:#f7f4f4; }
         .bk-time-gutter {
             font-size: 10px; color: #5c5c5c; text-align: right;
-            padding: 2px 8px 0 0; height: 48px; border-right: 1px solid #c0c0c0;
+            padding: 2px 8px 0 0; height: 48px; border-right: 1px solid #e0e0e0;
         }
         .bk-cell {
-            border-right: 1px solid #c0c0c0; border-bottom: 1px solid #c0c0c0;
+            border-right: 1px solid #e0e0e0; border-bottom: 1px solid #e0e0e0;
             height: 48px; position: relative;
             transition: background 0.1s;
         }
