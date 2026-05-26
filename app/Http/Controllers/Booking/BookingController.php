@@ -72,6 +72,7 @@ class BookingController extends Controller
 
         $isAjax = $request->ajax() || $request->wantsJson();
 
+        // 1. Semakan log masuk sedia ada
         if (!$user) {
             if ($isAjax) {
                 return response()->json(['message' => 'Sila log masuk untuk membuat tempahan.'], 401);
@@ -79,6 +80,16 @@ class BookingController extends Controller
             return redirect('/booking/login')->with('error', 'Sila log masuk untuk membuat tempahan.');
         }
 
+        // 2. SEMAKAN WILAYAH (KOD BARU)
+        if ($user->wilayah_id !== $bilik->wilayah_id) {
+            $msg = 'Anda hanya dibenarkan membuat tempahan bilik di dalam wilayah anda sahaja.';
+            if ($isAjax) {
+                return response()->json(['message' => $msg], 403); // 403 Forbidden
+            }
+            return back()->with('error', $msg)->withInput();
+        }
+
+        // 3. Validasi borang sedia ada
         $validated = $request->validate([
             'bilik_id'        => 'required|exists:booking_bilik,id',
             'tajuk_mesyuarat' => 'required|string|max:255',
@@ -87,8 +98,6 @@ class BookingController extends Controller
             'masa_tamat'      => 'required|after:masa_mula',
             'remarks'         => 'nullable|string|max:500',
         ]);
-        // Note: Laravel automatically returns a 422 JSON response for AJAX
-        // requests when validation fails, so no extra handling needed here.
 
         $mula  = \Carbon\Carbon::parse($request->masa_mula);
         $tamat = \Carbon\Carbon::parse($request->masa_tamat);
@@ -158,7 +167,6 @@ class BookingController extends Controller
 
         return redirect($redirectUrl)->with('success', $successMsg);
     }
-
 
     public function cancelBooking($token)
     {
