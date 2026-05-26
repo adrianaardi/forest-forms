@@ -36,6 +36,7 @@ class BookingSeeder extends Seeder
             ['nama_bilik' => 'Sri Belian',                'aras' => 'Tingkat 3',         'wing' => '-', 'wilayah_id' => $bintulu?->id],
             ['nama_bilik' => 'Bilik Mesyuarat','aras' => 'Tingkat 12','wing' => '-', 'wilayah_id' => $sibu?->id],
             ['nama_bilik' => 'Bilik Mesyuarat','aras' => 'Tingkat 13','wing' => '-', 'wilayah_id' => $sibu?->id],
+
             ['nama_bilik' => 'Nepenthes',                 'aras' => 'Tingkat 3',         'wing' => '-', 'wilayah_id' => $limbang?->id],
             ['nama_bilik' => 'Bilik Mesyuarat', 'aras' => 'Tingkat 2', 'wing' => '-', 'wilayah_id' => $lawas?->id],
             ['nama_bilik' => 'Bilik Mesyuarat', 'aras' => 'Tingkat 5', 'wing' => '-', 'wilayah_id' => $kapit?->id],
@@ -45,9 +46,13 @@ class BookingSeeder extends Seeder
 
         foreach ($rooms as $room) {
             BookingBilik::updateOrCreate(
-                ['nama_bilik' => $room['nama_bilik'], 'wilayah_id' => $room['wilayah_id']],
+                [
+                    'nama_bilik' => $room['nama_bilik'],
+                    'wilayah_id' => $room['wilayah_id'],
+                    'aras'       => $room['aras'],
+                ],
                 $room
             );
-        }
+}
     }
 }
