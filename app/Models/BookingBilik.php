@@ -14,4 +14,9 @@ class BookingBilik extends Model
     {
         return $this->hasMany(BookingRequest::class, 'bilik_id');
     }
+
+    public function wilayah()
+    {
+        return $this->belongsTo(\App\Models\Wilayah::class, 'wilayah_id');
+    }
 }

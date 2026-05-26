@@ -71,6 +71,35 @@
             background: #f3f7f2; border-left: 3px solid #7ec0c9;
             padding: 8px 10px; border-radius: 0 6px 6px 0;
         }
+        .bk-wilayah-toggle {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 4px 0;
+        font-size: 10px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.07em;
+        color: #313e69;
+        margin-bottom: 0.3rem;
+        transition: color 0.15s;
+    }
+    .bk-wilayah-toggle:hover { color: #194169; }
+    .bk-wilayah-toggle.open .bk-wilayah-arrow { transform: rotate(0deg); }
+    .bk-wilayah-arrow {
+        font-size: 11px;
+        transition: transform 0.2s;
+        color: #aaa;
+    }
+    .bk-wilayah-rooms {
+        padding-left: 4px;
+        overflow: hidden;
+        transition: max-height 0.25s ease;
+    }
 
         /* ── main ── */
         .bk-main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
@@ -302,21 +331,34 @@
         @endif
 
         <div class="bk-sidebar-section">
-            <div class="bk-guide-text">Pilih bilik untuk melihat ketersediaan dan membuat tempahan.</div>
+            <div class="bk-guide-text">Sila pilih wilayah sendiri sebelum membuat tempahan bilik.</div>
         </div>
 
-        @foreach($bilikList as $aras => $rooms)
-            <div class="bk-sidebar-section">
-                <span class="bk-sidebar-label">{{ $aras }}</span>
+    {{-- Room list grouped by wilayah --}}
+    @foreach($bilikList as $wilayah => $rooms)
+        @php
+            $isActiveWilayah = $bilik && $rooms->contains('id', $bilik->id);
+        @endphp
+        <div class="bk-sidebar-section">
+            <button
+                class="bk-wilayah-toggle {{ $isActiveWilayah ? 'open' : '' }}"
+                onclick="toggleWilayah(this)">
+                <span>{{ $wilayah }}</span>
+                <span class="bk-wilayah-arrow">{{ $isActiveWilayah ? '▾' : '›' }}</span>
+            </button>
+            <div class="bk-wilayah-rooms" style="{{ $isActiveWilayah ? '' : 'display:none;' }}">
                 @foreach($rooms as $room)
                     <a href="/booking/calendar?bilik={{ $room->id }}&week={{ $weekStart->toDateString() }}"
-                       class="bk-room-link {{ $bilik && $bilik->id == $room->id ? 'active' : '' }}">
+                    class="bk-room-link {{ $bilik && $bilik->id == $room->id ? 'active' : '' }}">
                         {{ $room->nama_bilik }}
-                        <span>{{ $room->wing }}</span>
+                        @if($room->aras && $room->aras !== '-')
+                            <span>{{ $room->aras }}{{ $room->wing && $room->wing !== '-' ? ', '.$room->wing : '' }}</span>
+                        @endif
                     </a>
                 @endforeach
             </div>
-        @endforeach
+        </div>
+    @endforeach
 
     </div>
 
@@ -729,6 +771,22 @@ document.getElementById('login-form').addEventListener('submit', async function(
     btn.disabled    = false;
     btn.textContent = 'Log Masuk';
 });
+
+function toggleWilayah(btn) {
+    const rooms = btn.nextElementSibling;
+    const arrow = btn.querySelector('.bk-wilayah-arrow');
+    const isOpen = rooms.style.display !== 'none';
+
+    if (isOpen) {
+        rooms.style.display = 'none';
+        arrow.textContent = '›';
+        btn.classList.remove('open');
+    } else {
+        rooms.style.display = 'block';
+        arrow.textContent = '▾';
+        btn.classList.add('open');
+    }
+}
 </script>
 
 </body>

@@ -23,11 +23,18 @@ class BookingController extends Controller
 
     public function calendar(Request $request)
     {
-        $bilikList  = BookingBilik::orderBy('aras')->orderBy('nama_bilik')->get()->groupBy('aras');
-        
-        // default to first room if none selected
-        $selectedId = $request->get('bilik') ?? BookingBilik::orderBy('aras')->orderBy('nama_bilik')->first()?->id;
-        $bilik      = BookingBilik::find($selectedId);
+        $wilayahOrder = [
+            'Ibu Pejabat', 'Kuching', 'Sri Aman', 'Sarikei',
+            'Sibu', 'Kapit', 'Bintulu', 'Miri', 'Limbang', 'Lawas',
+        ];
+
+        $bilikList = \App\Models\BookingBilik::with('wilayah')
+            ->whereHas('wilayah')
+            ->get()
+            ->groupBy(fn($b) => $b->wilayah->nama_wilayah)
+            ->sortBy(fn($rooms, $wilayah) => array_search($wilayah, $wilayahOrder));
+                $selectedId = $request->get('bilik') ?? \App\Models\BookingBilik::orderBy('aras')->orderBy('nama_bilik')->first()?->id;
+                $bilik      = \App\Models\BookingBilik::find($selectedId);
 
         $weekStart = $request->get('week')
             ? Carbon::parse($request->get('week'))->startOfWeek(Carbon::MONDAY)
@@ -38,14 +45,13 @@ class BookingController extends Controller
         if ($bilik) {
             $bookings = BookingRequest::with('user')
                 ->where('bilik_id', $bilik->id)
-                ->whereIn('status', ['confirmed', 'Confirmed', 'CONFIRMED'])
+                ->whereIn('status', ['confirmed'])
                 ->whereBetween('tarikh', [$weekStart->toDateString(), $weekEnd->toDateString()])
                 ->get();
         }
 
         return view('booking.calendar', compact('bilikList', 'bilik', 'bookings', 'weekStart', 'weekEnd'));
     }
-
     public function showBook(Request $request, $bilikId = null)
     {
         $bilikList = BookingBilik::orderBy('aras')->orderBy('nama_bilik')->get();
