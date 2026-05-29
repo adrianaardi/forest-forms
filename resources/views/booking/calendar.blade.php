@@ -553,7 +553,9 @@
                                         @php
                                             $time = sprintf('%02d:%s', $hour, $minute);
                                         @endphp
-                                        <option value="{{ $time }}">{{ $time }}</option>
+                                        @if (!($hour == 17 && $minute == '30'))
+                                            <option value="{{ $time }}">{{ $time }}</option>
+                                        @endif
                                     @endforeach
                                 @endfor
                             </select>
