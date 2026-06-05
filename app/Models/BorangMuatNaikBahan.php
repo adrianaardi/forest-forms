@@ -28,6 +28,6 @@ class BorangMuatNaikBahan extends Model
 
     public function getNoTiketAttribute()
     {
-        return 'JHS/MNB/A/' . date('Y') . '(' . $this->id . ')';
+        return 'JHS/ICT/P/' . date('Y') . '(' . $this->id . ')';
     }
 }
