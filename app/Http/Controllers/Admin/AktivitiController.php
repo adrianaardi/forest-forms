@@ -1,23 +1,31 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Admin; 
 
 use App\Http\Controllers\Controller;
-use App\Models\Aktiviti;
 use Illuminate\Http\Request;
+use App\Models\Aktiviti;
+use Illuminate\Support\Facades\Auth;
 
 class AktivitiController extends Controller
 {
-    public function store(Request $request)
+    public function storeAktiviti(Request $request)
     {
         $request->validate([
             'nama_aktiviti' => 'required|string|max:255',
             'tarikh' => 'required|date',
-            'seksyen_unit' => 'required|string|max:100',
+            'biodata' => 'required|string|max:255'
+        ], [], [
+            'biodata' => 'Seksyen/Unit' // Custom attribute display name
         ]);
 
-        Aktiviti::create($request->all());
+        Aktiviti::create([
+            'nama_aktiviti' => $request->nama_aktiviti,
+            'tarikh' => $request->tarikh,
+            'biodata' => $request->biodata,
+            'bahagian_id' => Auth::user()->bahagian_id
+        ]);
 
-        return redirect()->back()->with('success', 'Program / Aktiviti Jabatan berjaya dijadualkan!');
+        return redirect()->back()->with('success', 'External activity logged successfully.');
     }
 }

@@ -52,14 +52,14 @@
 
     <div class="grid">
         <div class="card">
-            <h2 class="card-title">🏢 Urus Seksyen / Unit Jabatan</h2>
+            <h2 class="card-title">🏢 Urus Bahagian Jabatan</h2>
             <form action="{{ route('admin.pergerakan.bahagian.store') }}" method="POST">
                 @csrf
                 <div class="form-group">
-                    <label>Nama Seksyen / Unit Baru</label>
-                    <input type="text" name="nama" class="form-control" placeholder="Cth: Seksyen Silvikultur" required>
+                    <label>Nama Bahagian Baru</label>
+                    <input type="text" name="nama" class="form-control" placeholder="Cth: Bahagian ICT" required>
                 </div>
-                <button type="submit" class="btn-submit" style="background:#475569;">Daftar Seksyen Baru</button>
+                <button type="submit" class="btn-submit" style="background:#475569;">Daftar Bahagian Baru</button>
             </form>
 
             <div class="table-wrapper" style="max-height: 330px;">
@@ -67,17 +67,17 @@
                     <thead>
                         <tr>
                             <th>ID</th>
-                            <th>Nama Seksyen / Unit</th>
+                            <th>Nama Bahagian</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @forelse($seksyenList as $sek)
+                        @forelse($bahagianList as $bahagian)
                             <tr>
-                                <td>{{ $sek->id }}</td>
-                                <td><strong>{{ $sek->nama }}</strong></td>
+                                <td>{{ $bahagian->id }}</td>
+                                <td><strong>{{ $bahagian->nama }}</strong></td>
                             </tr>
                         @empty
-                            <tr><td colspan="2" style="text-align:center; color:#999;">Tiada seksyen berdaftar.</td></tr>
+                            <tr><td colspan="2" style="text-align:center; color:#999;">Tiada bahagian berdaftar.</td></tr>
                         @endforelse
                     </tbody>
                 </table>
@@ -85,7 +85,7 @@
         </div>
 
         <div class="card">
-            <h2 class="card-title">👥 Tambah Akaun Sub-Admin Seksyen</h2>
+            <h2 class="card-title">👥 Tambah Akaun Sub-Admin Bahagian</h2>
             <form action="{{ route('admin.pergerakan.subadmin.store') }}" method="POST">
                 @csrf
                 <div class="form-group">
@@ -95,6 +95,15 @@
                 <div class="form-group">
                     <label>Email Rasmi (ID Log Masuk)</label>
                     <input type="email" name="email" class="form-control" placeholder="username@sarawak.gov.my" required>
+                </div>
+                <div class="form-group">
+                    <label>Bahagian Bertanggungjawab</label>
+                    <select name="bahagian_id" class="form-control" required>
+                        <option value="">-- Pilih Bahagian Terhad --</option>
+                        @foreach($bahagianList as $bahagian)
+                            <option value="{{ $bahagian->id }}">{{ $bahagian->nama }}</option>
+                        @endforeach
+                    </select>
                 </div>
                 <div class="form-group">
                     <label>Kata Laluan Sementara</label>
@@ -108,6 +117,7 @@
                     <thead>
                         <tr>
                             <th>Nama Pengurus</th>
+                            <th>Bahagian Terhad</th>
                             <th>Emel Akses</th>
                         </tr>
                     </thead>
@@ -115,10 +125,11 @@
                         @forelse($subadmins as $sub)
                             <tr>
                                 <td><strong>{{ $sub->name }}</strong></td>
+                                <td><span style="color: #194169; font-weight: 500;">{{ $sub->bahagian->nama ?? 'Tiada Bahagian' }}</span></td>
                                 <td>{{ $sub->email }}</td>
                             </tr>
                         @empty
-                            <tr><td colspan="2" style="text-align:center; color:#999;">Tiada sub-admin berdaftar.</td></tr>
+                            <tr><td colspan="3" style="text-align:center; color:#999;">Tiada sub-admin berdaftar.</td></tr>
                         @endforelse
                     </tbody>
                 </table>

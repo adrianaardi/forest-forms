@@ -14,6 +14,9 @@ return new class extends Migration
             $table->date('tarikh');
             $table->string('seksyen_unit');
             $table->timestamps();
+            $table->foreignId('bahagian_id')->constrained('bahagians')->onDelete('cascade');
+            $table->string('biodata');
+            $table->dropColumn('seksyen_unit');
         });
     }
 
