@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pengurusan Cawangan - Pergerakan Pegawai</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:opsz,wght@6..144,1..1000&family=Lora:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ asset('style.css') }}">
+    <link rel="icon" href="{{ asset('images/logo-icon.png')}}">
+    <style>
+        .grid { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 2rem; }
+        @media (max-width: 1000px) { .grid { grid-template-columns: 1fr; } }
+        .card { background: #fff; border-radius: 12px; padding: 1.5rem; box-shadow: 0 4px 12px rgba(0,0,0,0.05); border: 1px solid #eef2f5; margin-bottom: 2rem; }
+        .card-title { font-size: 16px; font-weight: 600; color: #334155; margin-top: 0; margin-bottom: 1.25rem; border-bottom: 2px solid #f0f4f8; padding-bottom: 0.5rem; }
+        .form-group { margin-bottom: 1rem; }
+        .form-group label { display: block; font-size: 12px; color: #666; margin-bottom: 4px; font-weight: 500; }
+        .form-control { width: 100%; padding: 10px 12px; border: 1px solid #dcdcdc; border-radius: 6px; font-size: 13px; box-sizing: border-box; }
+        .btn-submit { background: #334155; color: #fff; border: none; padding: 10px 20px; border-radius: 6px; font-size: 13px; font-weight: 500; cursor: pointer; width: 100%; }
+        .table-wrapper { margin-top: 1.5rem; max-height: 450px; overflow-y: auto; border: 1px solid #eef2f5; border-radius: 6px; }
+        table { width: 100%; border-collapse: collapse; font-size: 13px; text-align: left; }
+        th { background: #f8fafc; color: #475569; padding: 10px; position: sticky; top: 0; z-index: 10; }
+        td { padding: 10px; border-bottom: 1px solid #f1f5f9; }
+        
+        .switch { position: relative; display: inline-block; width: 44px; height: 22px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; inset: 0; background-color: #cbd5e1; transition: .3s; border-radius: 22px; }
+        .slider:before { position: absolute; content: ""; height: 16px; width: 16px; left: 3px; bottom: 3px; background-color: white; transition: .3s; border-radius: 50%; }
+        input:checked + .slider { background-color: #22c55e; }
+        input:checked + .slider:before { transform: translateX(22px); }
+        
+        .badge { font-size: 11px; padding: 2px 6px; border-radius: 4px; font-weight: 500; }
+        .bg-hadir { background: #dcfce7; color: #166534; }
+        .bg-tiada { background: #fee2e2; color: #991b1b; }
+        .alert-success { background: #dcfce7; color: #166534; padding: 10px; border-radius: 6px; font-size: 13px; margin-bottom: 1.5rem; border: 1px solid #bbf7d0; }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="logo"></div>
+    <div>
+        <h1>Jabatan Hutan Sarawak</h1>
+        <p>Hub Aplikasi Perkhidmatan Atas Talian</p>
+    </div>
+</header>
+
+<x-navbar :breadcrumbs="[['label' => 'Pergerakan Pegawai', 'url' => route('admin.pergerakan.index')], ['label' => 'Pengurusan Cawangan']]" />
+
+<div class="dashboard-body">
+
+    <div style="margin-bottom: 1rem;">
+        <a href="/admin/dashboard" class="btn-back">← Kembali ke Dashboard</a>
+    </div>
+
+    <p class="section-heading">Sistem Pergerakan Pegawai (Sub Admin)</p>
+
+    @if(session('success'))
+        <div class="alert-success">{{ session('success') }}</div>
+    @endif
+
+    <div class="grid">
+        <div class="card">
+            <h2 class="card-title">👥 Roster & Kehadiran Pegawai Cawangan</h2>
+            
+            <form action="{{ route('admin.pergerakan.pegawai.store') }}" method="POST" style="display:grid; grid-template-columns: 2fr 1fr 2fr auto; gap:10px; align-items:end;">
+                @csrf
+                <div class="form-group" style="margin:0;">
+                    <label>Nama Pegawai</label>
+                    <input type="text" name="nama" class="form-control" placeholder="Nama penuh" required>
+                </div>
+                <div class="form-group" style="margin:0;">
+                    <label>Gred</label>
+                    <input type="text" name="gred" class="form-control" placeholder="Cth: N29" required>
+                </div>
+                <div class="form-group" style="margin:0;">
+                    <label>Seksyen / Unit</label>
+                    <select name="seksyen_unit" class="form-control" required>
+                        <option value="">-- Pilih --</option>
+                        @foreach($seksyenList as $sek)
+                            <option value="{{ $sek->nama }}">{{ $sek->nama }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <button type="submit" class="btn-submit" style="height:38px;">+ Tambah</button>
+            </form>
+
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Pegawai / Gred</th>
+                            <th>Seksyen / Unit</th>
+                            <th style="text-align: center; width: 140px;">Kehadiran Hari Ini</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse($pegawaiList as $peg)
+                            <tr>
+                                <td>
+                                    <strong>{{ $peg->nama }}</strong><br>
+                                    <span style="color:#666; font-size:11px;">Gred: {{ $peg->gred }}</span>
+                                </td>
+                                <td>{{ $peg->seksyen_unit }}</td>
+                                <td style="text-align: center;">
+                                    <form action="{{ route('admin.pergerakan.pegawai.toggle', $peg->id) }}" method="POST" style="display: inline-flex; align-items: center; gap: 8px;">
+                                        @csrf
+                                        @method('PATCH')
+                                        <label class="switch">
+                                            <input type="checkbox" onChange="this.form.submit()" {{ $peg->is_hadir ? 'checked' : '' }}>
+                                            <span class="slider"></span>
+                                        </label>
+                                        <span class="badge {{ $peg->is_hadir ? 'bg-hadir' : 'bg-tiada' }}">
+                                            {{ $peg->is_hadir ? 'Hadir' : 'Tidak Hadir' }}
+                                        </span>
+                                    </form>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr><td colspan="3" style="text-align:center; color:#999;">Tiada pegawai didaftarkan di dalam roster.</td></tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2 class="card-title">📅 Jadual & Aktiviti Program Luar</h2>
+            <form action="{{ route('admin.pergerakan.aktiviti.store') }}" method="POST">
+                @csrf
+                <div class="form-group">
+                    <label>Nama Aktiviti / Program Jabatan</label>
+                    <input type="text" name="nama_aktiviti" class="form-control" placeholder="Cth: Taklimat Pengurusan Sempadan" required>
+                </div>
+                <div class="form-group">
+                    <label>Tarikh Dilaksanakan</label>
+                    <input type="date" name="tarikh" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label>Seksyen Mengadakan</label>
+                    <select name="seksyen_unit" class="form-control" required>
+                        @foreach($seksyenList as $sek)
+                            <option value="{{ $sek->nama }}">{{ $sek->nama }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <button type="submit" class="btn-submit" style="background:#475569;">Daftar Program Luar</button>
+            </form>
+
+            <div class="table-wrapper" style="max-height: 260px;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Program</th>
+                            <th>Tarikh</th>
+                            <th>Unit Pengurus</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse($aktivitiList as $akt)
+                            <tr>
+                                <td><strong>{{ $akt->nama_aktiviti }}</strong></td>
+                                <td>{{ \Carbon\Carbon::parse($akt->tarikh)->format('d/m/Y') }}</td>
+                                <td>{{ $akt->seksyen_unit }}</td>
+                            </tr>
+                        @empty
+                            <tr><td colspan="3" style="text-align:center; color:#999;">Tiada program dijadualkan lagi.</td></tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer>
+    <div><strong>Jabatan Hutan Sarawak</strong> | Wisma Sumber Alam, Petra Jaya, 93660 Kuching, Sarawak</div>
+    <div>© 2026 Jabatan Hutan Sarawak. Hak Cipta Terpelihara.</div>
+</footer>
+
+</body>
+</html>

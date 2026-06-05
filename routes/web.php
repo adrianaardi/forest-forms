@@ -11,6 +11,8 @@ use App\Http\Controllers\Booking\BookingAuthController;
 use App\Http\Controllers\Booking\AdminBookingController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\NewPasswordController;
+use App\Http\Controllers\Admin\PegawaiController;
+use App\Http\Controllers\Admin\AktivitiController;
 use Illuminate\Support\Facades\Route;
 
 // ── Homepage ──────────────────────────────────────────────
@@ -47,6 +49,24 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::get('/bahagian',         [BahagianController::class, 'index'])->name('bahagian');
     Route::post('/bahagian',        [BahagianController::class, 'store'])->name('bahagian.store');
     Route::delete('/bahagian/{id}', [BahagianController::class, 'destroy'])->name('bahagian.destroy');
+
+    Route::prefix('pergerakan-pegawai')->name('pergerakan.')->group(function () {
+        
+        // Dynamic index serves main-dashboard or sub-dashboard context automatically
+        Route::get('/', [PegawaiController::class, 'index'])->name('index');
+        
+        // Main Admin action context
+        Route::post('/subadmin/store', [PegawaiController::class, 'storeSubAdmin'])->name('subadmin.store');
+        
+        // Sub Admin action contexts
+        Route::post('/pegawai/store', [PegawaiController::class, 'storePegawai'])->name('pegawai.store');
+        Route::patch('/pegawai/{id}/toggle', [PegawaiController::class, 'toggleStatus'])->name('pegawai.toggle');
+        
+        // Shared capability context
+        Route::post('/aktiviti/store', [AktivitiController::class, 'store'])->name('aktiviti.store');
+
+        Route::post('/bahagian/store', [PegawaiController::class, 'storeBahagian'])->name('bahagian.store');
+    });
 });
 
 // ── Public Forms ──────────────────────────────────────────

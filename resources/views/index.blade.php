@@ -6,8 +6,8 @@
     <title>Hub Aplikasi Perkhidmatan</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:opsz,wght@6..144,1..1000&family=Lora:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="{{ asset('style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:opsz,wght@6..144,1..1000&family=Lora:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ asset('style.css') }}">
     <style>
         /* ── overlay ── */
         .ticket-modal-overlay {
@@ -161,7 +161,6 @@
 <div class="section">
     <p class="section-title">Perkhidmatan Yang Disediakan</p>
     <div class="cards">
-        <!-- Aduan ICT -->
         <a href="/forms/ict-aduan" class="card">
             <div class="card-icon icon-ict">💻</div>
             <h3>Aplikasi Aduan ICT</h3>
@@ -169,7 +168,6 @@
             <span class="card-link">Hantar Aduan →</span>
         </a>
 
-        <!-- Muat Naik Portal -->
         <a href="/forms/portal-upload" class="card">
             <div class="card-icon icon-upload">📂</div>
             <h3>Aplikasi Pengurusan Laman Web</h3>
@@ -177,12 +175,18 @@
             <span class="card-link">Hantar Permohonan →</span>
         </a>
 
-        <!-- Tempahan Bilik -->
         <a href="/booking/calendar" class="card">
             <div class="card-icon icon-track">📅</div>
             <h3>Aplikasi Menempah Bilik Mesyuarat</h3>
             <p>Sistem pengurusan ruang mesyuarat secara real-time untuk koordinasi perbincangan dan acara jabatan yang lebih teratur.</p>
             <span class="card-link">Tempah Sekarang →</span>
+        </a>
+
+        <a href="{{ route('admin.pergerakan.index') }}" class="card">
+            <div class="card-icon icon-movement">📡</div>
+            <h3>Aplikasi Pergerakan Pegawai</h3>
+            <p>Pantau kehadiran, tugasan luar, dan program pegawai Jabatan Hutan Sarawak secara langsung melalui paparan papan pemuka berpusat.</p>
+            <span class="card-link">Lihat Pergerakan →</span>
         </a>
     </div>
 </div>
@@ -291,7 +295,6 @@
 
     // auto-open after a short delay so the entry animation is visible
     window.addEventListener('DOMContentLoaded', function() {
-        // slight delay lets the page paint first, making the animation feel intentional
         requestAnimationFrame(function() {
             setTimeout(openTicketModal, 80);
         });
