@@ -56,10 +56,10 @@
                     <a href="/admin/bahagian" class="{{ request()->is('admin/bahagian') ? 'nav-dropdown-active' : '' }}">🏢 Urus Bahagian</a>
                 @endif
 
-                {{-- 📡 NEW: Sistem Pergerakan Pegawai WORKSPACE --}}
-                @if($email === 'admin.pergerakan@sarawak.gov.my' || $user->role === 'subadmin_pergerakan')
+                {{-- Sistem Pergerakan Pegawai --}}
+                @if($email === 'admin.pergerakan@sarawak.gov.my' || $user->role === 'subadmin' || $user->role === 'subadmin_pergerakan')
                     <div class="nav-dropdown-section">Pergerakan Pegawai</div>
-                    <a href="{{ route('admin.pergerakan.index') }}" class="{{ request()->is('admin/pergerakan-pegawai') ? 'nav-dropdown-active' : '' }}">
+                    <a href="{{ route('admin.pergerakan.index') }}" class="{{ request()->is('admin/pergerakan-pegawai*') ? 'nav-dropdown-active' : '' }}">
                         📊 {{ $email === 'admin.pergerakan@sarawak.gov.my' ? 'Dashboard Utama' : 'Dashboard Cawangan' }}
                     </a>
                 @endif

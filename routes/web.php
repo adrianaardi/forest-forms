@@ -13,10 +13,13 @@ use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\Admin\PegawaiController;
 use App\Http\Controllers\Admin\AktivitiController;
+use App\Http\Controllers\Admin\DisplayController;
 use Illuminate\Support\Facades\Route;
 
 // ── Homepage ──────────────────────────────────────────────
 Route::get('/', fn() => view('index'));
+Route::get('/display/pergerakan', [DisplayController::class, 'pergerakan'])->name('display.pergerakan');
+Route::get('/display/full-display', [DisplayController::class, 'fullDisplay'])->name('display.full-display');
 
 // ── JHS Admin ─────────────────────────────────────────────
 Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
