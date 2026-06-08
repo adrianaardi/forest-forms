@@ -143,7 +143,7 @@
                     <thead>
                         <tr>
                             <th>Pegawai / Gred</th>
-                            <th>Biodata (Seksyen/Unit)</th>
+                            <th>Seksyen/Unit</th>
                             <th style="text-align: center; width: 140px;">Kehadiran Hari Ini</th>
                         </tr>
                     </thead>
@@ -177,7 +177,7 @@
             </div>
         </div>
 
-        <div class="card">
+        <div class="card" id="jadual-program">
             <h2 class="card-title">📅 Jadual & Aktiviti Program Luar</h2>
             <form action="{{ route('admin.pergerakan.aktiviti.store') }}" method="POST">
                 @csrf
@@ -189,36 +189,18 @@
                     <label>Tarikh Dilaksanakan</label>
                     <input type="date" name="tarikh" class="form-control" required>
                 </div>
-               <div class="form-group" style="margin:0;">
+               <div class="form-group">
                     <label>Seksyen/Unit</label>
                     <input type="text" name="biodata" class="form-control" placeholder="Cth: Unit ICT" required>
                 </div>
 
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Pegawai / Gred</th>
-                            <th>Seksyen/Unit</th>
-                            <th style="text-align: center; width: 140px;">Kehadiran Hari Ini</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @forelse($pegawaiList as $peg)
-                            <tr>
-                                <td>
-                                    <strong>{{ $peg->nama }}</strong><br>
-                                    <span style="color:#666; font-size:11px;">Gred: {{ $peg->gred }}</span>
-                                </td>
-                                <td>{{ $peg->biodata }}</td> </tr>
-                        @empty
-                            <tr><td colspan="3" style="text-align:center; color:#999;">Tiada pegawai didaftarkan di bawah bahagian ini.</td></tr>
-                        @endforelse
-                    </tbody>
-                </table>
-
                 <div class="form-group">
                     <label>Seksyen/Unit Pengurus Program</label>
                     <input type="text" name="biodata" class="form-control" placeholder="Cth: Sub-Unit Projek" required>
+                </div>
+
+                <div style="margin-top: 1rem; text-align: right;">
+                    <button type="submit" class="btn-submit" style="width:auto; background:#334155; item-alignment: center; margin-bottom: 20px;">Simpan Jadual & Aktiviti</button>
                 </div>
 
                 <table>
@@ -241,12 +223,12 @@
                         @endforelse
                     </tbody>
                 </table>
-            </div>
+            </form>
         </div>
     </div>
 </div>
 
-<div class="card" style="margin-top: 1rem;">
+<div class="card" id="news-ticker" style="margin-top: 1rem;">
         <h2 class="card-title" style="color: #334155;">📢 Kemaskini Berita & Pengumuman Bergerak (News Ticker)</h2>
         <form action="/admin/pergerakan/news" method="POST" style="display: flex; gap: 12px; align-items: center;">
             @csrf
@@ -264,15 +246,6 @@
         </form>
     </div>
 
-</div>
-
-<div class="news-ticker-container">
-    <div class="ticker-title">📢 MAKLUMAN:</div>
-    <div class="ticker-wrap">
-        <div class="ticker-content">
-            Selamat Datang ke Sistem Pergerakan Pegawai Jabatan Hutan Sarawak • Sila pastikan status kehadiran harian dikemaskini sebelum jam 9:00 Pagi • Kerja-kerja penyelenggaraan pelayan portal dijadualkan pada hari Jumaat ini mermula jam 5.00 petang.
-        </div>
-    </div>
 </div>
 
 <footer>
