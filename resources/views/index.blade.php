@@ -182,10 +182,10 @@
             <span class="card-link">Tempah Sekarang →</span>
         </a>
 
-        <a href="{{ route('admin.pergerakan.index') }}" class="card">
-            <div class="card-icon icon-movement">📡</div>
+        <a href="/booking/calendar" class="card">
+            <div class="card-icon icon-track">📌</div>
             <h3>Aplikasi Pergerakan Pegawai</h3>
-            <p>Pantau kehadiran, tugasan luar, dan program pegawai Jabatan Hutan Sarawak secara langsung melalui paparan papan pemuka berpusat.</p>
+            <p>Pantau pergerakan pegawai dan program Jabatan Hutan Sarawak secara langsung melalui paparan papan pemuka berpusat.</p>
             <span class="card-link">Lihat Pergerakan →</span>
         </a>
     </div>
