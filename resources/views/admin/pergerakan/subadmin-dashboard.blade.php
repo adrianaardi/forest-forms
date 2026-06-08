@@ -34,6 +34,7 @@
         .bg-hadir { background: #dcfce7; color: #166534; }
         .bg-tiada { background: #fee2e2; color: #991b1b; }
         .alert-success { background: #dcfce7; color: #166534; padding: 10px; border-radius: 6px; font-size: 13px; margin-bottom: 1.5rem; border: 1px solid #bbf7d0; }
+        .scope-badge { background: #eff6ff; color: #1d4ed8; padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: 600; display: inline-block; margin-top: 5px; border: 1px solid #bfdbfe;}
     </style>
 </head>
 <body>
@@ -54,15 +55,17 @@
         <a href="/admin/dashboard" class="btn-back">← Kembali ke Dashboard</a>
     </div>
 
-    <p class="section-heading">Sistem Pergerakan Pegawai (Sub Admin)</p>
+    <p class="section-heading" style="margin-bottom: 0.25rem;">Sistem Pergerakan Pegawai</p>
+    <div class="scope-badge">🔒 Bahagian Mengurus: {{ Auth::user()->bahagian->nama ?? 'Umum' }}</div>
 
     @if(session('success'))
-        <div class="alert-success">{{ session('success') }}</div>
+        <div class="alert-success" style="margin-top: 1.5rem;">{{ session('success') }}</div>
     @endif
 
-    <div class="grid">
+    <div class="grid" style="margin-top: 1.5rem;">
+        
         <div class="card">
-            <h2 class="card-title">👥 Roster & Kehadiran Pegawai Cawangan</h2>
+            <h2 class="card-title">👥 Roster & Kehadiran Pegawai</h2>
             
             <form action="{{ route('admin.pergerakan.pegawai.store') }}" method="POST" style="display:grid; grid-template-columns: 2fr 1fr 2fr auto; gap:10px; align-items:end;">
                 @csrf
@@ -75,13 +78,8 @@
                     <input type="text" name="gred" class="form-control" placeholder="Cth: N29" required>
                 </div>
                 <div class="form-group" style="margin:0;">
-                    <label>Seksyen / Unit</label>
-                    <select name="seksyen_unit" class="form-control" required>
-                        <option value="">-- Pilih --</option>
-                        @foreach($seksyenList as $sek)
-                            <option value="{{ $sek->nama }}">{{ $sek->nama }}</option>
-                        @endforeach
-                    </select>
+                    <label>Biodata (Seksyen/Unit)</label>
+                    <input type="text" name="biodata" class="form-control" placeholder="Cth: Unit ICT" required>
                 </div>
                 <button type="submit" class="btn-submit" style="height:38px;">+ Tambah</button>
             </form>
@@ -91,7 +89,7 @@
                     <thead>
                         <tr>
                             <th>Pegawai / Gred</th>
-                            <th>Seksyen / Unit</th>
+                            <th>Biodata (Seksyen/Unit)</th>
                             <th style="text-align: center; width: 140px;">Kehadiran Hari Ini</th>
                         </tr>
                     </thead>
@@ -102,7 +100,7 @@
                                     <strong>{{ $peg->nama }}</strong><br>
                                     <span style="color:#666; font-size:11px;">Gred: {{ $peg->gred }}</span>
                                 </td>
-                                <td>{{ $peg->seksyen_unit }}</td>
+                                <td>{{ $peg->biodata }}</td>
                                 <td style="text-align: center;">
                                     <form action="{{ route('admin.pergerakan.pegawai.toggle', $peg->id) }}" method="POST" style="display: inline-flex; align-items: center; gap: 8px;">
                                         @csrf
@@ -118,7 +116,7 @@
                                 </td>
                             </tr>
                         @empty
-                            <tr><td colspan="3" style="text-align:center; color:#999;">Tiada pegawai didaftarkan di dalam roster.</td></tr>
+                            <tr><td colspan="3" style="text-align:center; color:#999;">Tiada pegawai didaftarkan di bawah bahagian ini.</td></tr>
                         @endforelse
                     </tbody>
                 </table>
@@ -137,24 +135,44 @@
                     <label>Tarikh Dilaksanakan</label>
                     <input type="date" name="tarikh" class="form-control" required>
                 </div>
-                <div class="form-group">
-                    <label>Seksyen Mengadakan</label>
-                    <select name="seksyen_unit" class="form-control" required>
-                        @foreach($seksyenList as $sek)
-                            <option value="{{ $sek->nama }}">{{ $sek->nama }}</option>
-                        @endforeach
-                    </select>
+               <div class="form-group" style="margin:0;">
+                    <label>Seksyen/Unit</label>
+                    <input type="text" name="biodata" class="form-control" placeholder="Cth: Unit ICT" required>
                 </div>
-                <button type="submit" class="btn-submit" style="background:#475569;">Daftar Program Luar</button>
-            </form>
 
-            <div class="table-wrapper" style="max-height: 260px;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Pegawai / Gred</th>
+                            <th>Seksyen/Unit</th>
+                            <th style="text-align: center; width: 140px;">Kehadiran Hari Ini</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse($pegawaiList as $peg)
+                            <tr>
+                                <td>
+                                    <strong>{{ $peg->nama }}</strong><br>
+                                    <span style="color:#666; font-size:11px;">Gred: {{ $peg->gred }}</span>
+                                </td>
+                                <td>{{ $peg->biodata }}</td> </tr>
+                        @empty
+                            <tr><td colspan="3" style="text-align:center; color:#999;">Tiada pegawai didaftarkan di bawah bahagian ini.</td></tr>
+                        @endforelse
+                    </tbody>
+                </table>
+
+                <div class="form-group">
+                    <label>Seksyen/Unit Pengurus Program</label>
+                    <input type="text" name="biodata" class="form-control" placeholder="Cth: Sub-Unit Projek" required>
+                </div>
+
                 <table>
                     <thead>
                         <tr>
                             <th>Program</th>
                             <th>Tarikh</th>
-                            <th>Unit Pengurus</th>
+                            <th>Seksyen/Unit</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -162,10 +180,10 @@
                             <tr>
                                 <td><strong>{{ $akt->nama_aktiviti }}</strong></td>
                                 <td>{{ \Carbon\Carbon::parse($akt->tarikh)->format('d/m/Y') }}</td>
-                                <td>{{ $akt->seksyen_unit }}</td>
+                                <td>{{ $akt->biodata }}</td>
                             </tr>
                         @empty
-                            <tr><td colspan="3" style="text-align:center; color:#999;">Tiada program dijadualkan lagi.</td></tr>
+                            <tr><td colspan="3" style="text-align:center; color:#999;">Tiada program dijadualkan bagi bahagian ini.</td></tr>
                         @endforelse
                     </tbody>
                 </table>

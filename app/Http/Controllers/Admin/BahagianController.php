@@ -3,37 +3,61 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\BahagianSupervisor;
 use Illuminate\Http\Request;
+use App\Models\Bahagian;
+use App\Models\User;
+use App\Models\Pegawai;
+use App\Models\Aktiviti;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 
 class BahagianController extends Controller
 {
     public function index()
     {
-        if (Auth::user()->email !== 'admin.mohon@sarawak.gov.my') abort(403);
-        $bahagian = BahagianSupervisor::latest()->get();
-        return view('admin.bahagian', compact('bahagian'));
+        $user = Auth::user();
+
+        // Super Admin perspective
+        if ($user->role === 'admin') {
+            $bahagianList = Bahagian::all();
+            $subadmins = User::where('role', 'subadmin')->with('bahagian')->get();
+            return view('admin.pergerakan.main-dashboard', compact('bahagianList', 'subadmins'));
+        }
+
+        // Sub-Admin perspective (Scoped data)
+        $bahagianId = $user->bahagian_id;
+        $pegawaiList = Pegawai::where('bahagian_id', $bahagianId)->get();
+        $aktivitiList = Aktiviti::where('bahagian_id', $bahagianId)->get();
+
+        return view('admin.pergerakan.subadmin-dashboard', compact('pegawaiList', 'aktivitiList'));
     }
 
-    public function store(Request $request)
+    public function storeBahagian(Request $request)
     {
-        if (Auth::user()->email !== 'admin.mohon@sarawak.gov.my') abort(403);
+        $request->validate(['nama' => 'required|unique:bahagians,nama|max:255']);
+        
+        Bahagian::create(['nama' => $request->nama]);
+        
+        return redirect()->back()->with('success', 'Bahagian successfully created!');
+    }
 
+    public function storeSubAdmin(Request $request)
+    {
         $request->validate([
-            'nama_bahagian'    => 'required|string|max:255|unique:bahagian_supervisors,nama_bahagian',
-            'email_supervisor' => 'required|email',
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email',
+            'bahagian_id' => 'required|exists:bahagians,id',
+            'password' => 'required|min:6'
         ]);
 
-        BahagianSupervisor::create($request->only('nama_bahagian', 'email_supervisor'));
+        User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'role' => 'subadmin',
+            'bahagian_id' => $request->bahagian_id,
+            'password' => Hash::make($request->password)
+        ]);
 
-        return back()->with('success', 'Bahagian berjaya ditambah.');
-    }
-
-    public function destroy($id)
-    {
-        if (Auth::user()->email !== 'admin.mohon@sarawak.gov.my') abort(403);
-        BahagianSupervisor::findOrFail($id)->delete();
-        return back()->with('success', 'Bahagian berjaya dipadam.');
+        return redirect()->back()->with('success', 'Sub-Admin registered and bound to Division successfully!');
     }
 }

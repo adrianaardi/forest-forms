@@ -24,6 +24,7 @@ class User extends Authenticatable
         'password',
         'role',
         'wilayah_id',
+        'bahagian_id',
     ];
 
     /**
@@ -52,5 +53,10 @@ class User extends Authenticatable
     public function wilayah()
     {
         return $this->belongsTo(\App\Models\Wilayah::class);
+    }
+
+    public function bahagian() 
+    { 
+        return $this->belongsTo(Bahagian::class); 
     }
 }

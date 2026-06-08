@@ -52,19 +52,19 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
 
     Route::prefix('pergerakan-pegawai')->name('pergerakan.')->group(function () {
         
-        // Dynamic index serves main-dashboard or sub-dashboard context automatically
-        Route::get('/', [PegawaiController::class, 'index'])->name('index');
+        // 1. Dashboard Views (Handled by BahagianController as the entry point)
+        Route::get('/', [BahagianController::class, 'index'])->name('index');
         
-        // Main Admin action context
-        Route::post('/subadmin/store', [PegawaiController::class, 'storeSubAdmin'])->name('subadmin.store');
-        
-        // Sub Admin action contexts
-        Route::post('/pegawai/store', [PegawaiController::class, 'storePegawai'])->name('pegawai.store');
-        Route::patch('/pegawai/{id}/toggle', [PegawaiController::class, 'toggleStatus'])->name('pegawai.toggle');
-        
-        // Shared capability context
-        Route::post('/aktiviti/store', [AktivitiController::class, 'store'])->name('aktiviti.store');
+        // 2. Super Admin Actions
+        Route::post('/bahagian', [BahagianController::class, 'storeBahagian'])->name('bahagian.store');
+        Route::post('/subadmin', [BahagianController::class, 'storeSubAdmin'])->name('subadmin.store');
 
+        // 3. Sub-Admin Actions (Officer Roster)
+        Route::post('/pegawai', [PegawaiController::class, 'storePegawai'])->name('pegawai.store');
+        Route::patch('/pegawai/{id}/toggle', [PegawaiController::class, 'toggleAttendance'])->name('pegawai.toggle');
+        
+        // 4. Sub-Admin Actions (Activity Logs)
+        Route::post('/aktiviti', [AktivitiController::class, 'storeAktiviti'])->name('aktiviti.store');
         Route::post('/bahagian/store', [PegawaiController::class, 'storeBahagian'])->name('bahagian.store');
     });
 });
