@@ -22,5 +22,14 @@ class AppServiceProvider extends ServiceProvider
             if (config('app.env') === 'production') {
             URL::forceScheme('https');
         }
+
+        View::composer(['admin.pergerakan.*', 'main-dashboard', 'subadmin-dashboard'], function ($view) {
+            $rollingNews = News::where('is_active', true)->latest()->pluck('headline')->toArray();
+            
+            // Combine all headlines into a single string separated by bullets
+            $newsTickerText = implode(' • ', $rollingNews);
+            
+            $view->with('newsTickerText', $newsTickerText);
+        });
     }
 }

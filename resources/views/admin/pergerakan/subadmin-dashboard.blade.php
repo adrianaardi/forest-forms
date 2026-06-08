@@ -35,6 +35,60 @@
         .bg-tiada { background: #fee2e2; color: #991b1b; }
         .alert-success { background: #dcfce7; color: #166534; padding: 10px; border-radius: 6px; font-size: 13px; margin-bottom: 1.5rem; border: 1px solid #bbf7d0; }
         .scope-badge { background: #eff6ff; color: #1d4ed8; padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: 600; display: inline-block; margin-top: 5px; border: 1px solid #bfdbfe;}
+
+        .news-ticker-container {
+            display: flex;
+            background: #1e293b; /* Premium Dark Slate background */
+            color: #f8fafc;
+            height: 40px;
+            align-items: center;
+            overflow: hidden;
+            border-top: 3px solid #194169; /* JHS Corporate Blue highlight border */
+            font-family: 'Google Sans Flex', sans-serif;
+            font-size: 13px;
+            box-shadow: 0 -4px 12px rgba(0,0,0,0.08);
+        }
+
+        .ticker-title {
+            background: #194169;
+            padding: 0 16px;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            font-weight: 700;
+            font-size: 11px;
+            letter-spacing: 0.75px;
+            z-index: 10;
+            white-space: nowrap;
+            box-shadow: 4px 0 12px rgba(0,0,0,0.3);
+        }
+
+        .ticker-wrap {
+            width: 100%;
+            overflow: hidden;
+        }
+
+        .ticker-content {
+            display: inline-block;
+            white-space: nowrap;
+            padding-left: 100%; /* Delays initial appearance gracefully */
+            animation: marquee-roll 30s linear infinite;
+        }
+
+        .ticker-content:hover {
+            animation-play-state: paused;
+            cursor: pointer;
+            color: #cbd5e1;
+        }
+
+        @keyframes marquee-roll {
+            0% {
+                transform: translate3d(0, 0, 0);
+            }
+            100% {
+                transform: translate3d(-100%, 0, 0);
+            }
+        }
     </style>
 </head>
 <body>
@@ -188,6 +242,35 @@
                     </tbody>
                 </table>
             </div>
+        </div>
+    </div>
+</div>
+
+<div class="card" style="margin-top: 1rem;">
+        <h2 class="card-title" style="color: #334155;">📢 Kemaskini Berita & Pengumuman Bergerak (News Ticker)</h2>
+        <form action="/admin/pergerakan/news" method="POST" style="display: flex; gap: 12px; align-items: center;">
+            @csrf
+            <div style="flex-grow: 1;">
+                <input type="text" name="headline" class="form-control" 
+                       placeholder="Taip pemberitahuan penting atau makluman cawangan di sini untuk disiarkan..." 
+                       required style="height: 42px;">
+            </div>
+            <div>
+                <button type="submit" class="btn-submit" 
+                        style="background: #334155; width: auto; height: 42px; padding: 0 24px; white-space: nowrap; margin: 0;">
+                    Siarkan Berita
+                </button>
+            </div>
+        </form>
+    </div>
+
+</div>
+
+<div class="news-ticker-container">
+    <div class="ticker-title">📢 MAKLUMAN:</div>
+    <div class="ticker-wrap">
+        <div class="ticker-content">
+            Selamat Datang ke Sistem Pergerakan Pegawai Jabatan Hutan Sarawak • Sila pastikan status kehadiran harian dikemaskini sebelum jam 9:00 Pagi • Kerja-kerja penyelenggaraan pelayan portal dijadualkan pada hari Jumaat ini mermula jam 5.00 petang.
         </div>
     </div>
 </div>
