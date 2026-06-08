@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Papan Paparan Penuh</title>
+    <title>Pergerakan Pegawai</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:opsz,wght@6..144,1..1000&family=Lora:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet">
@@ -62,7 +62,7 @@
     <main class="main">
         <div class="topbar">
             <div>
-                <div style="font-size: 28px; font-weight: 800; line-height: 1.1;">Paparan Penuh Kehadiran Pegawai</div>
+                <div style="font-size: 28px; font-weight: 800; line-height: 1.1;">Pergerakan Pegawai</div>
                 <div class="muted" style="margin-top: 4px;">Automatik · 8 pegawai setiap skrin · status hadir/tidak hadir</div>
             </div>
             <div class="chip">{{ now()->translatedFormat('d F Y, H:i') }}</div>
@@ -71,7 +71,7 @@
         @php $sectionLabel = $pegawaiList->first()?->bahagian->nama ?? 'Semua Seksyen'; @endphp
         <div class="panel" style="padding: 12px 14px; display:flex; align-items:center; justify-content:space-between; gap:12px;">
             <div>
-                <div style="font-size: 12px; text-transform: uppercase; letter-spacing: .08em; color: #7dd3fc;">Seksyen Dipaparkan</div>
+                <div style="font-size: 12px; text-transform: uppercase; letter-spacing: .08em; color: #7dd3fc;">Bahagian Dipaparkan</div>
                 <div style="font-size: 22px; font-weight: 800; color: #fff;">{{ $sectionLabel }}</div>
             </div>
             <div class="chip">{{ $pegawaiList->count() }} pegawai</div>
