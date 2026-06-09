@@ -192,14 +192,7 @@
     </div>
 </div>
 
-<div class="news-ticker-container">
-    <div class="ticker-title">📢 MAKLUMAN:</div>
-    <div class="ticker-wrap">
-        <div class="ticker-content">
-            Selamat Datang ke Sistem Pergerakan Pegawai Jabatan Hutan Sarawak • Sila pastikan status kehadiran harian dikemaskini sebelum jam 9:00 Pagi • Kerja-kerja penyelenggaraan pelayan portal dijadualkan pada hari Jumaat ini mermula jam 5.00 petang.
-        </div>
-    </div>
-</div>
+
 
 <footer>
     <div><strong>Jabatan Hutan Sarawak</strong> | Wisma Sumber Alam, Petra Jaya, 93660 Kuching, Sarawak</div>

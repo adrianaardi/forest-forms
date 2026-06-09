@@ -102,6 +102,7 @@
     </main>
 </div>
 
+
 <div class="ticker"><span>{{ $newsTicker ?: 'Tiada pengumuman pada masa ini.' }}</span></div>
 
 <script>
@@ -140,5 +141,25 @@
         }
     })();
 </script>
+
+    <!-- Add before closing </body> -->
+    <div id="fs-gate" style="
+        position:fixed; inset:0; z-index:9999;
+        background:rgba(15,23,42,0.97);
+        display:flex; align-items:center; justify-content:center;
+        cursor:pointer; flex-direction:column; gap:12px;
+    ">
+        <div style="font-size:28px; font-weight:800; color:#e0f2fe;">Pergerakan Pegawai</div>
+        <div style="color:#7dd3fc; font-size:14px;">Klik untuk mula paparan skrin penuh</div>
+    </div>
+
+    <script>
+    document.getElementById('fs-gate').addEventListener('click', function () {
+        const el = document.documentElement;
+        const req = el.requestFullscreen || el.webkitRequestFullscreen || el.mozRequestFullScreen;
+        if (req) req.call(el);
+        this.remove();
+    });
+    </script>
 </body>
 </html>
