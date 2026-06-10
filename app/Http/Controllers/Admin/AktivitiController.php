@@ -14,18 +14,16 @@ class AktivitiController extends Controller
         $request->validate([
             'nama_aktiviti' => 'required|string|max:255',
             'tarikh' => 'required|date',
-            'biodata' => 'required|string|max:255'
-        ], [], [
-            'biodata' => 'Seksyen/Unit' // Custom attribute display name
+            'seksyen_unit' => 'required|string|max:255'
         ]);
 
         Aktiviti::create([
             'nama_aktiviti' => $request->nama_aktiviti,
             'tarikh' => $request->tarikh,
-            'biodata' => $request->biodata,
+            'seksyen_unit' => $request->seksyen_unit,
             'bahagian_id' => Auth::user()->bahagian_id
         ]);
 
-        return redirect()->back()->with('success', 'External activity logged successfully.');
+        return redirect()->back()->with('success', 'Aktiviti berjaya direkodkan.');
     }
 }

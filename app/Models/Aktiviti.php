@@ -6,5 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class Aktiviti extends Model
 {
-    protected $fillable = ['nama_aktiviti', 'tarikh', 'seksyen_unit'];
+    protected $fillable = [
+        'nama_aktiviti',
+        'tarikh',
+        'seksyen_unit',
+        'bahagian_id'
+    ];
 }

@@ -190,15 +190,9 @@
                     <input type="date" name="tarikh" class="form-control" required>
                 </div>
                <div class="form-group">
-                    <label>Seksyen/Unit</label>
-                    <input type="text" name="biodata" class="form-control" placeholder="Cth: Unit ICT" required>
-                </div>
-
-                <div class="form-group">
                     <label>Seksyen/Unit Pengurus Program</label>
-                    <input type="text" name="biodata" class="form-control" placeholder="Cth: Sub-Unit Projek" required>
+                    <input type="text" name="seksyen_unit" class="form-control" placeholder="Cth: Seksyen Pengurusan dan Transformasi Digital" required>
                 </div>
-
                 <div style="margin-top: 1rem; text-align: right;">
                     <button type="submit" class="btn-submit" style="width:auto; background:#334155; item-alignment: center; margin-bottom: 20px;">Simpan Jadual & Aktiviti</button>
                 </div>
@@ -208,7 +202,7 @@
                         <tr>
                             <th>Program</th>
                             <th>Tarikh</th>
-                            <th>Seksyen/Unit</th>
+                            <th>Seksyen/Unit Pengurus Program</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -216,7 +210,7 @@
                             <tr>
                                 <td><strong>{{ $akt->nama_aktiviti }}</strong></td>
                                 <td>{{ \Carbon\Carbon::parse($akt->tarikh)->format('d/m/Y') }}</td>
-                                <td>{{ $akt->biodata }}</td>
+                                <td>{{ $akt->seksyen_unit }}</td>
                             </tr>
                         @empty
                             <tr><td colspan="3" style="text-align:center; color:#999;">Tiada program dijadualkan bagi bahagian ini.</td></tr>
