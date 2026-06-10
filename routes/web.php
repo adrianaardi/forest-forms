@@ -14,6 +14,7 @@ use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\Admin\PegawaiController;
 use App\Http\Controllers\Admin\AktivitiController;
 use App\Http\Controllers\Admin\DisplayController;
+use App\Http\Controllers\Admin\PergerakanDashboardController;
 use Illuminate\Support\Facades\Route;
 
 // ── Homepage ──────────────────────────────────────────────
@@ -55,9 +56,9 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
 
     Route::prefix('pergerakan-pegawai')->name('pergerakan.')->group(function () {
         
-        // 1. Dashboard Views (Handled by BahagianController as the entry point)
-        Route::get('/', [BahagianController::class, 'index'])->name('index');
-        
+        Route::get('/', [PergerakanDashboardController::class, 'index'])
+        ->name('index');
+
         // 2. Super Admin Actions
         Route::post('/bahagian', [BahagianController::class, 'storeBahagian'])->name('bahagian.store');
         Route::post('/subadmin', [BahagianController::class, 'storeSubAdmin'])->name('subadmin.store');

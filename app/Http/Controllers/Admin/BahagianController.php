@@ -13,25 +13,6 @@ use Illuminate\Support\Facades\Auth;
 
 class BahagianController extends Controller
 {
-    public function index()
-    {
-        $user = Auth::user();
-
-        // Super Admin perspective
-        if ($user->role === 'admin') {
-            $bahagianList = Bahagian::all();
-            $subadmins = User::where('role', 'subadmin')->with('bahagian')->get();
-            return view('admin.pergerakan.main-dashboard', compact('bahagianList', 'subadmins'));
-        }
-
-        // Sub-Admin perspective (Scoped data)
-        $bahagianId = $user->bahagian_id;
-        $pegawaiList = Pegawai::where('bahagian_id', $bahagianId)->get();
-        $aktivitiList = Aktiviti::where('bahagian_id', $bahagianId)->get();
-
-        return view('admin.pergerakan.subadmin-dashboard', compact('pegawaiList', 'aktivitiList'));
-    }
-
     public function storeBahagian(Request $request)
     {
         $request->validate(['nama' => 'required|unique:bahagians,nama|max:255']);

@@ -47,6 +47,15 @@ class AuthenticatedSessionController extends Controller
             return redirect('/admin/ict-aduan');
         }
 
+        // Pergerakan admin + subadmin
+        if (
+            $user->email === 'admin.pergerakan@sarawak.gov.my' ||
+            $user->role === 'admin_pergerakan' ||
+            $user->role === 'subadmin_pergerakan'
+        ) {
+            return redirect()->route('admin.pergerakan.index');
+        }
+
         return redirect('/');
     }
     /**
