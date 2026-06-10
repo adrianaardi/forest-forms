@@ -132,8 +132,8 @@
                     <input type="text" name="gred" class="form-control" placeholder="Cth: N29" required>
                 </div>
                 <div class="form-group" style="margin:0;">
-                    <label>Biodata (Seksyen/Unit)</label>
-                    <input type="text" name="biodata" class="form-control" placeholder="Cth: Unit ICT" required>
+                    <label>Seksyen/Unit</label>
+                    <input type="text" name="seksyen_unit" class="form-control" placeholder="Cth: Seksyen Pengurusan dan Transformasi Digital" required>
                 </div>
                 <button type="submit" class="btn-submit" style="height:38px;">+ Tambah</button>
             </form>
@@ -154,7 +154,7 @@
                                     <strong>{{ $peg->nama }}</strong><br>
                                     <span style="color:#666; font-size:11px;">Gred: {{ $peg->gred }}</span>
                                 </td>
-                                <td>{{ $peg->biodata }}</td>
+                                <td>{{ $peg->seksyen_unit }}</td>
                                 <td style="text-align: center;">
                                     <form action="{{ route('admin.pergerakan.pegawai.toggle', $peg->id) }}" method="POST" style="display: inline-flex; align-items: center; gap: 8px;">
                                         @csrf

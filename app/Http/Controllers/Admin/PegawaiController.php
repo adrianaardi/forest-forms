@@ -13,16 +13,14 @@ class PegawaiController extends Controller
     {
         $request->validate([
             'nama' => 'required|string|max:255',
-            'gred' => 'required|string|max:10',
-            'biodata' => 'required|string|max:255'
-        ], [], [
-            'biodata' => 'Seksyen/Unit' // Custom attribute display name for validation errors
+            'gred' => 'required|string|max:50',
+            'seksyen_unit' => 'required|string|max:255'
         ]);
 
         Pegawai::create([
             'nama' => $request->nama,
             'gred' => $request->gred,
-            'biodata' => $request->biodata,
+            'seksyen_unit' => $request->seksyen_unit,
             'bahagian_id' => Auth::user()->bahagian_id,
             'is_hadir' => true
         ]);
