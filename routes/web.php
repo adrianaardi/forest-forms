@@ -69,7 +69,6 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
         
         // 4. Sub-Admin Actions (Activity Logs)
         Route::post('/aktiviti', [AktivitiController::class, 'storeAktiviti'])->name('aktiviti.store');
-        Route::post('/bahagian/store', [PegawaiController::class, 'storeBahagian'])->name('bahagian.store');
     });
 });
 

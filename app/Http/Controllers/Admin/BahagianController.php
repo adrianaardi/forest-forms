@@ -34,7 +34,7 @@ class BahagianController extends Controller
         User::create([
             'name' => $request->name,
             'email' => $request->email,
-            'role' => 'subadmin',
+            'role' => 'subadmin_pergerakan',
             'bahagian_id' => $request->bahagian_id,
             'password' => Hash::make($request->password)
         ]);
