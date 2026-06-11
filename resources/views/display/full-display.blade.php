@@ -85,6 +85,7 @@
                         <th>Gred</th>
                         <th>Seksyen</th>
                         <th>Kehadiran</th>
+                        <th>Catatan (Ketidakhadiran)</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -94,6 +95,7 @@
                             <td>{{ $pegawai->gred }}</td>
                             <td>{{ $pegawai->bahagian->nama ?? '-' }}</td>
                             <td><span class="badge {{ $pegawai->is_hadir ? 'hadir' : 'tidak' }}">{{ $pegawai->is_hadir ? 'Hadir' : 'Tidak Hadir' }}</span></td>
+                            <td>{{ $pegawai->remarks ?? '-' }}</td>
                         </tr>
                     @endforeach
                 </tbody>
