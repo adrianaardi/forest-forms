@@ -53,7 +53,6 @@
                     <div class="nav-dropdown-section">Portal Muat Naik</div>
                     <a href="/admin/dashboard-mohon" class="{{ request()->is('admin/dashboard-mohon') ? 'nav-dropdown-active' : '' }}">📊 Dashboard</a>
                     <a href="/admin/portal-upload" class="{{ request()->is('admin/portal-upload*') ? 'nav-dropdown-active' : '' }}">📂 Senarai Permohonan</a>
-                    <a href="/admin/bahagian" class="{{ request()->is('admin/bahagian') ? 'nav-dropdown-active' : '' }}">🏢 Urus Bahagian</a>
                 @endif
 
                 {{-- Sistem Pergerakan Pegawai --}}
