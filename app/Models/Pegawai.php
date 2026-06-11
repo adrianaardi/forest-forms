@@ -10,7 +10,8 @@ class Pegawai extends Model {
         'gred',
         'bahagian_id',
         'seksyen_unit',
-        'is_hadir'
+        'is_hadir',
+        'remarks',
     ];
     public function bahagian() { return $this->belongsTo(Bahagian::class); }
 }

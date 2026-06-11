@@ -81,6 +81,17 @@
             color: #cbd5e1;
         }
 
+        .btn-small {
+            height: 30px;
+            padding: 0 10px;
+            font-size: 12px;
+            border-radius: 6px;
+            line-height: 30px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
         @keyframes marquee-roll {
             0% {
                 transform: translate3d(0, 0, 0);
@@ -121,22 +132,31 @@
         <div class="card">
             <h2 class="card-title">👥 Roster & Kehadiran Pegawai</h2>
             
-            <form action="{{ route('admin.pergerakan.pegawai.store') }}" method="POST" style="display:grid; grid-template-columns: 2fr 1fr 2fr auto; gap:10px; align-items:end;">
-                @csrf
-                <div class="form-group" style="margin:0;">
-                    <label>Nama Pegawai</label>
-                    <input type="text" name="nama" class="form-control" placeholder="Nama penuh" required>
-                </div>
-                <div class="form-group" style="margin:0;">
-                    <label>Gred</label>
-                    <input type="text" name="gred" class="form-control" placeholder="Cth: N29" required>
-                </div>
-                <div class="form-group" style="margin:0;">
-                    <label>Seksyen/Unit</label>
-                    <input type="text" name="seksyen_unit" class="form-control" placeholder="Cth: Seksyen Pengurusan dan Transformasi Digital" required>
-                </div>
-                <button type="submit" class="btn-submit" style="height:38px;">+ Tambah</button>
-            </form>
+        <form action="{{ route('admin.pergerakan.pegawai.store') }}" method="POST" 
+            style="display: grid; grid-template-columns: 2fr 1fr 2fr; gap: 15px; align-items: end;">
+            @csrf
+            
+            <!-- ROW 1 -->
+            <div class="form-group" style="margin: 0;">
+                <label>Nama Pegawai</label>
+                <input type="text" name="nama" class="form-control" placeholder="Nama penuh" required>
+            </div>
+            
+            <div class="form-group" style="margin: 0;">
+                <label>Gred</label>
+                <input type="text" name="gred" class="form-control" placeholder="Cth: N9" required>
+            </div>
+            
+            <div class="form-group" style="margin: 0;">
+                <label>Seksyen/Unit</label>
+                <input type="text" name="seksyen_unit" class="form-control" placeholder="Cth: Seksyen Pengurusan" required>
+            </div>
+            
+            <!-- ROW 2: Button stretches across all 3 columns -->
+            <button type="submit" class="btn-submit" style="grid-column: span 3; height: 40px; margin-top: 5px;">
+                + Tambah Pegawai
+            </button>
+        </form>
 
             <div class="table-wrapper">
                 <table>
@@ -145,6 +165,7 @@
                             <th>Pegawai / Gred</th>
                             <th>Seksyen/Unit</th>
                             <th style="text-align: center; width: 140px;">Kehadiran Hari Ini</th>
+                            <th>Catatan (Ketidakhadiran)</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -166,6 +187,24 @@
                                         <span class="badge {{ $peg->is_hadir ? 'bg-hadir' : 'bg-tiada' }}">
                                             {{ $peg->is_hadir ? 'Hadir' : 'Tidak Hadir' }}
                                         </span>
+                                    </form>
+                                </td>
+                                <td>
+                                    <form action="{{ route('admin.pergerakan.pegawai.updateRemarks', $peg->id) }}" method="POST"
+                                        style="display:flex; gap:6px; align-items:center;">
+                                        @csrf
+                                        @method('PATCH')
+
+                                        <input type="text"
+                                            name="remarks"
+                                            value="{{ $peg->remarks }}"
+                                            class="form-control form-control-sm"
+                                            placeholder="-"
+                                            style="max-width:140px;">
+
+                                        <button type="submit" class="btn-submit btn-small">
+                                            Save
+                                        </button>
                                     </form>
                                 </td>
                             </tr>

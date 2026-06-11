@@ -14,7 +14,8 @@ class PegawaiController extends Controller
         $request->validate([
             'nama' => 'required|string|max:255',
             'gred' => 'required|string|max:50',
-            'seksyen_unit' => 'required|string|max:255'
+            'seksyen_unit' => 'required|string|max:255',
+            'remarks' => 'nullable|string|max:255',
         ]);
 
         Pegawai::create([
@@ -22,7 +23,8 @@ class PegawaiController extends Controller
             'gred' => $request->gred,
             'seksyen_unit' => $request->seksyen_unit,
             'bahagian_id' => Auth::user()->bahagian_id,
-            'is_hadir' => true
+            'is_hadir' => true,
+            'remarks'=> $request->remarks,
         ]);
 
         return redirect()->back()->with('success', 'Officer added to roster successfully.');
@@ -30,13 +32,25 @@ class PegawaiController extends Controller
 
     public function toggleAttendance($id)
     {
-        // Find officer while ensuring they belong strictly to this sub-admin's division
         $pegawai = Pegawai::where('id', $id)
             ->where('bahagian_id', Auth::user()->bahagian_id)
             ->firstOrFail();
 
-        $pegawai->update(['is_hadir' => !$pegawai->is_hadir]);
-        
-        return redirect()->back()->with('success', 'Attendance status updated.');
+        $pegawai->update([
+            'is_hadir' => !$pegawai->is_hadir,
+        ]);
+
+        return back()->with('success', 'Attendance status updated.');
+    }
+
+    public function updateRemarks(Request $request, $id)
+    {
+        $pegawai = \App\Models\Pegawai::findOrFail($id);
+
+        $pegawai->update([
+            'remarks' => $request->remarks
+        ]);
+
+        return back()->with('success', 'Remarks updated successfully');
     }
 }

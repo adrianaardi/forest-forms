@@ -66,6 +66,7 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
         // 3. Sub-Admin Actions (Officer Roster)
         Route::post('/pegawai', [PegawaiController::class, 'storePegawai'])->name('pegawai.store');
         Route::patch('/pegawai/{id}/toggle', [PegawaiController::class, 'toggleAttendance'])->name('pegawai.toggle');
+        Route::patch('/pegawai/{id}/remarks', [PegawaiController::class, 'updateRemarks'])->name('pegawai.updateRemarks');
         
         // 4. Sub-Admin Actions (Activity Logs)
         Route::post('/aktiviti', [AktivitiController::class, 'storeAktiviti'])->name('aktiviti.store');

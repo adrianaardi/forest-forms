@@ -51,6 +51,7 @@
                         <th>Gred</th>
                         <th>Seksyen</th>
                         <th>Status Kehadiran</th>
+                        <th>Catatan (Ketidakhadiran)</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -62,6 +63,7 @@
                             <td>
                                 <span class="badge {{ $pegawai->is_hadir ? 'badge-done' : 'badge-pending' }}">{{ $pegawai->is_hadir ? 'Hadir' : 'Tidak Hadir' }}</span>
                             </td>
+                            <td>{{$pegawai->remarks ?? '-' }}</td>
                         </tr>
                     @empty
                         <tr>
