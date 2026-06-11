@@ -31,9 +31,8 @@
         <form method="GET" action="{{ route('display.pergerakan') }}" class="toolbar">
             <input type="text" name="search" value="{{ old('search', $search) }}" placeholder="Cari nama pegawai...">
             <select name="bahagian_id">
-                <option value="">Semua seksyen</option>
                 @foreach($bahagianList as $bahagian)
-                    <option value="{{ $bahagian->id }}" {{ (string) $selectedBahagianId === (string) $bahagian->id ? 'selected' : '' }}>{{ $bahagian->nama }}</option>
+                    <option value="{{ $bahagian->id }}" {{ (string) $selectedBahagianId === (string) $bahagian->id || (!$selectedBahagianId && $loop->first) ? 'selected' : '' }}>{{ $bahagian->nama }}</option>
                 @endforeach
             </select>
             <button type="submit">Tapis</button>
@@ -67,11 +66,14 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="4" style="text-align:center; color:#777;">Tiada rekod pegawai dipaparkan untuk pilihan semasa.</td>
+                            <td colspan="5" style="text-align:center; color:#777;">Tiada rekod pegawai dipaparkan untuk pilihan semasa.</td>
                         </tr>
                     @endforelse
                 </tbody>
             </table>
+        </div>
+        <div class="pagination-wrap" style="display:flex; justify-content:center; padding:0.75rem 0; background:#194169; color:#fff;">
+            {{ $pegawaiList->appends(request()->query())->links() }}
         </div>
     </div>
 </div>

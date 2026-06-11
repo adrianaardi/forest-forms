@@ -14,7 +14,9 @@ class DisplayController extends Controller
     public function pergerakan(Request $request)
     {
         $bahagianList = Bahagian::orderBy('nama')->get();
-        $selectedBahagianId = $request->input('bahagian_id');
+
+        // Automatically select the first section if no selection is made
+        $selectedBahagianId = $request->input('bahagian_id') ?: $bahagianList->first()?->id;
         $search = trim((string) $request->input('search', ''));
 
         $pegawaiQuery = Pegawai::query()->with('bahagian')->orderBy('nama');
@@ -27,7 +29,8 @@ class DisplayController extends Controller
             $pegawaiQuery->where('nama', 'like', '%' . $search . '%');
         }
 
-        $pegawaiList = $pegawaiQuery->get();
+        // Paginate list to show 10 per page
+        $pegawaiList = $pegawaiQuery->paginate(10);
 
         $aktivitiList = Aktiviti::query()
             ->when($selectedBahagianId, fn ($query) => $query->where('bahagian_id', $selectedBahagianId))
@@ -42,7 +45,9 @@ class DisplayController extends Controller
 
     public function fullDisplay(Request $request)
     {
-        $selectedBahagianId = $request->input('bahagian_id');
+        // Automatically select the first section if no selection is made
+        $selectedBahagianId = $request->input('bahagian_id') ?: Bahagian::orderBy('nama')->first()?->id;
+
         $search = trim((string) $request->input('search', ''));
 
         $pegawaiQuery = Pegawai::query()->with('bahagian')->orderBy('nama');

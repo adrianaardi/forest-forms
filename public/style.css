@@ -72,7 +72,7 @@ header p {
 
 /* ───── NAV ───── */
 nav {
-    background: #213458;
+    background: #194169;
     padding: 0 2rem;
     display: flex;
     gap: 1.5rem;
@@ -626,8 +626,31 @@ footer strong {
 
 /* ── PAGINATION ── */
 .pagination-wrap {
-    margin-top: 1rem;
-    font-size: 13px;
+    padding: 0.75rem 1.25rem;
+    background: #194169;
+    border-top: 1px solid #ffffff;
+}
+
+/* Adjusting Laravel's default layout */
+.pagination-wrap nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.pagination-wrap div p {
+    font-size: 12px;
+    color: #ffffff;
+    margin: 0;
+}
+
+/* Constrain the auto-generated SVGs from Laravel */
+.pagination-wrap svg {
+    width: 16px;
+    height: 16px;
+    display: inline-block;
+    vertical-align: middle;
 }
 
 /* ── RESPONSIVE ── */
