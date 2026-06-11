@@ -16,8 +16,7 @@ return new class extends Migration
             $table->boolean('is_hadir')->default(true); // true = Hadir, false = Tidak Hadir
             $table->timestamps();
             $table->foreignId('bahagian_id')->constrained('bahagians')->onDelete('cascade');
-            $table->string('biodata'); // Serves as Seksyen/Unit string descriptor
-            $table->dropColumn('seksyen_unit'); // Dropping old design field if present
+            $table->string('biodata')->nullable(); // Serves as Seksyen/Unit string descriptor
         });
     }
 
