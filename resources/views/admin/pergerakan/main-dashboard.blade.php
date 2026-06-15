@@ -9,76 +9,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:opsz,wght@6..144,1..1000&family=Lora:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('style.css') }}">
     <link rel="icon" href="{{ asset('images/logo-icon.png')}}">
-    <style>
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
-        @media (max-width: 900px) { .grid { grid-template-columns: 1fr; } }
-        .card { background: #fff; border-radius: 12px; padding: 1.5rem; box-shadow: 0 4px 12px rgba(0,0,0,0.05); border: 1px solid #eef2f5; margin-bottom: 2rem; }
-        .card-title { font-size: 16px; font-weight: 600; color: #194169; margin-top: 0; margin-bottom: 1.25rem; border-bottom: 2px solid #f0f4f8; padding-bottom: 0.5rem; }
-        .form-group { margin-bottom: 1rem; }
-        .form-group label { display: block; font-size: 12px; color: #666; margin-bottom: 4px; font-weight: 500; }
-        .form-control { width: 100%; padding: 10px 12px; border: 1px solid #dcdcdc; border-radius: 6px; font-size: 13px; box-sizing: border-box; }
-        .btn-submit { background: #194169; color: #fff; border: none; padding: 10px 20px; border-radius: 6px; font-size: 13px; font-weight: 500; cursor: pointer; width: 100%; }
-        .btn-submit:hover { background: #12304f; }
-        .table-wrapper { margin-top: 1.5rem; max-height: 250px; overflow-y: auto; border: 1px solid #eef2f5; border-radius: 6px; }
-        table { width: 100%; border-collapse: collapse; font-size: 13px; text-align: left; }
-        th { background: #f8fafc; color: #475569; padding: 10px; position: sticky; top: 0; z-index: 10; }
-        td { padding: 10px; border-bottom: 1px solid #f1f5f9; }
-        .alert-success { background: #dcfce7; color: #166534; padding: 10px; border-radius: 6px; font-size: 13px; margin-bottom: 1.5rem; border: 1px solid #bbf7d0; }
-
-        .news-ticker-container {
-            display: flex;
-            background: #1e293b; /* Premium Dark Slate background */
-            color: #f8fafc;
-            height: 40px;
-            align-items: center;
-            overflow: hidden;
-            border-top: 3px solid #194169; /* JHS Corporate Blue highlight border */
-            font-family: 'Google Sans Flex', sans-serif;
-            font-size: 13px;
-            box-shadow: 0 -4px 12px rgba(0,0,0,0.08);
-        }
-
-        .ticker-title {
-            background: #194169;
-            padding: 0 16px;
-            height: 100%;
-            display: flex;
-            align-items: center;
-            font-weight: 700;
-            font-size: 11px;
-            letter-spacing: 0.75px;
-            z-index: 10;
-            white-space: nowrap;
-            box-shadow: 4px 0 12px rgba(0,0,0,0.3);
-        }
-
-        .ticker-wrap {
-            width: 100%;
-            overflow: hidden;
-        }
-
-        .ticker-content {
-            display: inline-block;
-            white-space: nowrap;
-            padding-left: 100%; /* Delays initial appearance gracefully */
-            animation: marquee-roll 30s linear infinite;
-        }
-
-        .ticker-content:hover {
-            animation-play-state: paused;
-            cursor: pointer;
-            color: #cbd5e1;
-        }
-
-        @keyframes marquee-roll {
-            0% {
-                transform: translate3d(0, 0, 0);
-            }
-            100% {
-                transform: translate3d(-100%, 0, 0);
-            }
-        }
-    </style>
 </head>
 <body>
 
@@ -101,27 +31,32 @@
     <p class="section-heading">Sistem Pergerakan Pegawai (Super Admin)</p>
 
     @if(session('success'))
-        <div class="alert-success">{{ session('success') }}</div>
+        <div class="alert alert-success">{{ session('success') }}</div>
     @endif
 
-    <div class="grid">
-        <div class="card">
-            <h2 class="card-title">🏢 Urus Bahagian Jabatan</h2>
+    <div class="admin-grid">
+        <div class="form-card">
+            <div class="form-card-header">
+                <h2>🏢 Urus Bahagian Jabatan</h2>
+            </div>
+            <div class="form-section">
             <form action="{{ route('admin.pergerakan.bahagian.store') }}" method="POST">
                 @csrf
-                <div class="form-group">
+                <div class="field">
                     <label>Nama Bahagian Baru</label>
-                    <input type="text" name="nama" class="form-control" placeholder="Cth: Bahagian ICT" required>
+                    <input type="text" name="nama" placeholder="Cth: Bahagian ICT" required>
                 </div>
                 <button type="submit" class="btn-submit" style="background:#475569;">Daftar Bahagian Baru</button>
             </form>
+            </div>
 
-            <div class="table-wrapper" style="max-height: 330px;">
-                <table>
+            <div class="data-table-container">
+                <table class="data-table">
                     <thead>
                         <tr>
                             <th>ID</th>
                             <th>Nama Bahagian</th>
+                            <th>Tindakan</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -129,50 +64,62 @@
                             <tr>
                                 <td>{{ $bahagian->id }}</td>
                                 <td><strong>{{ $bahagian->nama }}</strong></td>
+                                <td class="action-btns">
+                                    <button type="button" class="btn-edit" onclick="openEditBahagian({{ $bahagian->id }}, '{{ $bahagian->nama }}')">Edit</button>
+                                    <form action="{{ route('admin.pergerakan.bahagian.destroy', $bahagian->id) }}" method="POST" onsubmit="return confirm('Padam bahagian ini?')">
+                                        @csrf @method('DELETE')
+                                        <button type="submit" class="btn-delete">Padam</button>
+                                    </form>
+                                </td>
                             </tr>
                         @empty
-                            <tr><td colspan="2" style="text-align:center; color:#999;">Tiada bahagian berdaftar.</td></tr>
+                            <tr><td colspan="3" style="text-align:center; color:#999;">Tiada bahagian berdaftar.</td></tr>
                         @endforelse
                     </tbody>
                 </table>
             </div>
         </div>
 
-        <div class="card">
-            <h2 class="card-title">👥 Tambah Akaun Sub-Admin Bahagian</h2>
+        <div class="form-card">
+            <div class="form-card-header">
+                <h2>👥 Tambah Akaun Sub-Admin Bahagian</h2>
+            </div>
+            <div class="form-section">
             <form action="{{ route('admin.pergerakan.subadmin.store') }}" method="POST">
                 @csrf
-                <div class="form-group">
+                <div class="field">
                     <label>Nama Penuh Sub-Admin</label>
-                    <input type="text" name="name" class="form-control" placeholder="Nama pegawai pengurus" required>
+                    <input type="text" name="name" placeholder="Nama pegawai pengurus" required>
                 </div>
-                <div class="form-group">
+                <div class="field">
                     <label>Email Rasmi (ID Log Masuk)</label>
-                    <input type="email" name="email" class="form-control" placeholder="username@sarawak.gov.my" required>
+                    <input type="email" name="email" placeholder="username@sarawak.gov.my" required>
                 </div>
-                <div class="form-group">
+                <div class="field">
                     <label>Bahagian Bertanggungjawab</label>
-                    <select name="bahagian_id" class="form-control" required>
+                    <select name="bahagian_id" required>
                         <option value="">-- Pilih Bahagian Terhad --</option>
                         @foreach($bahagianList as $bahagian)
                             <option value="{{ $bahagian->id }}">{{ $bahagian->nama }}</option>
                         @endforeach
                     </select>
                 </div>
-                <div class="form-group">
+                <div class="field">
                     <label>Kata Laluan Sementara</label>
-                    <input type="password" name="password" class="form-control" required>
+                    <input type="password" name="password" required>
                 </div>
                 <button type="submit" class="btn-submit">Daftar Sub-Admin</button>
             </form>
+            </div>
 
-            <div class="table-wrapper" style="max-height: 200px;">
-                <table>
+            <div class="data-table-container">
+                <table class="data-table">
                     <thead>
                         <tr>
                             <th>Nama Pengurus</th>
                             <th>Bahagian Terhad</th>
                             <th>Emel Akses</th>
+                            <th>Tindakan</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -181,9 +128,16 @@
                                 <td><strong>{{ $sub->name }}</strong></td>
                                 <td><span style="color: #194169; font-weight: 500;">{{ $sub->bahagian->nama ?? 'Tiada Bahagian' }}</span></td>
                                 <td>{{ $sub->email }}</td>
+                                <td class="action-btns">
+                                    <button type="button" class="btn-edit" onclick="openEditSubAdmin({{ $sub->id }}, '{{ $sub->name }}', '{{ $sub->email }}', '{{ $sub->bahagian_id }}')">Edit</button>
+                                    <form action="{{ route('admin.pergerakan.subadmin.destroy', $sub->id) }}" method="POST" onsubmit="return confirm('Padam akaun ini?')">
+                                        @csrf @method('DELETE')
+                                        <button type="submit" class="btn-delete">Padam</button>
+                                    </form>
+                                </td>
                             </tr>
                         @empty
-                            <tr><td colspan="3" style="text-align:center; color:#999;">Tiada sub-admin berdaftar.</td></tr>
+                            <tr><td colspan="4" style="text-align:center; color:#999;">Tiada sub-admin berdaftar.</td></tr>
                         @endforelse
                     </tbody>
                 </table>
@@ -192,12 +146,119 @@
     </div>
 </div>
 
+<!-- Edit Bahagian Modal -->
+<div class="modal-overlay" id="modalEditBahagian">
+    <div class="modal">
+        <div class="modal-header">
+            <h2>📝 Kemaskini Bahagian</h2>
+            <button class="modal-close" onclick="closeModal('modalEditBahagian')">&times;</button>
+        </div>
+        <div class="modal-body">
+            <form id="formEditBahagian" method="POST">
+                @csrf @method('PUT')
+                <div class="field">
+                    <label>Nama Bahagian</label>
+                    <input type="text" name="nama" id="edit_bahagian_nama" required>
+                </div>
+                <div class="modal-actions">
+                    <button type="submit" class="btn-submit">Simpan Perubahan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 
+<!-- Edit Sub-Admin Modal -->
+<div class="modal-overlay" id="modalEditSubAdmin">
+    <div class="modal">
+        <div class="modal-header">
+            <h2>📝 Kemaskini Akaun Sub-Admin</h2>
+            <button class="modal-close" onclick="closeModal('modalEditSubAdmin')">&times;</button>
+        </div>
+        <div class="modal-body">
+            <form id="formEditSubAdmin" method="POST">
+                @csrf @method('PUT')
+                <div class="field">
+                    <label>Nama Penuh</label>
+                    <input type="text" name="name" id="edit_sub_name" required>
+                </div>
+                <div class="field">
+                    <label>Email Rasmi</label>
+                    <input type="email" name="email" id="edit_sub_email" required>
+                </div>
+                <div class="field">
+                    <label>Bahagian Bertanggungjawab</label>
+                    <select name="bahagian_id" id="edit_sub_bahagian_id" required>
+                        @foreach($bahagianList as $bahagian)
+                            <option value="{{ $bahagian->id }}">{{ $bahagian->nama }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="field">
+                    <label>Kata Laluan Baru (Biarkan kosong jika tiada perubahan)</label>
+                    <input type="password" name="password">
+                </div>
+                <div class="modal-actions">
+                    <button type="submit" class="btn-submit">Simpan Perubahan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 
 <footer>
     <div><strong>Jabatan Hutan Sarawak</strong> | Wisma Sumber Alam, Petra Jaya, 93660 Kuching, Sarawak</div>
     <div>© 2026 Jabatan Hutan Sarawak. Hak Cipta Terpelihara.</div>
 </footer>
+
+<script>
+    function openEditBahagian(id, nama) {
+        const modal = document.getElementById('modalEditBahagian');
+        const form = document.getElementById('formEditBahagian');
+        
+        // Set action URL dynamically
+        form.action = `/admin/pergerakan-pegawai/bahagian/${id}`;
+        
+        // Set current values
+        document.getElementById('edit_bahagian_nama').value = nama;
+        
+        modal.classList.add('active');
+    }
+
+    function openEditSubAdmin(id, name, email, bahagianId) {
+        const modal = document.getElementById('modalEditSubAdmin');
+        const form = document.getElementById('formEditSubAdmin');
+        
+        // Set action URL dynamically
+        form.action = `/admin/pergerakan-pegawai/subadmin/${id}`;
+        
+        // Set current values
+        document.getElementById('edit_sub_name').value = name;
+        document.getElementById('edit_sub_email').value = email;
+        document.getElementById('edit_sub_bahagian_id').value = bahagianId;
+        
+        modal.classList.add('active');
+    }
+
+    function closeModal(id) {
+        document.getElementById(id).classList.remove('active');
+    }
+
+    // Close modal when clicking on overlay
+    window.onclick = function(event) {
+        if (event.target.classList.contains('modal-overlay')) {
+            event.target.classList.remove('active');
+        }
+    }
+
+    // Optional: Close modal on ESC key
+    document.addEventListener('keydown', function(event) {
+        if (event.key === "Escape") {
+            const actives = document.querySelectorAll('.modal-overlay.active');
+            actives.forEach(m => m.classList.remove('active'));
+        }
+    });
+</script>
 
 </body>
 </html>

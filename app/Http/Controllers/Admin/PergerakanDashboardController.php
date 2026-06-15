@@ -3,10 +3,12 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Bahagian;
 use App\Models\Pegawai;
 use App\Models\Aktiviti;
+use App\Models\User;
 
 class PergerakanDashboardController extends Controller
 {
@@ -37,5 +39,39 @@ class PergerakanDashboardController extends Controller
             'pegawaiList',
             'aktivitiList'
         ));
+    }
+
+    public function updateBahagian(Request $request, $id)
+    {
+        $bahagian = Bahagian::findOrFail($id);
+        $bahagian->update(['nama' => $request->nama]);
+        return back()->with('success', 'Bahagian berjaya dikemaskini.');
+    }
+
+    public function destroyBahagian($id)
+    {
+        $bahagian = Bahagian::findOrFail($id);
+        $bahagian->delete();
+        return back()->with('success', 'Bahagian berjaya dipadam.');
+    }
+
+    public function updateSubAdmin(Request $request, $id)
+    {
+        $user = User::findOrFail($id);
+        $user->name = $request->name;
+        $user->email = $request->email;
+        $user->bahagian_id = $request->bahagian_id;
+        if ($request->filled('password')) {
+            $user->password = bcrypt($request->password);
+        }
+        $user->save();
+        return back()->with('success', 'Akaun Sub-Admin berjaya dikemaskini.');
+    }
+
+    public function destroySubAdmin($id)
+    {
+        $user = User::findOrFail($id);
+        $user->delete();
+        return back()->with('success', 'Akaun Sub-Admin berjaya dipadam.');
     }
 }

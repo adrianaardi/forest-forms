@@ -61,7 +61,11 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
 
         // 2. Super Admin Actions
         Route::post('/bahagian', [BahagianController::class, 'storeBahagian'])->name('bahagian.store');
+        Route::put('/bahagian/{id}', [PergerakanDashboardController::class, 'updateBahagian'])->name('bahagian.update');
+        Route::delete('/bahagian/{id}', [PergerakanDashboardController::class, 'destroyBahagian'])->name('bahagian.destroy');
         Route::post('/subadmin', [BahagianController::class, 'storeSubAdmin'])->name('subadmin.store');
+        Route::put('/subadmin/{id}', [PergerakanDashboardController::class, 'updateSubAdmin'])->name('subadmin.update');
+        Route::delete('/subadmin/{id}', [PergerakanDashboardController::class, 'destroySubAdmin'])->name('subadmin.destroy');
 
         // 3. Sub-Admin Actions (Officer Roster)
         Route::post('/pegawai', [PegawaiController::class, 'storePegawai'])->name('pegawai.store');
