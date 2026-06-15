@@ -208,7 +208,7 @@
 
 <footer>
     <div><strong>Jabatan Hutan Sarawak</strong> | Wisma Sumber Alam, Petra Jaya, 93660 Kuching, Sarawak</div>
-    <div>© 2026 Jabatan Hutan Sarawak. Hak Cipta Terpelihara.</div>
+    <div>© <?php echo date("Y"); ?> Jabatan Hutan Sarawak. Hak Cipta Terpelihara.</div>
 </footer>
 
 <script>

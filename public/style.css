@@ -979,3 +979,41 @@ input[type="checkbox"] {
     z-index: 10;
     white-space: nowrap;
 }
+
+/* ── SUB-ADMIN UTILITIES ── */
+.scope-badge {
+    background: #eff6ff;
+    color: #1d4ed8;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    display: inline-block;
+    margin-top: 5px;
+    border: 1px solid #bfdbfe;
+}
+
+.bg-hadir { background: #dcfce7 !important; color: #166534 !important; }
+.bg-tiada { background: #fee2e2 !important; color: #991b1b !important; }
+
+.btn-remove-small {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    background: #fee2e2;
+    color: #991b1b;
+    border: 1px solid #fecaca;
+    border-radius: 4px;
+    font-size: 16px;
+    font-weight: bold;
+    line-height: 1;
+    cursor: pointer;
+    transition: background 0.15s;
+    padding-bottom: 2px;
+}
+
+.btn-remove-small:hover {
+    background: #fecaca;
+}

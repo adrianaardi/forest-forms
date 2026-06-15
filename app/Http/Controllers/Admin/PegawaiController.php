@@ -30,6 +30,17 @@ class PegawaiController extends Controller
         return redirect()->back()->with('success', 'Officer added to roster successfully.');
     }
 
+    public function destroyPegawai($id)
+    {
+        $pegawai = Pegawai::where('id', $id)
+            ->where('bahagian_id', Auth::user()->bahagian_id)
+            ->firstOrFail();
+
+        $pegawai->delete();
+
+        return back()->with('success', 'Pegawai berjaya dipadam daripada roster.');
+    }
+
     public function toggleAttendance($id)
     {
         $pegawai = Pegawai::where('id', $id)

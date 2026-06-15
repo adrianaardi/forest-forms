@@ -21,7 +21,7 @@
         .table-wrapper { margin-top: 1.5rem; max-height: 450px; overflow-y: auto; border: 1px solid #eef2f5; border-radius: 6px; }
         table { width: 100%; border-collapse: collapse; font-size: 13px; text-align: left; }
         th { background: #f8fafc; color: #475569; padding: 10px; position: sticky; top: 0; z-index: 10; }
-        td { padding: 10px; border-bottom: 1px solid #f1f5f9; }
+        td { padding: 10px; border-bottom: 1px solid #f1f5f9; vertical-align: middle; }
         
         .switch { position: relative; display: inline-block; width: 44px; height: 22px; }
         .switch input { opacity: 0; width: 0; height: 0; }
@@ -38,12 +38,12 @@
 
         .news-ticker-container {
             display: flex;
-            background: #1e293b; /* Premium Dark Slate background */
+            background: #1e293b;
             color: #f8fafc;
             height: 40px;
             align-items: center;
             overflow: hidden;
-            border-top: 3px solid #194169; /* JHS Corporate Blue highlight border */
+            border-top: 3px solid #194169;
             font-family: 'Google Sans Flex', sans-serif;
             font-size: 13px;
             box-shadow: 0 -4px 12px rgba(0,0,0,0.08);
@@ -71,7 +71,7 @@
         .ticker-content {
             display: inline-block;
             white-space: nowrap;
-            padding-left: 100%; /* Delays initial appearance gracefully */
+            padding-left: 100%;
             animation: marquee-roll 30s linear infinite;
         }
 
@@ -90,6 +90,27 @@
             display: inline-flex;
             align-items: center;
             justify-content: center;
+        }
+
+        .btn-remove-small {
+            background: #ef4444;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            width: 22px;
+            height: 22px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 14px;
+            padding: 0;
+            line-height: 1;
+            margin: 0 auto;
+        }
+        .btn-remove-small:hover {
+            background: #dc2626;
         }
 
         @keyframes marquee-roll {
@@ -132,36 +153,35 @@
         <div class="card">
             <h2 class="card-title">👥 Roster & Kehadiran Pegawai</h2>
             
-        <form action="{{ route('admin.pergerakan.pegawai.store') }}" method="POST" 
-            style="display: grid; grid-template-columns: 2fr 1fr 2fr; gap: 15px; align-items: end;">
-            @csrf
-            
-            <!-- ROW 1 -->
-            <div class="form-group" style="margin: 0;">
-                <label>Nama Pegawai</label>
-                <input type="text" name="nama" class="form-control" placeholder="Nama penuh" required>
-            </div>
-            
-            <div class="form-group" style="margin: 0;">
-                <label>Gred</label>
-                <input type="text" name="gred" class="form-control" placeholder="Cth: N9" required>
-            </div>
-            
-            <div class="form-group" style="margin: 0;">
-                <label>Seksyen/Unit</label>
-                <input type="text" name="seksyen_unit" class="form-control" placeholder="Cth: Seksyen Pengurusan" required>
-            </div>
-            
-            <!-- ROW 2: Button stretches across all 3 columns -->
-            <button type="submit" class="btn-submit" style="grid-column: span 3; height: 40px; margin-top: 5px;">
-                + Tambah Pegawai
-            </button>
-        </form>
+            <form action="{{ route('admin.pergerakan.pegawai.store') }}" method="POST" 
+                style="display: grid; grid-template-columns: 2fr 1fr 2fr; gap: 15px; align-items: end;">
+                @csrf
+                
+                <div class="form-group" style="margin: 0;">
+                    <label>Nama Pegawai</label>
+                    <input type="text" name="nama" class="form-control" placeholder="Nama penuh" required>
+                </div>
+                
+                <div class="form-group" style="margin: 0;">
+                    <label>Gred</label>
+                    <input type="text" name="gred" class="form-control" placeholder="Cth: N9" required>
+                </div>
+                
+                <div class="form-group" style="margin: 0;">
+                    <label>Seksyen/Unit</label>
+                    <input type="text" name="seksyen_unit" class="form-control" placeholder="Cth: Seksyen Pengurusan" required>
+                </div>
+                
+                <button type="submit" class="btn-submit" style="grid-column: span 3; height: 40px; margin-top: 5px;">
+                    + Tambah Pegawai
+                </button>
+            </form>
 
             <div class="table-wrapper">
                 <table>
                     <thead>
                         <tr>
+                            <th style="width: 40px; text-align: center;">Tindakan</th>
                             <th>Pegawai / Gred</th>
                             <th>Seksyen/Unit</th>
                             <th style="text-align: center; width: 140px;">Kehadiran Hari Ini</th>
@@ -171,16 +191,18 @@
                     <tbody>
                         @forelse($pegawaiList as $peg)
                             <tr>
+                                <td style="text-align: center;">
+                                    <form action="{{ route('admin.pergerakan.pegawai.destroy', $peg->id) }}" method="POST" onsubmit="return confirm('Padam pegawai ini daripada roster?')">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn-remove-small">−</button>
+                                    </form>
+                                </td>
                                 <td>
-<div style="display: flex; align-items: flex-start; gap: 8px;">
-                                        <form action="{{ route('admin.pergerakan.pegawai.destroy', $peg->id) }}" method="POST" onsubmit="return confirm('Padam pegawai ini daripada roster?')">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn-remove-small">−</button>
-                                        </form>
-                                        <div>
-                                    <strong>{{ $peg->nama }}</strong><br>
-                                    <span style="color:#666; font-size:11px;">Gred: {{ $peg->gred }}</span>
+                                    <div>
+                                        <strong>{{ $peg->nama }}</strong><br>
+                                        <span style="color:#666; font-size:11px;">Gred: {{ $peg->gred }}</span>
+                                    </div>
                                 </td>
                                 <td>{{ $peg->seksyen_unit }}</td>
                                 <td style="text-align: center;">
@@ -197,8 +219,7 @@
                                     </form>
                                 </td>
                                 <td>
-                                    <form action="{{ route('admin.pergerakan.pegawai.updateRemarks', $peg->id) }}" method="POST"
-                                        style="display:flex; gap:6px; align-items:center;">
+                                    <form action="{{ route('admin.pergerakan.pegawai.updateRemarks', $peg->id) }}" method="POST" style="display:flex; gap:6px; align-items:center;">
                                         @csrf
                                         @method('PATCH')
 
@@ -207,7 +228,7 @@
                                             value="{{ $peg->remarks }}"
                                             class="form-control form-control-sm"
                                             placeholder="-"
-                                            style="max-width:140px;">
+                                            style="max-width:140px; padding: 6px 10px; font-size: 12px;">
 
                                         <button type="submit" class="btn-submit btn-small">
                                             Save
@@ -216,7 +237,9 @@
                                 </td>
                             </tr>
                         @empty
-                            <tr><td colspan="3" style="text-align:center; color:#999;">Tiada pegawai didaftarkan di bawah bahagian ini.</td></tr>
+                            <tr>
+                                <td colspan="5" style="text-align:center; color:#999;">Tiada pegawai didaftarkan di bawah bahagian ini.</td>
+                            </tr>
                         @endforelse
                     </tbody>
                 </table>
@@ -235,14 +258,16 @@
                     <label>Tarikh Dilaksanakan</label>
                     <input type="date" name="tarikh" class="form-control" required>
                 </div>
-               <div class="form-group">
+                <div class="form-group">
                     <label>Seksyen/Unit Pengurus Program</label>
                     <input type="text" name="seksyen_unit" class="form-control" placeholder="Cth: Seksyen Pengurusan dan Transformasi Digital" required>
                 </div>
-                <div style="margin-top: 1rem; text-align: right;">
-                    <button type="submit" class="btn-submit" style="width:auto; background:#334155; item-alignment: center; margin-bottom: 20px;">Simpan Jadual & Aktiviti</button>
+                <div style="margin-top: 1rem; text-align: right; margin-bottom: 20px;">
+                    <button type="submit" class="btn-submit" style="width:auto; background:#334155;">Simpan Jadual & Aktiviti</button>
                 </div>
+            </form>
 
+            <div class="table-wrapper" style="margin-top: 1rem;">
                 <table>
                     <thead>
                         <tr>
@@ -259,16 +284,17 @@
                                 <td>{{ $akt->seksyen_unit }}</td>
                             </tr>
                         @empty
-                            <tr><td colspan="3" style="text-align:center; color:#999;">Tiada program dijadualkan bagi bahagian ini.</td></tr>
+                            <tr>
+                                <td colspan="3" style="text-align:center; color:#999;">Tiada program dijadualkan bagi bahagian ini.</td>
+                            </tr>
                         @endforelse
                     </tbody>
                 </table>
-            </form>
+            </div>
         </div>
     </div>
-</div>
 
-<div class="card" id="news-ticker" style="margin-top: 1rem;">
+    <div class="card" id="news-ticker" style="margin-top: 1rem;">
         <h2 class="card-title" style="color: #334155;">📢 Kemaskini Berita & Pengumuman Bergerak (News Ticker)</h2>
         <form action="/admin/pergerakan/news" method="POST" style="display: flex; gap: 12px; align-items: center;">
             @csrf
@@ -289,8 +315,12 @@
 </div>
 
 <footer>
-    <div><strong>Jabatan Hutan Sarawak</strong> | Wisma Sumber Alam, Petra Jaya, 93660 Kuching, Sarawak</div>
-    <div>© 2026 Jabatan Hutan Sarawak. Hak Cipta Terpelihara.</div>
+    <div style="text-align: center; font-size: 13px; color: #666; margin-top: 2rem;">
+        <strong>Jabatan Hutan Sarawak</strong> | Wisma Sumber Alam, Petra Jaya, 93660 Kuching, Sarawak
+    </div>
+    <div style="text-align: center; font-size: 12px; color: #888; margin-top: 4px;">
+        © 2026 Jabatan Hutan Sarawak. Hak Cipta Terpelihara.
+    </div>
 </footer>
 
 </body>
