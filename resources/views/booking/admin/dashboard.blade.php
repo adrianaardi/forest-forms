@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard — Tempahan</title>
+    <title>Dashboard Ibu Pejabat — Tempahan</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:opsz,wght@6..144,1..1000&family=Lora:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet"><link rel="stylesheet" href="{{ asset('style.css') }}">    <style>
@@ -43,13 +43,13 @@
         <p>Hub Aplikasi Perkhidmatan Atas Talian</p>
     </div>
 </header>
-<x-navbar :breadcrumbs="[['label' => 'Tempahan Bilik', 'url' => '/booking/admin/dashboard'], ['label' => 'Dashboard']]" />
+<x-navbar :breadcrumbs="[['label' => 'Tempahan Bilik', 'url' => '/booking/admin/dashboard'], ['label' => 'Dashboard Ibu Pejabat']]" />
 <div class="dashboard-body">
 
     {{-- date + alert --}}
     <div class="db-greeting" style="margin-bottom:1.5rem;">
         <div>
-            <h2 class="db-greeting-title">Dashboard Tempahan 📅</h2>
+            <h2 class="db-greeting-title">Dashboard Tempahan Ibu Pejabat 🏢</h2>
             <p class="db-greeting-sub">{{ $today->translatedFormat('l, d F Y') }}</p>
         </div>
         <a href="/booking/admin/users?status=pending"
@@ -70,7 +70,7 @@
             {{-- weekly chart --}}
             <div class="dash-card">
                 <div class="dash-card-title">
-                    Tempahan Mingguan
+                    Tempahan Mingguan (Ibu Pejabat)
                     <strong>{{ $weeklyData->sum('count') }}</strong>
                 </div>
                 <canvas id="weeklyChart" style="max-height:200px;"></canvas>
@@ -79,7 +79,7 @@
             {{-- room availability --}}
             <div class="dash-card">
                 <div class="dash-card-title">
-                    Ketersediaan Bilik Hari Ini
+                    Ketersediaan Bilik (Ibu Pejabat)
                     <strong>{{ $allBilik->count() }} bilik</strong>
                 </div>
 
@@ -126,7 +126,7 @@
         <div class="dash-row">
             <div class="dash-card">
                 <div class="dash-card-title" style="margin-bottom:0.75rem;">
-                    5 Tempahan Terkini
+                    5 Tempahan Terkini (Ibu Pejabat)
                     <a href="/booking/calendar" class="db-link">Lihat kalendar →</a>
                 </div>
                 <table class="data-table">

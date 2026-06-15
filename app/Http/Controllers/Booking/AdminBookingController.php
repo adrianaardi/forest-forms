@@ -14,34 +14,58 @@ class AdminBookingController extends Controller
     public function dashboard()
     {
         $today = \Carbon\Carbon::today();
+        
+        // Filter for Ibu Pejabat only
+        $wilayah = \App\Models\Wilayah::where('nama_wilayah', 'Ibu Pejabat')->first();
+        $wilayahId = $wilayah ? $wilayah->id : null;
 
         // ── stats ──
         $stats = [
-            'total'         => BookingRequest::where('status', 'confirmed')->count(),
-            'today'         => BookingRequest::where('status', 'confirmed')->where('tarikh', $today->toDateString())->count(),
-            'pending_users' => BookingUser::where('status', 'pending')->count(),
-            'total_users'   => BookingUser::where('status', 'approved')->count(),
+            'total' => BookingRequest::where('status', 'confirmed')
+                        ->whereHas('bilik', function($q) use ($wilayahId) {
+                            $q->where('wilayah_id', $wilayahId);
+                        })->count(),
+            'today' => BookingRequest::where('status', 'confirmed')
+                        ->where('tarikh', $today->toDateString())
+                        ->whereHas('bilik', function($q) use ($wilayahId) {
+                            $q->where('wilayah_id', $wilayahId);
+                        })->count(),
+            'pending_users' => BookingUser::where('status', 'pending')
+                                ->where('wilayah_id', $wilayahId)
+                                ->count(),
+            'total_users'   => BookingUser::where('status', 'approved')
+                                ->where('wilayah_id', $wilayahId)
+                                ->count(),
         ];
 
         // ── weekly chart (Mon–Sun of current week) ──
         $weekStart = $today->copy()->startOfWeek(\Carbon\Carbon::MONDAY);
-        $weeklyData = collect(range(0, 6))->map(function($i) use ($weekStart) {
+        $weeklyData = collect(range(0, 6))->map(function($i) use ($weekStart, $wilayahId) {
             $day = $weekStart->copy()->addDays($i);
             return [
                 'label' => $day->translatedFormat('D, d M'),
                 'count' => BookingRequest::where('status', 'confirmed')
                             ->where('tarikh', $day->toDateString())
+                            ->whereHas('bilik', function($q) use ($wilayahId) {
+                                $q->where('wilayah_id', $wilayahId);
+                            })
                             ->count(),
             ];
         });
 
         // ── room availability today ──
-        $allBilik = \App\Models\BookingBilik::orderBy('aras')->orderBy('nama_bilik')->get();
+        $allBilik = \App\Models\BookingBilik::where('wilayah_id', $wilayahId)
+            ->orderBy('aras')
+            ->orderBy('nama_bilik')
+            ->get();
         $totalSlotMins = 9 * 60; // 8am-5pm
 
         $todayBookingsAll = BookingRequest::with('bilik')
             ->where('status', 'confirmed')
             ->where('tarikh', $today->toDateString())
+            ->whereHas('bilik', function($q) use ($wilayahId) {
+                $q->where('wilayah_id', $wilayahId);
+            })
             ->get();
 
         $bilikStatus = $allBilik->map(function($bilik) use ($todayBookingsAll, $totalSlotMins) {
@@ -67,6 +91,9 @@ class AdminBookingController extends Controller
         // ── 5 most recent bookings ──
         $recentBookings = BookingRequest::with(['user', 'bilik'])
             ->where('status', 'confirmed')
+            ->whereHas('bilik', function($q) use ($wilayahId) {
+                $q->where('wilayah_id', $wilayahId);
+            })
             ->orderByDesc('created_at')
             ->take(5)
             ->get();
