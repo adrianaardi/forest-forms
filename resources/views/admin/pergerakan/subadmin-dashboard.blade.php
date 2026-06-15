@@ -172,6 +172,13 @@
                         @forelse($pegawaiList as $peg)
                             <tr>
                                 <td>
+<div style="display: flex; align-items: flex-start; gap: 8px;">
+                                        <form action="{{ route('admin.pergerakan.pegawai.destroy', $peg->id) }}" method="POST" onsubmit="return confirm('Padam pegawai ini daripada roster?')">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn-remove-small">−</button>
+                                        </form>
+                                        <div>
                                     <strong>{{ $peg->nama }}</strong><br>
                                     <span style="color:#666; font-size:11px;">Gred: {{ $peg->gred }}</span>
                                 </td>
