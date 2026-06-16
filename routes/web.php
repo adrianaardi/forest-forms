@@ -13,6 +13,7 @@ use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\Admin\PegawaiController;
 use App\Http\Controllers\Admin\AktivitiController;
+use App\Http\Controllers\Admin\NewsController;
 use App\Http\Controllers\Admin\DisplayController;
 use App\Http\Controllers\Admin\PergerakanDashboardController;
 use Illuminate\Support\Facades\Route;
@@ -55,26 +56,31 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::delete('/bahagian/{id}', [BahagianController::class, 'destroy'])->name('bahagian.destroy');
 
     Route::prefix('pergerakan-pegawai')->name('pergerakan.')->group(function () {
-        
-        Route::get('/', [PergerakanDashboardController::class, 'index'])
-        ->name('index');
 
-        // 2. Super Admin Actions
-        Route::post('/bahagian', [BahagianController::class, 'storeBahagian'])->name('bahagian.store');
-        Route::put('/bahagian/{id}', [PergerakanDashboardController::class, 'updateBahagian'])->name('bahagian.update');
+        Route::get('/', [PergerakanDashboardController::class, 'index'])->name('index');
+
+        // Super Admin
+        Route::post('/bahagian',        [BahagianController::class, 'storeBahagian'])->name('bahagian.store');
+        Route::put('/bahagian/{id}',    [PergerakanDashboardController::class, 'updateBahagian'])->name('bahagian.update');
         Route::delete('/bahagian/{id}', [PergerakanDashboardController::class, 'destroyBahagian'])->name('bahagian.destroy');
-        Route::post('/subadmin', [BahagianController::class, 'storeSubAdmin'])->name('subadmin.store');
-        Route::put('/subadmin/{id}', [PergerakanDashboardController::class, 'updateSubAdmin'])->name('subadmin.update');
+        Route::post('/subadmin',        [BahagianController::class, 'storeSubAdmin'])->name('subadmin.store');
+        Route::put('/subadmin/{id}',    [PergerakanDashboardController::class, 'updateSubAdmin'])->name('subadmin.update');
         Route::delete('/subadmin/{id}', [PergerakanDashboardController::class, 'destroySubAdmin'])->name('subadmin.destroy');
 
-        // 3. Sub-Admin Actions (Officer Roster)
-        Route::post('/pegawai', [PegawaiController::class, 'storePegawai'])->name('pegawai.store');
-        Route::delete('/pegawai/{id}', [PegawaiController::class, 'destroyPegawai'])->name('pegawai.destroy');
-        Route::patch('/pegawai/{id}/toggle', [PegawaiController::class, 'toggleAttendance'])->name('pegawai.toggle');
-        Route::patch('/pegawai/{id}/remarks', [PegawaiController::class, 'updateRemarks'])->name('pegawai.updateRemarks');
-        
-        // 4. Sub-Admin Actions (Activity Logs)
-        Route::post('/aktiviti', [AktivitiController::class, 'storeAktiviti'])->name('aktiviti.store');
+        // Pegawai
+        Route::post('/pegawai',                   [PegawaiController::class, 'store'])->name('pegawai.store');
+        Route::delete('/pegawai/{id}',            [PegawaiController::class, 'destroy'])->name('pegawai.destroy');
+        Route::patch('/pegawai/{id}/toggle',      [PegawaiController::class, 'toggleAttendance'])->name('pegawai.toggle');
+        Route::patch('/pegawai/{id}/remarks',     [PegawaiController::class, 'updateRemarks'])->name('pegawai.updateRemarks');
+
+        // Aktiviti
+        Route::post('/aktiviti',        [AktivitiController::class, 'store'])->name('aktiviti.store');
+        Route::patch('/aktiviti/{id}', [AktivitiController::class, 'update'])->name('aktiviti.update');
+        Route::delete('/aktiviti/{id}', [AktivitiController::class, 'destroy'])->name('aktiviti.destroy');
+
+        // News
+        Route::post('/news',        [NewsController::class, 'store'])->name('news.store');
+        Route::delete('/news/{id}', [NewsController::class, 'destroy'])->name('news.destroy');
     });
 });
 

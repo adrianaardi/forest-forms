@@ -10,6 +10,11 @@ class Aktiviti extends Model
         'nama_aktiviti',
         'tarikh',
         'seksyen_unit',
-        'bahagian_id'
+        'bahagian_id',
     ];
+
+    public function bahagian()
+    {
+        return $this->belongsTo(Bahagian::class);
+    }
 }

@@ -423,7 +423,7 @@
             @forelse($aktivitiList as $aktiviti)
                 <div class="act-item">
                     <strong>{{ $aktiviti->nama_aktiviti }}</strong>
-                    <span>{{ $aktiviti->biodata ?? 'Seksyen/Unit' }} &middot; {{ \Carbon\Carbon::parse($aktiviti->tarikh)->format('d/m/Y') }}</span>
+                    <span>{{ $aktiviti->seksyen_unit }} &middot; {{ \Carbon\Carbon::parse($aktiviti->tarikh)->format('d/m/Y') }}</span>
                 </div>
             @empty
                 <div class="act-item">

@@ -7,68 +7,68 @@ use App\Models\Aktiviti;
 use App\Models\Bahagian;
 use App\Models\News;
 use App\Models\Pegawai;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class DisplayController extends Controller
 {
     public function pergerakan(Request $request)
     {
-        $bahagianList = Bahagian::orderBy('nama')->get();
-
-        // Automatically select the first section if no selection is made
-        $selectedBahagianId = $request->input('bahagian_id') ?: $bahagianList->first()?->id;
-        $search = trim((string) $request->input('search', ''));
+        $bahagianList        = Bahagian::orderBy('nama')->get();
+        $selectedBahagianId  = $request->input('bahagian_id') ?: $bahagianList->first()?->id;
+        $search              = trim((string) $request->input('search', ''));
 
         $pegawaiQuery = Pegawai::query()->with('bahagian')->orderBy('nama');
 
         if ($selectedBahagianId) {
             $pegawaiQuery->where('bahagian_id', $selectedBahagianId);
         }
-
         if ($search !== '') {
             $pegawaiQuery->where('nama', 'like', '%' . $search . '%');
         }
 
-        // Paginate list to show 10 per page
-        $pegawaiList = $pegawaiQuery->paginate(10);
+        $pegawaiList  = $pegawaiQuery->paginate(10);
+        $aktivitiList = $this->aktivitiMingguIni($selectedBahagianId);
+        $newsTicker   = News::where('bahagian_id', $selectedBahagianId)
+                            ->latest()
+                            ->pluck('headline')
+                            ->implode(' • ');
 
-        $aktivitiList = Aktiviti::query()
-            ->when($selectedBahagianId, fn ($query) => $query->where('bahagian_id', $selectedBahagianId))
-            ->latest('tarikh')
-            ->take(8)
-            ->get();
-
-        $newsTicker = News::where('is_active', true)->latest('created_at')->pluck('headline')->implode(' • ');
-
-        return view('display.pergerakan', compact('bahagianList', 'selectedBahagianId', 'search', 'pegawaiList', 'aktivitiList', 'newsTicker'));
+        return view('display.pergerakan', compact(
+            'bahagianList', 'selectedBahagianId', 'search', 'pegawaiList', 'aktivitiList', 'newsTicker'
+        ));
     }
 
     public function fullDisplay(Request $request)
     {
-        // Automatically select the first section if no selection is made
         $selectedBahagianId = $request->input('bahagian_id') ?: Bahagian::orderBy('nama')->first()?->id;
-
-        $search = trim((string) $request->input('search', ''));
+        $search             = trim((string) $request->input('search', ''));
 
         $pegawaiQuery = Pegawai::query()->with('bahagian')->orderBy('nama');
 
         if ($selectedBahagianId) {
             $pegawaiQuery->where('bahagian_id', $selectedBahagianId);
         }
-
         if ($search !== '') {
             $pegawaiQuery->where('nama', 'like', '%' . $search . '%');
         }
 
-        $pegawaiList = $pegawaiQuery->get();
-        $aktivitiList = Aktiviti::query()
-            ->when($selectedBahagianId, fn ($query) => $query->where('bahagian_id', $selectedBahagianId))
-            ->latest('tarikh')
-            ->take(8)
-            ->get();
-
-        $newsTicker = News::where('is_active', true)->latest('created_at')->pluck('headline')->implode(' • ');
+        $pegawaiList  = $pegawaiQuery->get();
+        $aktivitiList = $this->aktivitiMingguIni($selectedBahagianId);
+        $newsTicker   = News::where('bahagian_id', $selectedBahagianId)
+                            ->latest()
+                            ->pluck('headline')
+                            ->implode(' • ');
 
         return view('display.full-display', compact('pegawaiList', 'aktivitiList', 'newsTicker'));
+    }
+
+    private function aktivitiMingguIni($bahagianId)
+    {
+        return Aktiviti::where('bahagian_id', $bahagianId)
+            ->where('tarikh', '>=', now()->subDays(7)->toDateString())
+            ->orderBy('tarikh')
+            ->take(8)
+            ->get();
     }
 }
