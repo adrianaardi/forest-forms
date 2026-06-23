@@ -1,8 +1,6 @@
 @props(['breadcrumbs' => []])
 
-<nav style="background:#213458; padding:0 1.5rem; display:flex; align-items:center;">
-
-    {{-- LEFT SIDE --}}
+<nav style="background:#213458; padding:0 1.5rem; display:flex; flex-wrap:wrap; align-items:center; gap:1.5rem; row-gap:0.5rem; position:relative;">    {{-- LEFT SIDE --}}
     <div style="display:flex; align-items:center; gap:1.5rem; white-space:nowrap;">
 
         {{-- Hub Aplikasi always shows --}}
