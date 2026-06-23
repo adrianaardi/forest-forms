@@ -25,7 +25,7 @@
 
             <div style="border:1px solid #eee; border-radius:10px; padding:1rem;">
                 <h4>Aplikasi Aduan ICT</h4>
-                <a href="{{ asset('manuals/ict-manual.pdf') }}" target="_blank"
+                <a href="{{ asset('manuals/aduan-manual.pdf') }}" target="_blank"
                    style="display:inline-block; margin-top:10px; padding:6px 10px; background:#213458; color:#fff; text-decoration:none; border-radius:5px; font-size:13px;">
                     Lihat Manual Pengguna
                 </a>
@@ -33,7 +33,7 @@
 
             <div style="border:1px solid #eee; border-radius:10px; padding:1rem;">
                 <h4>Aplikasi Pengurusan Laman Web</h4>
-                <a href="{{ asset('manuals/portal-upload-manual.pdf') }}" target="_blank"
+                <a href="{{ asset('manuals/mohon-manual.pdf') }}" target="_blank"
                    style="display:inline-block; margin-top:10px; padding:6px 10px; background:#213458; color:#fff; text-decoration:none; border-radius:5px; font-size:13px;">
                     Lihat Manual Pengguna
                 </a>
