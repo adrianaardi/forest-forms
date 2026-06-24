@@ -513,7 +513,7 @@
     // Pagination — show 8 rows at a time
     (function () {
         const rows       = Array.from(document.querySelectorAll('tbody tr'));
-        const perPage    = 6;
+        const perPage    = 10;
         let   page       = 0;
         const totalPages = Math.ceil(rows.length / perPage);
 
