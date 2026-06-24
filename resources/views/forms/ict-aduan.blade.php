@@ -185,6 +185,17 @@
     </div>
 </div>
 
+<footer>
+        <div>
+            <strong>Seksyen Pengurusan Dan Transformasi Digital</strong>
+            &nbsp;|&nbsp;
+            Tingkat 15, Bangunan Baitul Makmur II, Medan Raya, Petra Jaya, 93050 Kuching, Sarawak
+        </div>
+        <div>
+            © {{ date('Y') }} Jabatan Hutan Sarawak. Hak Cipta Terpelihara.
+        </div>
+</footer>
+
 <div id="imageModal" style="
     display:none;
     position:fixed;

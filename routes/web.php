@@ -16,12 +16,14 @@ use App\Http\Controllers\Admin\AktivitiController;
 use App\Http\Controllers\Admin\NewsController;
 use App\Http\Controllers\Admin\DisplayController;
 use App\Http\Controllers\Admin\PergerakanDashboardController;
+use App\Http\Controllers\HelpController;
 use Illuminate\Support\Facades\Route;
 
 // ── Homepage ──────────────────────────────────────────────
 Route::get('/', fn() => view('index'));
 Route::get('/display/pergerakan', [DisplayController::class, 'pergerakan'])->name('display.pergerakan');
 Route::get('/display/full-display', [DisplayController::class, 'fullDisplay'])->name('display.full-display');
+Route::get('/help', [HelpController::class, 'index'])->name('help.index');
 
 // ── JHS Admin ─────────────────────────────────────────────
 Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
