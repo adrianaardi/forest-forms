@@ -411,6 +411,53 @@ function closeOnOverlay(e) {
     if (e.target === document.getElementById('modalOverlay')) closeModal();
 }
 
+// 1. Handles the main header checkbox (Check/Uncheck all rows)
+function toggleAll(masterCheckbox) {
+    const rowCheckboxes = document.querySelectorAll('.row-check');
+    
+    rowCheckboxes.forEach(checkbox => {
+        checkbox.checked = masterCheckbox.checked;
+    });
+    
+    // Update the delete button status after changing all states
+    updateDelete();
+}
+
+// 2. Checks if any checkbox is active and updates the "Padam" button status
+function updateDelete() {
+    const rowCheckboxes = document.querySelectorAll('.row-check');
+    const deleteBtn = document.getElementById('deleteBtn');
+    const deleteInputsContainer = document.getElementById('deleteInputs');
+    
+    // Clear previously injected IDs from the hidden form container
+    deleteInputsContainer.innerHTML = '';
+    
+    let anyChecked = false;
+    
+    rowCheckboxes.forEach(checkbox => {
+        if (checkbox.checked) {
+            anyChecked = true;
+            
+            // Inject a hidden input element for each checked item into your deleteForm
+            const hiddenInput = document.createElement('input');
+            hiddenInput.type = 'hidden';
+            hiddenInput.name = 'ids[]';
+            hiddenInput.value = checkbox.value;
+            deleteInputsContainer.appendChild(hiddenInput);
+        }
+    });
+    
+    // Enable button if at least one checkbox is selected, otherwise disable it
+    deleteBtn.disabled = !anyChecked;
+}
+
+// 3. Handles clicking the actual "Padam" button
+function submitDelete() {
+    if (confirm("Adakah anda pasti mahu memadam item yang dipilih?")) {
+        document.getElementById('deleteForm').submit();
+    }
+}
+
 </script>
 
 </body>
