@@ -50,7 +50,7 @@
 <div class="container">
 
     <div class="header">
-        <h1>Jabatan Hutan Sarawak</h1>
+<a href="/" style="color: white; text-decoration: none;"><h1>Jabatan Hutan Sarawak</h1></a>
         <p> Hub Aplikasi Perkhidmatan Atas Talian</p>
     </div>
 

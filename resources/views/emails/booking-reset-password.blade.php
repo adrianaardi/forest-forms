@@ -18,7 +18,7 @@
 <body>
 <div class="container">
     <div class="header">
-        <h1>Jabatan Hutan Sarawak</h1>
+<a href="/" style="color: white; text-decoration: none;"><h1>Jabatan Hutan Sarawak</h1></a>
         <p>Sistem Tempahan Bilik Mesyuarat — Reset Kata Laluan</p>
     </div>
     <div class="body">

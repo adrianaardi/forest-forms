@@ -155,7 +155,7 @@ class BookingController extends Controller
         );
 
         $redirectUrl = '/booking/calendar?bilik=' . $bilikId . '&week=' . $request->tarikh;
-        $successMsg  = 'Tempahan berjaya! Emel pengesahan telah dihantar ke ' . $user->email;
+        $successMsg  = 'Tempahan anda berjaya!';
 
         if ($isAjax) {
             return response()->json([
