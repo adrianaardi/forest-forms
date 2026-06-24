@@ -12,7 +12,7 @@
 <header>
     <div class="logo"></div>
     <div>
-        <h1>Jabatan Hutan Sarawak</h1>
+        <a href="/" style="color: white; text-decoration: none;"><h1>Jabatan Hutan Sarawak</h1></a>
         <p> Hub Aplikasi Perkhidmatan Atas Talian</p>
     </div>
 </header>
@@ -48,7 +48,7 @@
                     <label>Bilik Mesyuarat <span class="required">*</span></label>
                     <select name="bilik_id" required onchange="updateCalendarLink(this.value)">
                         <option value="">-- Pilih Bilik --</option>
-                        @foreach($bilikList->groupBy('aras') as $aras => $rooms)
+@foreach($bilikList->where('wilayah', $user->wilayah)->groupBy('aras') as $aras => $rooms)
                             <optgroup label="{{ $aras }}">
                                 @foreach($rooms as $room)
                                     <option value="{{ $room->id }}"

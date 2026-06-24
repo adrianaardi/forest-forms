@@ -10,10 +10,10 @@
 </head>
 <body>
 <header>
-    <div class="logo"></div>
+        <div class="logo"></div>
     <div>
-        <h1>Jabatan Hutan Sarawak</h1>
-        <p>Hub Aplikasi Perkhidmatan Atas Talian</p>
+        <a href="/" style="color: white; text-decoration: none;"><h1>Jabatan Hutan Sarawak</h1></a>
+        <p> Hub Aplikasi Perkhidmatan Atas Talian</p>
     </div>
 </header>
 <x-navbar :breadcrumbs="[['label' => 'Tempah Bilik Mesyuarat', 'url' => '/booking/calendar'], ['label' => 'Tempahan Saya']]" />
