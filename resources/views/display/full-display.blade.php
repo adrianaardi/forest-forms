@@ -462,7 +462,7 @@
                             <tr>
                                 <td class="col-nama">{{ $pegawai->nama }}</td>
                                 <td class="col-gred">{{ $pegawai->gred }}</td>
-                                <td class="col-seksyen">{{ $pegawai->bahagian->nama ?? '—' }}</td>
+                                <td class="col-seksyen">{{ $pegawai->seksyen_unit }}</td>
                                 <td>
                                     <span class="badge {{ $pegawai->is_hadir ? 'hadir' : 'tidak' }}">
                                         {{ $pegawai->is_hadir ? 'Hadir' : 'Tidak Hadir' }}
