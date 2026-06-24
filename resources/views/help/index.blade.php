@@ -6,7 +6,7 @@
 
     {{-- Page Title --}}
     <div style="margin-bottom: 1.5rem;">
-        <h2 style="margin:0; color:#213458;">Manual Pengguna</h2>
+        <h2 style="margin:0; color:#213458; font-weight:600;">Manual Pengguna</h2>
         <p style="margin:5px 0 0; color:#666; font-size:14px;">
             Akses panduan sistem untuk setiap aplikasi
         </p>
@@ -15,43 +15,62 @@
     {{-- OUTER BOX --}}
     <div style="
         background:#fff;
-        padding:20px;
-        border-radius:12px;
-        box-shadow:0 2px 10px rgba(0,0,0,0.05);
+        padding:24px;
+        border-radius:14px;
+        box-shadow:0 4px 18px rgba(0,0,0,0.06);
     ">
 
         {{-- Cards Grid --}}
-        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); gap:1rem;">
+        <div style="
+            display:grid;
+            grid-template-columns: repeat(2, 1fr);
+            @media (max-width: 700px) {
+                grid-template-columns: 1fr;
+            }
+            gap:1.2rem;
+        ">
 
-            <div style="border:1px solid #eee; border-radius:10px; padding:1rem;">
+            {{-- ICT --}}
+            <div class="manual-card">
+                <div class="manual-icon">🖥️</div>
                 <h4>Aplikasi Aduan ICT</h4>
-                <a href="{{ asset('manuals/aduan-manual.pdf') }}" target="_blank"
-                   style="display:inline-block; margin-top:10px; padding:6px 10px; background:#213458; color:#fff; text-decoration:none; border-radius:5px; font-size:13px;">
-                    Lihat Manual Pengguna
+                <p>Sistem untuk melaporkan dan memantau aduan ICT.</p>
+
+                <a href="{{ asset('manuals/aduan-manual.pdf') }}" target="_blank" class="manual-btn">
+                    Lihat Manual Pengguna →
                 </a>
             </div>
 
-            <div style="border:1px solid #eee; border-radius:10px; padding:1rem;">
+            {{-- Portal --}}
+            <div class="manual-card">
+                <div class="manual-icon">📂</div>
                 <h4>Aplikasi Pengurusan Laman Web</h4>
-                <a href="{{ asset('manuals/mohon-manual.pdf') }}" target="_blank"
-                   style="display:inline-block; margin-top:10px; padding:6px 10px; background:#213458; color:#fff; text-decoration:none; border-radius:5px; font-size:13px;">
-                    Lihat Manual Pengguna
+                <p>Muat naik dan urus kandungan portal rasmi jabatan.</p>
+
+                <a href="{{ asset('manuals/mohon-manual.pdf') }}" target="_blank" class="manual-btn">
+                    Lihat Manual Pengguna →
                 </a>
             </div>
 
-            <div style="border:1px solid #eee; border-radius:10px; padding:1rem;">
+            {{-- Booking --}}
+            <div class="manual-card">
+                <div class="manual-icon">📅</div>
                 <h4>Aplikasi Menempah Bilik Mesyuarat</h4>
-                <a href="{{ asset('manuals/booking-manual.pdf') }}" target="_blank"
-                style="display:inline-block; margin-top:10px; padding:6px 10px; background:#213458; color:#fff; text-decoration:none; border-radius:5px; font-size:13px;">
-                    View Manual Pengguna
+                <p>Tempah bilik dan lihat jadual penggunaan bilik.</p>
+
+                <a href="{{ asset('manuals/booking-manual.pdf') }}" target="_blank" class="manual-btn">
+                    Lihat Manual Pengguna →
                 </a>
             </div>
 
-            <div style="border:1px solid #eee; border-radius:10px; padding:1rem;">
+            {{-- Pergerakan --}}
+            <div class="manual-card">
+                <div class="manual-icon">📌</div>
                 <h4>Aplikasi Pergerakan Pegawai</h4>
-                <a href="{{ asset('manuals/pergerakan-manual.pdf') }}" target="_blank"
-                   style="display:inline-block; margin-top:10px; padding:6px 10px; background:#213458; color:#fff; text-decoration:none; border-radius:5px; font-size:13px;">
-                    Lihat Manual Pengguna
+                <p>Rekod kehadiran dan aktiviti pegawai jabatan.</p>
+
+                <a href="{{ asset('manuals/pergerakan-manual.pdf') }}" target="_blank" class="manual-btn">
+                    Lihat Manual Pengguna →
                 </a>
             </div>
 
@@ -59,5 +78,62 @@
     </div>
 
 </div>
+
+{{-- STYLE --}}
+<style>
+.manual-card {
+    border: 1px solid #eee;
+    border-radius: 12px;
+    padding: 18px;
+    background: #fff;
+    transition: all 0.2s ease;
+
+    display: flex;
+    flex-direction: column;
+
+    min-height: 180px;
+}
+
+.manual-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+    border-color: #dcdcdc;
+}
+
+.manual-icon {
+    font-size: 26px;
+    margin-bottom: 10px;
+}
+
+.manual-card h4 {
+    margin: 0 0 6px;
+    font-size: 15px;
+    color: #213458;
+    text-align: left;
+}
+
+.manual-card p {
+    font-size: 12.5px;
+    color: #666;
+    margin-bottom: 10px;
+}
+
+.manual-btn {
+    display: inline-block;
+    margin-top: auto;   
+    padding: 7px 12px;
+    background: #213458;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 6px;
+    font-size: 12.5px;
+    transition: 0.15s;
+    text-align: center;
+}
+
+.manual-btn:hover {
+    background: #1a2e46;
+}
+</style>
 
 @endsection
