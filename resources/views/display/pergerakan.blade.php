@@ -58,7 +58,7 @@
                         <tr>
                             <td><strong>{{ $pegawai->nama }}</strong></td>
                             <td>{{ $pegawai->gred }}</td>
-                            <td>{{ $pegawai->bahagian->nama ?? '-' }}</td>
+                            <td>{{ $pegawai->seksyen_unit}}</td>
                             <td>
                                 <span class="badge {{ $pegawai->is_hadir ? 'badge-done' : 'badge-pending' }}">{{ $pegawai->is_hadir ? 'Hadir' : 'Tidak Hadir' }}</span>
                             </td>
