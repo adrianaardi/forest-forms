@@ -115,6 +115,7 @@
                             <option value="Sarikei" {{ old('wilayah') == 'Sarikei' ? 'selected' : '' }}>Sarikei</option>
                             <option value="Kapit" {{ old('wilayah') == 'Kapit' ? 'selected' : '' }}>Kapit</option>
                             <option value="Limbang" {{ old('wilayah') == 'Limbang' ? 'selected' : '' }}>Limbang</option>
+                            <option value="Lawas" {{ old('wilayah') == 'Lawas' ? 'selected' : '' }}>Lawas</option>
                         </select>
                     </div> 
                 </div>
