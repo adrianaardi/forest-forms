@@ -19,6 +19,7 @@ class WilayahSeeder extends Seeder
             ['nama_wilayah' => 'Sarikei'],
             ['nama_wilayah' => 'Kapit'],
             ['nama_wilayah' => 'Limbang'],
+            ['nama_wilayah' => 'Lawas'],
         ]);
     }
 }
