@@ -10,9 +10,39 @@ use App\Models\Pegawai;
 use App\Models\Aktiviti;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
+use App\Models\BahagianSupervisor;
+
 
 class BahagianController extends Controller
 {
+    public function index()
+    {
+        if (Auth::user()->email !== 'admin.mohon@sarawak.gov.my') abort(403);
+        $bahagian = BahagianSupervisor::latest()->get();
+        return view('admin.bahagian', compact('bahagian'));
+    }
+
+    public function store(Request $request)
+    {
+        if (Auth::user()->email !== 'admin.mohon@sarawak.gov.my') abort(403);
+
+        $request->validate([
+            'nama_bahagian'    => 'required|string|max:255|unique:bahagian_supervisors,nama_bahagian',
+            'email_supervisor' => 'required|email',
+        ]);
+
+        BahagianSupervisor::create($request->only('nama_bahagian', 'email_supervisor'));
+
+        return back()->with('success', 'Bahagian berjaya ditambah.');
+    }
+
+    public function destroy($id)
+    {
+        if (Auth::user()->email !== 'admin.mohon@sarawak.gov.my') abort(403);
+        BahagianSupervisor::findOrFail($id)->delete();
+        return back()->with('success', 'Bahagian berjaya dipadam.');
+    }
+    
     public function storeBahagian(Request $request)
     {
         $request->validate(['nama' => 'required|unique:bahagians,nama|max:255']);

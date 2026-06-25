@@ -81,6 +81,7 @@
                         <div class="nav-dropdown-section">Portal Muat Naik</div>
                         <a href="/admin/dashboard-mohon">📊 Dashboard</a>
                         <a href="/admin/portal-upload">📂 Senarai Permohonan</a>
+                        <a href="/admin/bahagian">➕ Tambah Supervisor Bahagian</a>
                     @endif
 
                     {{-- Pergerakan Pegawai --}}
