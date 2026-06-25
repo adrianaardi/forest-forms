@@ -79,8 +79,14 @@
 </div>
 
 <footer>
-    <div><strong>Jabatan Hutan Sarawak</strong> | Wisma Sumber Alam, Petra Jaya, 93660 Kuching, Sarawak</div>
-    <div>© {{ date('Y') }} Jabatan Hutan Sarawak. Hak Cipta Terpelihara.</div>
+        <div>
+            <strong>Seksyen Pengurusan Dan Transformasi Digital</strong>
+            &nbsp;|&nbsp;
+            Tingkat 15, Bangunan Baitul Makmur II, Medan Raya, Petra Jaya, 93050 Kuching, Sarawak
+        </div>
+        <div>
+            © {{ date('Y') }} Jabatan Hutan Sarawak. Hak Cipta Terpelihara.
+        </div>
 </footer>
 
 <style>
