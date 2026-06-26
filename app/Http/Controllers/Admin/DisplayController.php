@@ -18,7 +18,7 @@ class DisplayController extends Controller
         $selectedBahagianId  = $request->input('bahagian_id') ?: $bahagianList->first()?->id;
         $search              = trim((string) $request->input('search', ''));
 
-        $pegawaiQuery = Pegawai::query()->with('bahagian')->orderBy('gred')->orderBy('nama');
+        $pegawaiQuery = Pegawai::query()->with('bahagian')->orderBy('gred', 'desc')->orderBy('nama');
 
         if ($selectedBahagianId) {
             $pegawaiQuery->where('bahagian_id', $selectedBahagianId);
@@ -44,7 +44,7 @@ class DisplayController extends Controller
         $selectedBahagianId = $request->input('bahagian_id') ?: Bahagian::orderBy('nama')->first()?->id;
         $search             = trim((string) $request->input('search', ''));
 
-        $pegawaiQuery = Pegawai::query()->with('bahagian')->orderBy('gred')->orderBy('nama');
+        $pegawaiQuery = Pegawai::query()->with('bahagian')->orderBy('gred', 'desc')->orderBy('nama');
 
         if ($selectedBahagianId) {
             $pegawaiQuery->where('bahagian_id', $selectedBahagianId);
