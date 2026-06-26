@@ -56,7 +56,7 @@
                 </div>
                 <div class="field">
                     <label>Email</label>
-                    <input type="email" name="email" value="{{ old('email') }}" placeholder="subadmin.wilayahname.aduan@sarawak.gov.my" required>
+                    <input type="email" name="email" value="{{ old('email') }}" placeholder="aduan.wilayahname@sarawak.gov.my" required>
                     @error('email')
                         <div style="color:#a32d2d; font-size:12px; margin-top:4px;">{{ $message }}</div>
                     @enderror
