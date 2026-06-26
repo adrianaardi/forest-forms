@@ -80,13 +80,16 @@ class BookingController extends Controller
             return redirect('/booking/login')->with('error', 'Sila log masuk untuk membuat tempahan.');
         }
 
-        // 2. SEMAKAN WILAYAH (KOD BARU)
-        if ($user->wilayah_id !== $bilik->wilayah_id) {
-            $msg = 'Anda hanya dibenarkan membuat tempahan bilik di dalam wilayah anda sahaja.';
-            if ($isAjax) {
-                return response()->json(['message' => $msg], 403); // 403 Forbidden
-            }
-            return back()->with('error', $msg)->withInput();
+        // 2. Cross-booking check 
+        $isCrossWilayah = $user->wilayah_id !== $bilik->wilayah_id;
+
+        if ($isCrossWilayah) {
+            \App\Models\BookingActivityLog::log(
+                'user',
+                $user->name,
+                'cross_region_booking',
+                $user->name . ' membuat tempahan luar wilayah untuk ' . $bilik->nama_bilik
+            );
         }
 
         // 3. Validasi borang sedia ada
