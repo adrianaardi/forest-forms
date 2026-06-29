@@ -670,14 +670,25 @@ function closeBookModal() {
     setBkSuccess(null);
 }
 
-// ── Weekly booking summary: show every time the module loads ──
+// ── Weekly booking summary: show only when entering the module from outside ──
 document.addEventListener('DOMContentLoaded', function() {
     const hasDaftarModal = document.getElementById('daftar-modal'); // don't stack on top of registration success
+
+    let cameFromOutsideModule = true;
+    try {
+        const ref = document.referrer ? new URL(document.referrer) : null;
+        if (ref && ref.pathname === window.location.pathname) {
+            cameFromOutsideModule = false; // referrer is also /booking/calendar → internal nav
+        }
+    } catch (e) {
+        // malformed/empty referrer, treat as "from outside"
+    }
+
+    if (!cameFromOutsideModule) return; // skip popup, just clicking through rooms/weeks
 
     if (!hasDaftarModal) {
         setTimeout(() => openModal('weekSummaryModal'), 250);
     } else {
-        // show summary right after the registration modal is dismissed
         const observer = new MutationObserver(() => {
             if (!document.getElementById('daftar-modal')) {
                 observer.disconnect();
