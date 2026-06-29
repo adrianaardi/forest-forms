@@ -254,6 +254,7 @@
 @endif
 
 @php
+    \Carbon\Carbon::setLocale('ms');
     $today         = \Carbon\Carbon::today();
     $prevWeek      = $weekStart->copy()->subWeek()->toDateString();
     $nextWeek      = $weekStart->copy()->addWeek()->toDateString();
@@ -314,11 +315,11 @@
         <div class="mini-cal">
             <div class="mini-cal-header">
                 <a href="/booking/calendar?bilik={{ $bilik->id }}&week={{ $miniPrevMonth }}">‹</a>
-                <span>{{ $miniMonth->translatedFormat('M Y') }}</span>
+                <span>{{ $miniMonth->translatedFormat('F Y') }}</span>
                 <a href="/booking/calendar?bilik={{ $bilik->id }}&week={{ $miniNextMonth }}">›</a>
             </div>
             <div class="mini-cal-grid">
-                @foreach(['A','I','S','R','K','J','S'] as $dow)
+                @foreach(['Ahad','Isnin','Selasa','Rabu','Khamis','Jumaat','Sabtu'] as $dow)
                     <div class="mini-cal-dow">{{ $dow }}</div>
                 @endforeach
                 @for($i = 0; $i < $miniFirstDow; $i++)
@@ -386,7 +387,7 @@
             <a href="/booking/calendar?bilik={{ $bilik?->id }}&week={{ $nextWeek }}" class="bk-btn">›</a>
             <a href="/booking/calendar?bilik={{ $bilik?->id }}&week={{ $thisWeek }}" class="bk-btn bk-btn-today">Hari Ini</a>
             <span class="bk-toolbar-title">
-                {{ $weekStart->translatedFormat('d M') }} — {{ $weekEnd->translatedFormat('d M Y') }}
+                {{ $weekStart->translatedFormat('j F') }} — {{ $weekEnd->translatedFormat('j F Y') }}
                 @if($bilik)
                     &nbsp;·&nbsp;
                     <span style="color:#194169; font-weight:500;">{{ $bilik->nama_bilik }}</span>
@@ -410,7 +411,7 @@
                 <div class="bk-col-header"></div>
                 @foreach($days as $day)
                     <div class="bk-col-header">
-                        <div class="dname">{{ $day->translatedFormat('D') }}</div>
+                        <div class="dname">{{ $day->translatedFormat('l') }}</div>
                         <div class="dnum {{ $day->isToday() ? 'today' : '' }}">{{ $day->format('j') }}</div>
                     </div>
                 @endforeach
@@ -447,7 +448,7 @@
                                             @json($b->user->phone ?? "-"),
                                             @json(substr($b->masa_mula,0,5)),
                                             @json(substr($b->masa_tamat,0,5)),
-                                            @json($day->translatedFormat("d F Y")),
+                                            @json($day->translatedFormat("j F Y")),
                                             @json($b->remarks ?? "-"),
                                             @json($b->id),
                                             @json($b->cancel_token),
