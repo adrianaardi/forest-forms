@@ -670,17 +670,14 @@ function closeBookModal() {
     setBkSuccess(null);
 }
 
-// ── Weekly booking summary: show once per session, on first load ──
+// ── Weekly booking summary: show every time the module loads ──
 document.addEventListener('DOMContentLoaded', function() {
-    const alreadyShown = sessionStorage.getItem('bk_summary_shown');
     const hasDaftarModal = document.getElementById('daftar-modal'); // don't stack on top of registration success
 
-    if (!alreadyShown && !hasDaftarModal) {
-        sessionStorage.setItem('bk_summary_shown', '1');
+    if (!hasDaftarModal) {
         setTimeout(() => openModal('weekSummaryModal'), 250);
-    } else if (!alreadyShown && hasDaftarModal) {
+    } else {
         // show summary right after the registration modal is dismissed
-        sessionStorage.setItem('bk_summary_shown', '1');
         const observer = new MutationObserver(() => {
             if (!document.getElementById('daftar-modal')) {
                 observer.disconnect();
