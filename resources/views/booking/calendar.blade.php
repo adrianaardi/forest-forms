@@ -287,6 +287,22 @@
             $miniBookingSummary[$ds] = $ratio >= 1 ? 'full' : ($ratio > 0 ? 'partial' : 'available');
         }
     }
+
+    // ── Weekly booking summary popup data (RDD & Ibu Pejabat only) ──
+    $summaryWilayah = ['RDD', 'Ibu Pejabat'];
+
+    $summaryBilikIds = \App\Models\BookingBilik::whereHas('wilayah', function ($q) use ($summaryWilayah) {
+            $q->whereIn('nama_wilayah', $summaryWilayah);
+        })->pluck('id');
+
+    $weekSummaryBookings = \App\Models\BookingRequest::whereIn('bilik_id', $summaryBilikIds)
+        ->where('status', 'confirmed')
+        ->whereBetween('tarikh', [$weekStart->toDateString(), $weekEnd->toDateString()])
+        ->with('bilik', 'user')
+        ->orderBy('tarikh')
+        ->orderBy('masa_mula')
+        ->get()
+        ->groupBy('tarikh');
 @endphp
 
 <div class="bk-wrap">
@@ -574,6 +590,56 @@
     <div><strong>Seksyen Pengurusan Dan Transformasi Digital</strong> &nbsp;|&nbsp; Tingkat 15, Bangunan Baitul Makmur II, Medan Raya, Petra Jaya, 93050 Kuching, Sarawak</div>
     <div>© <?php echo date("Y"); ?> Jabatan Hutan Sarawak. Hak Cipta Terpelihara.</div>
 </footer>
+
+{{-- Weekly Booking Summary popup (RDD & Ibu Pejabat) --}}
+<div class="modal-overlay" id="weekSummaryModal">
+    <div class="modal" style="max-width:520px; max-height:80vh; display:flex; flex-direction:column;">
+        <div class="modal-header">
+            <h2 style="font-size:14px;">
+                Ringkasan Tempahan Minggu Ini
+                <span style="font-size:11px; color:#888; font-weight:400; display:block; margin-top:2px;">
+                    {{ $weekStart->translatedFormat('d M') }} — {{ $weekEnd->translatedFormat('d M Y') }} · RDD &amp; Ibu Pejabat
+                </span>
+            </h2>
+            <button class="modal-close" onclick="closeModal('weekSummaryModal')">×</button>
+        </div>
+        <div class="modal-body" style="overflow-y:auto;">
+            @forelse($weekSummaryBookings as $tarikh => $dayBookings)
+                @php $dCarbon = \Carbon\Carbon::parse($tarikh); @endphp
+                <div style="margin-bottom:1rem;">
+                    <div style="font-size:11px; font-weight:600; color:#194169; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:0.4rem; padding-bottom:0.3rem; border-bottom:1px solid #eee;">
+                        {{ $dCarbon->translatedFormat('l, d F Y') }}
+                    </div>
+                    @foreach($dayBookings as $b)
+                        <div class="ws-item"
+                            onclick="window.location='/booking/calendar?bilik={{ $b->bilik_id }}&week={{ \Carbon\Carbon::parse($tarikh)->startOfWeek(\Carbon\Carbon::MONDAY)->toDateString() }}'"
+                            style="display:flex; align-items:center; gap:8px; padding:7px 8px; border-radius:7px; cursor:pointer; transition:background 0.15s; margin-bottom:3px;"
+                            onmouseover="this.style.background='#f0f9f4'" onmouseout="this.style.background='transparent'">
+                            <div style="width:5px; height:32px; border-radius:3px; background:#7ec0c9; flex-shrink:0;"></div>
+                            <div style="flex:1; min-width:0;">
+                                <div style="font-size:12px; font-weight:500; color:#1a1a1a; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+                                    {{ $b->tajuk_mesyuarat }}
+                                </div>
+                                <div style="font-size:11px; color:#777;">
+                                    {{ $b->bilik->nama_bilik ?? '-' }} · {{ substr($b->masa_mula,0,5) }}–{{ substr($b->masa_tamat,0,5) }} · {{ $b->user->name ?? '-' }}
+                                </div>
+                            </div>
+                            <span style="font-size:14px; color:#bbb;">›</span>
+                        </div>
+                    @endforeach
+                </div>
+            @empty
+                <p style="font-size:12px; color:#888; text-align:center; padding:1.5rem 0;">
+                    Tiada tempahan untuk minggu ini di wilayah RDD &amp; Ibu Pejabat.
+                </p>
+            @endforelse
+        </div>
+        <div class="form-footer" style="padding:0.75rem 1rem; border-top:1px solid #f0f0f0; text-align:right;">
+            <button class="btn-secondary" onclick="closeModal('weekSummaryModal')">Tutup</button>
+        </div>
+    </div>
+</div>
+
 {{-- Login modal --}}
 @include('booking._login-modal')
 
@@ -603,6 +669,27 @@ function closeBookModal() {
     setBkError(null);
     setBkSuccess(null);
 }
+
+// ── Weekly booking summary: show once per session, on first load ──
+document.addEventListener('DOMContentLoaded', function() {
+    const alreadyShown = sessionStorage.getItem('bk_summary_shown');
+    const hasDaftarModal = document.getElementById('daftar-modal'); // don't stack on top of registration success
+
+    if (!alreadyShown && !hasDaftarModal) {
+        sessionStorage.setItem('bk_summary_shown', '1');
+        setTimeout(() => openModal('weekSummaryModal'), 250);
+    } else if (!alreadyShown && hasDaftarModal) {
+        // show summary right after the registration modal is dismissed
+        sessionStorage.setItem('bk_summary_shown', '1');
+        const observer = new MutationObserver(() => {
+            if (!document.getElementById('daftar-modal')) {
+                observer.disconnect();
+                setTimeout(() => openModal('weekSummaryModal'), 200);
+            }
+        });
+        observer.observe(document.body, { childList: true });
+    }
+});
 
 // ── book slot (click on grid cell) ─────────────────────────────────────────
 
