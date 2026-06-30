@@ -2,10 +2,12 @@
 
 namespace App\Models;
 
+use App\Models\Traits\HasNamaTitleCase;
 use Illuminate\Database\Eloquent\Model;
 
 class BorangAduanKerosakan extends Model
 {
+    use HasNamaTitleCase;
     public function getNoTiketAttribute()
     {
         return 'JHS/ICT/A/' . date('Y') . '(' . $this->id .')';

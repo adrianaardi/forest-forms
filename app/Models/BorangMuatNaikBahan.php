@@ -2,10 +2,12 @@
 
 namespace App\Models;
 
+use App\Models\Traits\HasNamaTitleCase;
 use Illuminate\Database\Eloquent\Model;
 
 class BorangMuatNaikBahan extends Model
 {
+    use HasNamaTitleCase;
     protected $table = 'borang_muat_naik_bahan';
 
     protected $fillable = [

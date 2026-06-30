@@ -2,9 +2,11 @@
 
 namespace App\Models;
 
+use App\Models\Traits\HasNamaTitleCase;
 use Illuminate\Database\Eloquent\Model;
 
 class Pegawai extends Model {
+    use HasNamaTitleCase;
     protected $fillable = [
         'nama',
         'gred',

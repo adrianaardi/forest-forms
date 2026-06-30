@@ -2,9 +2,12 @@
 
 namespace App\Models;
 
+use App\Models\Traits\HasNamaTitleCase;
 use Illuminate\Database\Eloquent\Model;
 
 class Bahagian extends Model {
+    use HasNamaTitleCase;
+
     protected $fillable = ['nama'];
 
     public function users() { return $this->hasMany(User::class); }

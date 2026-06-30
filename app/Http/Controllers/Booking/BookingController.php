@@ -23,35 +23,45 @@ class BookingController extends Controller
 
     public function calendar(Request $request)
     {
-        $wilayahOrder = [
-            'Ibu Pejabat', 'Kuching', 'Sri Aman', 'Sarikei',
-            'Sibu', 'Kapit', 'Bintulu', 'Miri', 'Limbang', 'Lawas',
-        ];
-
+        // ── room list (unchanged) ──
         $bilikList = \App\Models\BookingBilik::with('wilayah')
             ->whereHas('wilayah')
             ->get()
-            ->groupBy(fn($b) => $b->wilayah->nama_wilayah)
-            ->sortBy(fn($rooms, $wilayah) => array_search($wilayah, $wilayahOrder));
-                $selectedId = $request->get('bilik') ?? \App\Models\BookingBilik::orderBy('aras')->orderBy('nama_bilik')->first()?->id;
-                $bilik      = \App\Models\BookingBilik::find($selectedId);
+            ->groupBy(fn($b) => $b->wilayah->nama_wilayah);
 
-        $weekStart = $request->get('week')
-            ? Carbon::parse($request->get('week'))->startOfWeek(Carbon::MONDAY)
-            : Carbon::now()->startOfWeek(Carbon::MONDAY);
-        $weekEnd = $weekStart->copy()->endOfWeek(Carbon::SUNDAY);
+        // ── selected rooms (now an array) ──
+        $selectedIds = $request->input('bilik', []);
+        if (!is_array($selectedIds)) $selectedIds = [$selectedIds]; // backward compat with old links
+        $selectedIds = array_filter(array_map('intval', $selectedIds));
 
-        $bookings = collect();
-        if ($bilik) {
-            $bookings = BookingRequest::with('user')
-                ->where('bilik_id', $bilik->id)
-                ->whereIn('status', ['confirmed'])
-                ->whereBetween('tarikh', [$weekStart->toDateString(), $weekEnd->toDateString()])
-                ->get();
+        $selectedBiliks = \App\Models\BookingBilik::whereIn('id', $selectedIds)->get();
+
+        // ── default: first room if nothing selected ──
+        if ($selectedBiliks->isEmpty()) {
+            $first = \App\Models\BookingBilik::orderBy('aras')->orderBy('nama_bilik')->first();
+            if ($first) {
+                $selectedIds    = [$first->id];
+                $selectedBiliks = collect([$first]);
+            }
         }
 
-        return view('booking.calendar', compact('bilikList', 'bilik', 'bookings', 'weekStart', 'weekEnd'));
+        // ── week ──
+        $weekStart = \Carbon\Carbon::parse($request->input('week', now()))->startOfWeek(\Carbon\Carbon::MONDAY);
+        $weekEnd   = $weekStart->copy()->endOfWeek(\Carbon\Carbon::SUNDAY);
+
+        // ── bookings across all selected rooms ──
+        $bookings = \App\Models\BookingRequest::whereIn('bilik_id', $selectedIds)
+            ->whereIn('status', ['confirmed'])
+            ->whereBetween('tarikh', [$weekStart->toDateString(), $weekEnd->toDateString()])
+            ->with('user', 'bilik')
+            ->get();
+
+        return view('booking.calendar', compact(
+            'bilikList', 'selectedIds', 'selectedBiliks',
+            'bookings', 'weekStart', 'weekEnd'
+        ));
     }
+
     public function showBook(Request $request, $bilikId = null)
     {
         $bilikList = BookingBilik::orderBy('aras')->orderBy('nama_bilik')->get();
