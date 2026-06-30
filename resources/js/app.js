@@ -11,6 +11,12 @@ function normalizeNamaInputs() {
                 .toLowerCase()
                 .replace(/\b\w/g, (m) => m.toUpperCase());
         });
+
+        input.addEventListener('blur', () => {
+            input.value = input.value
+                .toLowerCase()
+                .replace(/\b\w/g, (m) => m.toUpperCase());
+        });
     });
 }
 
