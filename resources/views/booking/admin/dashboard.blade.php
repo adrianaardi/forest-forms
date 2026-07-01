@@ -168,6 +168,7 @@
                 <div class="dash-card-title" style="margin-bottom:0.75rem;">
                     Aktiviti Terkini
                     <span style="font-size:11px; color:#aaa; text-transform:none; letter-spacing:0;">10 terbaru</span>
+                    <a href="/booking/admin/activity-log" class="db-link">Lihat semua log →</a>
                 </div>
                 @if($activityLogs->isEmpty())
                     <div class="db-empty">Tiada aktiviti direkodkan.</div>

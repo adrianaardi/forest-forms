@@ -610,6 +610,147 @@ footer strong {
     background: #213458;
 }
 
+.page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1.25rem;
+    flex-wrap: wrap;
+}
+
+.page-header h1 {
+    margin: 0;
+    font-size: 22px;
+}
+
+.page-header p {
+    margin: 0;
+    color: #666;
+    font-size: 13px;
+}
+
+.activity-filter {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    align-items: flex-end;
+    margin-bottom: 1rem;
+}
+
+.activity-filter label {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    min-width: 220px;
+}
+
+.filter-label {
+    font-size: 12px;
+    color: #666;
+}
+
+.activity-filter select,
+.activity-filter button {
+    padding: 0.75rem 1rem;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    background: #fff;
+    font-size: 13px;
+    color: #1a1a1a;
+}
+
+.activity-filter button {
+    cursor: pointer;
+    background: #194169;
+    color: #f7f4f4;
+    border-color: #194169;
+}
+
+.activity-filter button:hover {
+    background: #213458;
+}
+
+.activity-card {
+    background: #fff;
+    border: 1px solid #eee;
+    border-radius: 14px;
+    padding: 1rem;
+}
+
+.activity-row {
+    display: grid;
+    grid-template-columns: 1fr 180px 120px;
+    gap: 1rem;
+    align-items: center;
+    padding: 1rem 0;
+    border-bottom: 1px solid #f5f5f5;
+}
+
+.activity-row:last-child {
+    border-bottom: none;
+}
+
+.activity-row span,
+.activity-row div {
+    font-size: 13px;
+    color: #333;
+}
+
+.activity-label {
+    font-weight: 600;
+    margin-bottom: 0.35rem;
+}
+
+.activity-meta {
+    color: #777;
+    font-size: 12px;
+}
+
+.activity-time {
+    text-align: right;
+}
+
+.badge-admin {
+    background: #e6f1fb;
+    color: #0c447c;
+}
+
+.badge-user {
+    background: #eaf3de;
+    color: #27500a;
+}
+
+.empty-state {
+    padding: 2rem;
+    text-align: center;
+    color: #999;
+    border: 1px solid #f5f5f5;
+    border-radius: 14px;
+}
+
+.db-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.75rem 1rem;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    background: #fff;
+    color: #194169;
+    text-decoration: none;
+    font-size: 13px;
+}
+
+.db-link:hover {
+    background: #f7f7f7;
+}
+
+header a {
+    color: inherit;
+    text-decoration: none;
+}
+
 .btn-reset {
     padding: 7px 16px;
     background: #f0f0f0;

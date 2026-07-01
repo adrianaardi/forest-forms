@@ -156,6 +156,7 @@ Route::prefix('booking')->name('booking.')->group(function () {
     // booking admin
     Route::middleware('booking.admin')->prefix('admin')->name('admin.')->group(function () {
         Route::get('/dashboard',          [AdminBookingController::class, 'dashboard'])->name('dashboard');
+        Route::get('/activity-log',       [AdminBookingController::class, 'activityLog'])->name('activity-log');
         Route::get('/users',              [AdminBookingController::class, 'users'])->name('users');
         Route::post('/users/{id}/status', [AdminBookingController::class, 'updateUserStatus'])->name('users.status');
         Route::delete('/users/{id}',      [AdminBookingController::class, 'deleteUser'])->name('users.delete');

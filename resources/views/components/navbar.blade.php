@@ -61,6 +61,7 @@
                     @if($email === 'admin.booking@sarawak.gov.my')
                         <div class="nav-dropdown-section">Tempahan Bilik</div>
                         <a href="/booking/admin/dashboard">📊 Dashboard</a>
+                        <a href="/booking/admin/activity-log">📝 Log Aktiviti</a>
                         <a href="/booking/admin/users">👥 Urus Pengguna</a>
                         <a href="/booking/calendar">📅 Lihat Kalendar</a>
                     @endif

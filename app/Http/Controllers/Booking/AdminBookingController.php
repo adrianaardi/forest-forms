@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Booking;
 
 use App\Http\Controllers\Controller;
+use App\Models\BookingActivityLog;
 use App\Models\BookingRequest;
 use App\Models\BookingUser;
 use Illuminate\Http\Request;
@@ -104,6 +105,40 @@ class AdminBookingController extends Controller
             'stats', 'weeklyData', 'today',
             'bilikFree', 'bilikPartial', 'bilikFull', 'allBilik',
             'recentBookings', 'activityLogs'
+        ));
+    }
+
+    public function activityLog(Request $request)
+    {
+        $query = BookingActivityLog::query();
+        $selectedActivity = $request->get('activity');
+
+        if ($request->filled('activity')) {
+            $query->where('action', $selectedActivity);
+        }
+
+        $activityLogs = $query->latest()->paginate(20)->withQueryString();
+
+        $activityLabels = [
+            'registered' => 'Pendaftaran Pengguna',
+            'created_booking' => 'Tempahan Dibuat',
+            'cancelled_booking' => 'Tempahan Dibatalkan',
+            'updated_profile' => 'Profil Dikemaskini',
+            'updated_password' => 'Kata Laluan Dikemaskini',
+            'cross_region_booking' => 'Tempahan Luar Wilayah',
+            'updated_user_status' => 'Status Pengguna Dikemaskini',
+            'edited_user' => 'Pengguna Dikemaskini',
+            'deleted_user' => 'Pengguna Dipadam',
+            'added_user' => 'Pengguna Ditambah',
+        ];
+
+        $activityTypes = BookingActivityLog::select('action')
+            ->distinct()
+            ->orderBy('action')
+            ->pluck('action');
+
+        return view('booking.admin.activity-log', compact(
+            'activityLogs', 'activityLabels', 'activityTypes', 'selectedActivity'
         ));
     }
 
