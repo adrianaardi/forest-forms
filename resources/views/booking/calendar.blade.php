@@ -264,8 +264,8 @@
     $totalSlotMins = 9 * 60;
 
     $miniMonth       = $weekStart->copy()->startOfMonth();
-    $miniPrevMonth   = $miniMonth->copy()->subMonth()->toDateString();
-    $miniNextMonth   = $miniMonth->copy()->addMonth()->toDateString();
+    $miniPrevMonth   = $miniMonth->copy()->subMonth()->day(15)->toDateString();
+    $miniNextMonth   = $miniMonth->copy()->addMonth()->day(15)->toDateString();
     $miniDaysInMonth = $miniMonth->daysInMonth;
     $miniFirstDow    = $miniMonth->dayOfWeek;
 
@@ -319,7 +319,7 @@
                 <a href="/booking/calendar?bilik={{ $bilik->id }}&week={{ $miniNextMonth }}">›</a>
             </div>
             <div class="mini-cal-grid">
-                @foreach(['Ahad','Isnin','Selasa','Rabu','Khamis','Jumaat','Sabtu'] as $dow)
+                @foreach(['A','I','S','R','K','J','S'] as $dow)
                     <div class="mini-cal-dow">{{ $dow }}</div>
                 @endforeach
                 @for($i = 0; $i < $miniFirstDow; $i++)
