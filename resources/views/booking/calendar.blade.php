@@ -67,8 +67,8 @@
 
         /* ── guide ── */
         .bk-guide-text {
-            font-size: 11px; color: #535353; line-height: 1.5;
-            background: #f3f7f2; border-left: 3px solid #7ec0c9;
+            font-size: 11px; color: #262525; line-height: 1.5;
+            background: #deeccb; border-left: 3px solid #29bcd0;
             padding: 8px 10px; border-radius: 0 6px 6px 0;
         }
         .bk-wilayah-toggle {
@@ -128,7 +128,7 @@
             font-size: 11px; background:#f7f4f4;
             position: sticky; top: 0; z-index: 2;
         }
-        .bk-col-header .dname { color: #777777; font-weight: 400; font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; }
+        .bk-col-header .dname { color: #302f2f; font-weight: 400; font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; }
         .bk-col-header .dnum {
             font-size: 18px; font-weight: 500; width: 32px; height: 32px;
             line-height: 32px; border-radius: 50%; margin: 3px auto 0;
@@ -136,7 +136,7 @@
         }
         .bk-col-header .dnum.today { background: #194169; color:#f7f4f4; }
         .bk-time-gutter {
-            font-size: 10px; color: #5c5c5c; text-align: right;
+            font-size: 10px; color: #232121; text-align: right;
             padding: 2px 8px 0 0; height: 48px; border-right: 1px solid #e0e0e0;
         }
         .bk-cell {
@@ -348,7 +348,7 @@
         @endif
 
         <div class="bk-sidebar-section">
-            <div class="bk-guide-text">Sila pilih wilayah sendiri sebelum membuat tempahan bilik.</div>
+            <div class="bk-guide-text">Sila pilih cawangan yang berkenaan sebelum membuat tempahan bilik.</div>
         </div>
 
     {{-- Room list grouped by wilayah --}}
@@ -391,7 +391,7 @@
                 @if($bilik)
                     &nbsp;·&nbsp;
                     <span style="color:#194169; font-weight:500;">{{ $bilik->nama_bilik }}</span>
-                    <span style="color:#727272; font-size:11px;"> {{ $bilik->aras }}, {{ $bilik->wing }}</span>
+                    <span style="color:#302f2f; font-size:11px;"> {{ $bilik->aras }}, {{ $bilik->wing }}</span>
                 @endif
             </span>
             @if($bilik)
