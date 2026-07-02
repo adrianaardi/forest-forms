@@ -18,7 +18,18 @@ class DisplayController extends Controller
         $selectedBahagianId  = $request->input('bahagian_id') ?: $bahagianList->first()?->id;
         $search              = trim((string) $request->input('search', ''));
 
-        $pegawaiQuery = Pegawai::query()->with('bahagian')->orderBy('gred', 'desc')->orderBy('nama');
+        // Fixed to use 'seksyen_unit' everywhere
+        $pegawaiQuery = Pegawai::query()->with('bahagian')
+            ->orderByRaw("
+                CASE 
+                    WHEN seksyen_unit = 'Head of Department' THEN 0 
+                    WHEN seksyen_unit = 'Head of Division' THEN 1 
+                    ELSE 2 
+                END
+            ")
+            ->orderBy('seksyen_unit', 'asc')
+            ->orderByRaw("CAST(REGEXP_REPLACE(gred, '[^0-9]', '') AS UNSIGNED) DESC")
+            ->orderBy('nama', 'asc');
 
         if ($selectedBahagianId) {
             $pegawaiQuery->where('bahagian_id', $selectedBahagianId);
@@ -44,7 +55,18 @@ class DisplayController extends Controller
         $selectedBahagianId = $request->input('bahagian_id') ?: Bahagian::orderBy('nama')->first()?->id;
         $search             = trim((string) $request->input('search', ''));
 
-        $pegawaiQuery = Pegawai::query()->with('bahagian')->orderBy('gred', 'desc')->orderBy('nama');
+        // Fixed to use 'seksyen_unit' everywhere here too
+        $pegawaiQuery = Pegawai::query()->with('bahagian')
+            ->orderByRaw("
+                CASE 
+                    WHEN seksyen_unit = 'Head of Department' THEN 0 
+                    WHEN seksyen_unit = 'Head of Division' THEN 1 
+                    ELSE 2 
+                END
+            ")
+            ->orderBy('seksyen_unit', 'asc')
+            ->orderByRaw("CAST(REGEXP_REPLACE(gred, '[^0-9]', '') AS UNSIGNED) DESC")
+            ->orderBy('nama', 'asc');
 
         if ($selectedBahagianId) {
             $pegawaiQuery->where('bahagian_id', $selectedBahagianId);
