@@ -68,7 +68,7 @@
         /* ── guide ── */
         .bk-guide-text {
             font-size: 11px; color: #262525; line-height: 1.5;
-            background: #deeccb; border-left: 3px solid #29bcd0;
+            background: #deeccb; border-left: 3px solid #7ec0c9;
             padding: 8px 10px; border-radius: 0 6px 6px 0;
         }
         .bk-wilayah-toggle {
