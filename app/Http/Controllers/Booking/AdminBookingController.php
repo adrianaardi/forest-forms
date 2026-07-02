@@ -244,4 +244,28 @@ class AdminBookingController extends Controller
 
         return back()->with('success', 'Pengguna berjaya ditambah.');
     }
+
+public function resetPassword($id)
+{
+    // 1. Fetch user model profile
+    $targetUser = \App\Models\BookingUser::findOrFail($id);
+    
+    // 2. Override with standard password string
+    $targetUser->update([
+        'password' => \Illuminate\Support\Facades\Hash::make('password123')
+    ]);
+
+    // 3. Log administrative audit trace 
+    $adminName = \Illuminate\Support\Facades\Auth::guard('web')->user()->name;
+    \App\Models\BookingActivityLog::log(
+        'admin', 
+        $adminName,
+        'edited_user', 
+        'Admin ' . $adminName . ' mengeset semula kata laluan pengguna ' . $targetUser->name
+    );
+
+    // 4. Return safety bounce right back to your dashboard table view
+    return redirect('/booking/admin/users')->with('success', 'Kata laluan berjaya diset semula kepada password123.');
+}
+
 }

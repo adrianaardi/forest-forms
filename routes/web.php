@@ -163,7 +163,7 @@ Route::prefix('booking')->name('booking.')->group(function () {
         Route::post('/users/{id}/edit', [AdminBookingController::class, 'editUser'])->name('users.edit');
         Route::post('/logout',            [BookingAuthController::class, 'logoutAdmin'])->name('logout');
         Route::post('/users', [AdminBookingController::class, 'storeUser'])->name('users.store');
-        
+        Route::post('/users/{id}/reset-password', [AdminBookingController::class, 'resetPassword'])->name('users.reset_password');        
     });
 
     

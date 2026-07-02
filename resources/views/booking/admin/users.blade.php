@@ -176,6 +176,7 @@
     <div><strong>Seksyen Pengurusan Dan Transformasi Digital</strong> &nbsp;|&nbsp; Tingkat 15, Bangunan Baitul Makmur II, Medan Raya, Petra Jaya, 93050 Kuching, Sarawak</div>
     <div>© <?php echo date("Y"); ?> Jabatan Hutan Sarawak. Hak Cipta Terpelihara.</div>
 </footer>
+
 {{-- Edit modal --}}
 <div class="modal-overlay" id="editModal">
     <div class="modal" style="max-width:480px;">
@@ -213,13 +214,22 @@
                         <input type="text" id="edit-phone" name="phone" placeholder="Cth: 0123456789">
                     </div>
                 </div>
-                <div class="form-footer">
+                <div class="form-footer" style="display: flex; gap: 6px; justify-content: flex-end; align-items: center;">
+                    <button type="button" onclick="submitPasswordReset()"
+                        style="padding:8px 12px; font-size:13px; border-radius:6px; border:1px solid #f5c1c1; background:#fdf0f0; color:#a32d2d; cursor:pointer; margin-right: auto;">
+                        Set Semula Kata Laluan
+                    </button>
+
                     <button type="button" onclick="closeEditModal()"
                         style="padding:8px 16px; font-size:13px; border-radius:6px; border:1px solid #ddd; background:#f5f5f5; color:#555; cursor:pointer;">
                         Batal
                     </button>
                     <button type="submit" class="btn-submit">Simpan</button>
                 </div>
+            </form>
+
+            <form id="reset-password-form" method="POST" style="display:none;">
+                @csrf
             </form>
         </div>
     </div>
@@ -233,12 +243,21 @@ function openEditModal(id, name, email, bahagian, phone, wilayahId) {
     document.getElementById('edit-phone').value    = phone;
     document.getElementById('edit-wilayah').value  = wilayahId;
     document.getElementById('edit-form').action    = '/booking/admin/users/' + id + '/edit';
+    
+    // Dynamically set the password reset action url
+    document.getElementById('reset-password-form').action = '/booking/admin/users/' + id + '/reset-password';
 
     const overlay = document.getElementById('editModal');
     overlay.classList.add('active');
     const modal = overlay.querySelector('.modal');
     modal.style.transform = '';
     modal.style.opacity   = '';
+}
+
+function submitPasswordReset() {
+    if (confirm('Set semula kata laluan pengguna ini kepada "password123"?')) {
+        document.getElementById('reset-password-form').submit();
+    }
 }
 
 function closeEditModal() {
