@@ -252,7 +252,7 @@ public function resetPassword($id)
     
     // 2. Override with standard password string
     $targetUser->update([
-        'password' => \Illuminate\Support\Facades\Hash::make('password123')
+        'password' => \Illuminate\Support\Facades\Hash::make('123456789')
     ]);
 
     // 3. Log administrative audit trace 
@@ -265,7 +265,7 @@ public function resetPassword($id)
     );
 
     // 4. Return safety bounce right back to your dashboard table view
-    return redirect('/booking/admin/users')->with('success', 'Kata laluan berjaya diset semula kepada password123.');
+    return redirect('/booking/admin/users')->with('success', 'Kata laluan berjaya diset semula kepada 123456789.');
 }
 
 }

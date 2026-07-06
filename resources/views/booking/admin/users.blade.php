@@ -238,13 +238,13 @@
                         style="padding:8px 12px; font-size:13px; border-radius:6px; border:1px solid #f5c1c1; background:#fdf0f0; color:#a32d2d; cursor:pointer; margin-right: auto;">
                         Set Semula Kata Laluan
                     </button>
-
                     <button type="button" onclick="closeEditModal()"
                         style="padding:8px 16px; font-size:13px; border-radius:6px; border:1px solid #ddd; background:#f5f5f5; color:#555; cursor:pointer;">
                         Batal
                     </button>
                     <button type="submit" class="btn-submit">Simpan</button>
                 </div>
+                <span style="font-size:12px; color:#666;">Kata Laluan: 123456789.</span>
             </form>
 
             <form id="reset-password-form" method="POST" style="display:none;">
