@@ -304,6 +304,48 @@
         ->orderBy('masa_mula')
         ->get()
         ->groupBy('tarikh');
+
+    $viewMode = request('view') === 'all'; // eye icon toggles this
+
+    if ($viewMode) {
+        $displayBookings = \App\Models\BookingRequest::whereIn('bilik_id', $summaryBilikIds)
+            ->where('status', 'confirmed')
+            ->whereBetween('tarikh', [$weekStart->toDateString(), $weekEnd->toDateString()])
+            ->with('bilik', 'user')
+            ->get();
+    } else {
+        $displayBookings = $bookings; // existing single-room collection
+    }
+
+    // greedy column assignment so overlapping bookings (any room) sit side-by-side
+    function assignEventColumns($items) {
+        usort($items, fn($a, $b) => $a['start'] <=> $b['start']);
+        $colEnds = [];
+        foreach ($items as &$item) {
+            $placed = false;
+            foreach ($colEnds as $ci => $end) {
+                if ($item['start'] >= $end) { $colEnds[$ci] = $item['end']; $item['col'] = $ci; $placed = true; break; }
+            }
+            if (!$placed) { $colEnds[] = $item['end']; $item['col'] = count($colEnds) - 1; }
+        }
+        $total = count($colEnds);
+        foreach ($items as &$item) { $item['cols'] = $total; }
+        return $items;
+    }
+
+    // pre-compute columns per day
+    $dayColumnData = [];
+    foreach ($days as $day) {
+        $ds = $day->toDateString();
+        $items = $displayBookings->where('tarikh', $ds)->map(function ($b) {
+            return [
+                'start' => (int)substr($b->masa_mula, 0, 2) * 60 + (int)substr($b->masa_mula, 3, 2),
+                'end'   => (int)substr($b->masa_tamat, 0, 2) * 60 + (int)substr($b->masa_tamat, 3, 2),
+                'b'     => $b,
+            ];
+        })->values()->all();
+        $dayColumnData[$ds] = assignEventColumns($items);
+    }
 @endphp
 
 <div class="bk-wrap">
@@ -386,6 +428,15 @@
             <a href="/booking/calendar?bilik={{ $bilik?->id }}&week={{ $prevWeek }}" class="bk-btn">‹</a>
             <a href="/booking/calendar?bilik={{ $bilik?->id }}&week={{ $nextWeek }}" class="bk-btn">›</a>
             <a href="/booking/calendar?bilik={{ $bilik?->id }}&week={{ $thisWeek }}" class="bk-btn bk-btn-today">Hari Ini</a>
+            @php
+                $toggleViewUrl = '/booking/calendar?bilik='.$bilik?->id.'&week='.$weekStart->toDateString().($viewMode ? '' : '&view=all');
+            @endphp
+            <a href="{{ $toggleViewUrl }}" class="bk-btn {{ $viewMode ? 'bk-btn-today' : '' }}" style="display:flex; align-items:center; gap:5px;" title="Lihat semua bilik (RDD & Ibu Pejabat)">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8Z"/><circle cx="12" cy="12" r="3"/>
+                </svg>
+                <span style="font-size:12px;">{{ $viewMode ? 'Semua Bilik' : 'Lihat Semua' }}</span>
+            </a>
             <span class="bk-toolbar-title">
                 {{ $weekStart->translatedFormat('j F') }} — {{ $weekEnd->translatedFormat('j F Y') }}
                 @if($bilik)
@@ -428,34 +479,45 @@
                                 (int)substr($b->masa_tamat, 0, 2) > $hour
                             );
                         @endphp
-                        <div class="bk-cell {{ $loop->parent->index % 2 === 0 ? 'row-light' : 'row-dark' }} {{ $isPast ? 'past-cell' : '' }}"
-                            @if(!$isPast) onclick="openBookSlot('{{ $dateStr }}', '{{ str_pad($hour, 2, '0', STR_PAD_LEFT) }}:00')" @endif>
-                            @foreach($dayBookings as $b)
+<div class="bk-cell {{ $loop->parent->index % 2 === 0 ? 'row-light' : 'row-dark' }} {{ $isPast ? 'past-cell' : '' }}"
+    @if(!$isPast && !$viewMode) onclick="openBookSlot('{{ $dateStr }}', '{{ str_pad($hour, 2, '0', STR_PAD_LEFT) }}:00')" @endif>
+                            @php
+                                $dayItems = collect($dayColumnData[$dateStr] ?? [])->filter(fn($it) =>
+                                    $it['b']->tarikh === $dateStr &&
+                                    (int)substr($it['b']->masa_mula, 0, 2) <= $hour &&
+                                    (int)substr($it['b']->masa_tamat, 0, 2) > $hour
+                                );
+                            @endphp
+                            @foreach($dayItems as $it)
                                 @php
+                                    $b = $it['b'];
                                     $startsHere = (int)substr($b->masa_mula, 0, 2) === $hour;
                                     $mins = \Carbon\Carbon::parse($b->masa_mula)->diffInMinutes(\Carbon\Carbon::parse($b->masa_tamat));
                                     $h = ($mins / 60) * 48;
-                                    $isOwn = Auth::guard('booking_user')->check() &&
-                                             Auth::guard('booking_user')->user()->id === $b->user_id;
+                                    $isOwn = Auth::guard('booking_user')->check() && Auth::guard('booking_user')->user()->id === $b->user_id;
+                                    $cols = max($it['cols'], 1);
+                                    $widthPct = 100 / $cols;
+                                    $leftPct  = $it['col'] * $widthPct;
+                                    $bg = $viewMode ? ($roomColorMap[$b->bilik_id] ?? '#194169') : ($isOwn ? '#7ec0c9' : '#194169');
                                 @endphp
                                 @if($startsHere)
-                                    <div class="bk-event"
-                                        style="height:{{ max($h - 4, 14) }}px; background:{{ $isOwn ? '#7ec0c9' : '#194169' }}; color:{{ $isOwn ? '#213458' : '#fff' }};"
-                                        onclick='event.stopPropagation(); showEvent(
-                                            @json($b->tajuk_mesyuarat),
-                                            @json($b->user->name),
-                                            @json($b->user->bahagian ?? "-"),
-                                            @json($b->user->phone ?? "-"),
-                                            @json(substr($b->masa_mula,0,5)),
-                                            @json(substr($b->masa_tamat,0,5)),
-                                            @json($day->translatedFormat("j F Y")),
-                                            @json($b->remarks ?? "-"),
-                                            @json($b->id),
-                                            @json($b->cancel_token),
-                                            @json($isOwn)
-                                        )'
-                                        title="{{ $b->tajuk_mesyuarat }} — {{ $b->user->name }}">
-                                        <strong>{{ Str::limit($b->tajuk_mesyuarat, 20) }}</strong><br>
+                                    <div class="bk-event {{ $viewMode ? 'bk-event-nav' : '' }}"
+                                        style="height:{{ max($h - 4, 14) }}px; left:calc({{ $leftPct }}% + 2px); width:calc({{ $widthPct }}% - 4px); background:{{ $bg }}; color:#fff;"
+                                        @if($viewMode)
+                                            onclick="event.stopPropagation(); window.location='/booking/calendar?bilik={{ $b->bilik_id }}&week={{ $weekStart->toDateString() }}'"
+                                        @else
+                                            onclick='event.stopPropagation(); showEvent(
+                                                @json($b->tajuk_mesyuarat), @json($b->user->name), @json($b->user->bahagian ?? "-"),
+                                                @json($b->user->phone ?? "-"), @json(substr($b->masa_mula,0,5)), @json(substr($b->masa_tamat,0,5)),
+                                                @json($day->translatedFormat("j F Y")), @json($b->remarks ?? "-"), @json($b->id),
+                                                @json($b->cancel_token), @json($isOwn)
+                                            )'
+                                        @endif
+                                        title="{{ $viewMode ? ($b->bilik->nama_bilik ?? '').' — '.$b->tajuk_mesyuarat : $b->tajuk_mesyuarat.' — '.$b->user->name }}">
+                                        @if($viewMode)
+                                            <span style="font-weight:600; font-size:9.5px; opacity:.95; display:block;">{{ Str::limit($b->bilik->nama_bilik ?? '', 16) }}</span>
+                                        @endif
+                                        <strong>{{ Str::limit($b->tajuk_mesyuarat, 18) }}</strong><br>
                                         {{ substr($b->masa_mula,0,5) }}–{{ substr($b->masa_tamat,0,5) }}
                                     </div>
                                 @endif
