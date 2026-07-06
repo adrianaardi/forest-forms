@@ -146,18 +146,6 @@
 
         @endauth
 
-        @guest('web')
-            @guest('booking_user')      
-                <a href="/login"
-                   style="color:rgba(255,255,255,0.7);
-                          text-decoration:none;
-                          font-size:13px;
-                          white-space:nowrap;">
-                    Log Masuk Admin
-                </a>
-            @endguest
-        @endguest
-
     </div>
 
 </nav>
