@@ -395,24 +395,54 @@ nav a.active {
 
 /* ───── FOOTER ───── */
 footer {
-    background:#194169;
-    color: rgba(255,255,255,0.6);
-    padding: 1.25rem 2rem;
+    background: #194169;
+    color: rgba(255, 255, 255, 0.7);
+    padding: 1rem 2rem;
     font-size: 12px;
     display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 0.5rem;
+    justify-content: space-between; /* Pushes left and right sides apart */
+    align-items: center; /* Centers everything vertically on the line */
+    gap: 2rem;
     margin-top: auto;
 }
 
 footer strong {
-    color:#f7f4f4;
+    color: #ffffff;
+}
+
+.footer-content {
+    white-space: nowrap; /* Keeps the address strictly on one line */
+}
+
+.footer-content .divider {
+    margin: 0 8px;
+    color: rgba(255, 255, 255, 0.3);
+}
+
+/* Keeps Copyright and Icon perfectly together */
+.footer-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    white-space: nowrap; 
+}
+
+/* Interactive Login Icon */
+.footer-login-link {
+    display: inline-flex;
+    align-items: center;
+    color: rgba(255, 255, 255, 0.6);
+    transition: color 0.2s ease;
+    text-decoration: none;
+}
+
+.footer-login-link:hover {
+    color: #ffffff;
 }
 
 .user-icon {
-    width: 20px;
-    height: 20px;
+    width: 16px; /* Slightly smaller to match the 12px font beautifully */
+    height: 16px;
     margin: 0;
 }
 
