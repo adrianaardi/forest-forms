@@ -305,7 +305,7 @@
         ->get()
         ->groupBy('tarikh');
 
-    $viewMode = request('view') === 'all'; // eye icon toggles this
+    $viewMode = !$bilik || request('view') === 'all';
 
     if ($viewMode) {
         $displayBookings = \App\Models\BookingRequest::whereIn('bilik_id', $summaryBilikIds)

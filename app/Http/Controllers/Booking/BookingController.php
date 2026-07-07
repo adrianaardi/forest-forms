@@ -33,7 +33,7 @@ class BookingController extends Controller
             ->get()
             ->groupBy(fn($b) => $b->wilayah->nama_wilayah)
             ->sortBy(fn($rooms, $wilayah) => array_search($wilayah, $wilayahOrder));
-                $selectedId = $request->get('bilik') ?? \App\Models\BookingBilik::orderBy('aras')->orderBy('nama_bilik')->first()?->id;
+                $selectedId = $request->get('bilik');
                 $bilik      = \App\Models\BookingBilik::find($selectedId);
 
         $weekStart = $request->get('week')

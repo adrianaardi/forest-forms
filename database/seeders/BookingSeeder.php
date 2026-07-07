@@ -9,16 +9,11 @@ class BookingSeeder extends Seeder
 {
     public function run(): void
     {
-	    $rdd = \App\Models\Wilayah::where('nama_wilayah', 'RDD')->first();
+	    $IFRCSemenggok = \App\Models\Wilayah::where('nama_wilayah', 'IFRC Semenggok')->first();
 
         $rooms = [
-            ['nama_bilik' => 'Bilik Mesyuarat A',        'aras' => 'Tingkat 1', 'wing' => '-', 'wilayah_id' => $rdd?->id],
-            ['nama_bilik' => 'Bilik Mesyuarat Mycology', 'aras' => 'Tingkat 1', 'wing' => '-', 'wilayah_id' => $rdd?->id],
-            ['nama_bilik' => 'Bilik Mesyuarat Entomology','aras' => 'Tingkat 1', 'wing' => '-', 'wilayah_id' => $rdd?->id],
-            ['nama_bilik' => 'Bilik Mesyuarat Botany',    'aras' => 'Tingkat 1', 'wing' => '-', 'wilayah_id' => $rdd?->id],
-            ['nama_bilik' => 'Bilik Mesyuarat Paedology', 'aras' => 'Tingkat 1', 'wing' => '-', 'wilayah_id' => $rdd?->id],
-            ['nama_bilik' => 'Bilik Latihan',             'aras' => 'Tingkat 1', 'wing' => '-', 'wilayah_id' => $rdd?->id],
-            ['nama_bilik' => 'Dewan Serbaguna RDD',       'aras' => 'Tingkat 1', 'wing' => '-', 'wilayah_id' => $rdd?->id],
+            ['nama_bilik' => 'Conference Room',        'aras' => 'Tingkat 1', 'wing' => '-', 'wilayah_id' => $IFRCSemenggok?->id],
+            ['nama_bilik' => 'Bilik Mesyuarat', 'aras' => 'Tingkat G', 'wing' => '-', 'wilayah_id' => $IFRCSemenggok?->id],
         ];
 
         foreach ($rooms as $room) {
