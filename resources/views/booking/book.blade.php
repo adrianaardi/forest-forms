@@ -43,24 +43,25 @@
                 <div style="background:#f0f4f1; border:1px solid #dde8e1; border-radius:8px; padding:0.75rem 1rem; margin-bottom:1rem; font-size:13px; color:#444;">
                     Tempahan sebagai <strong>{{ $user->name }}</strong> ({{ $user->bahagian ?? '-' }})
                 </div>
+<div class="field">
+    <label>Bilik Mesyuarat <span class="required">*</span></label>
+    <select name="bilik_id" required onchange="updateCalendarLink(this.value)">
+        <option value="">-- Pilih Bilik --</option>
+        
+        {{-- Use dot notation to group by the nested property 'nama_wilayah' --}}
+        @foreach($bilikList->groupBy('wilayah.nama_wilayah') as $namaWilayah => $rooms)
+            <optgroup label="Wilayah: {{ $namaWilayah }}">
+                @foreach($rooms as $room)
+                    <option value="{{ $room->id }}"
+                        {{ old('bilik_id', $bilik?->id) == $room->id ? 'selected' : '' }}>
+                        {{ $room->nama_bilik }} ({{ $room->aras }})
+                    </option>
+                @endforeach
+            </optgroup>
+        @endforeach
 
-                <div class="field">
-                    <label>Bilik Mesyuarat <span class="required">*</span></label>
-                    <select name="bilik_id" required onchange="updateCalendarLink(this.value)">
-                        <option value="">-- Pilih Bilik --</option>
-@foreach($bilikList->where('wilayah', $user->wilayah)->groupBy('aras') as $aras => $rooms)
-                            <optgroup label="{{ $aras }}">
-                                @foreach($rooms as $room)
-                                    <option value="{{ $room->id }}"
-                                        {{ old('bilik_id', $bilik?->id) == $room->id ? 'selected' : '' }}>
-                                        {{ $room->nama_bilik }} ({{ $room->wing }})
-                                    </option>
-                                @endforeach
-                            </optgroup>
-                        @endforeach
-                    </select>
-                </div>
-
+    </select>
+</div>
                 <div class="field">
                     <label>Tajuk Mesyuarat <span class="required">*</span></label>
                     <input type="text" name="tajuk_mesyuarat" value="{{ old('tajuk_mesyuarat') }}"
