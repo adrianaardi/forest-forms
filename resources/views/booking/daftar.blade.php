@@ -4,16 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Daftar — Sistem Tempahan</title>
-        <link rel="icon" href="{{ asset('images/logo-icon.png')}}">
+    <link rel="icon" href="{{ asset('images/logo-icon.png')}}">
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:opsz,wght@6..144,1..1000&family=Lora:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet"><link rel="stylesheet" href="{{ asset('style.css') }}"></head>
+    <link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:opsz,wght@6..144,1..1000&family=Lora:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ asset('style.css') }}">
+</head>
 <body>
 <header>
     <div class="logo"></div>
     <div>
-<a href="/" style="color: white; text-decoration: none;"><h1>Jabatan Hutan Sarawak</h1></a>
+        <a href="/" style="color: white; text-decoration: none;"><h1>Jabatan Hutan Sarawak</h1></a>
         <p> Hub Aplikasi Perkhidmatan Atas Talian</p>
     </div>
 </header>
@@ -44,19 +46,40 @@
                 </div>
                 <div class="field">
                     <label>Bahagian / Unit</label>
-                    <input type="text" name="bahagian" value="{{ old('bahagian') }}" placeholder="Cth: Bahagian ICT">
+                    <select name="bahagian">
+                        <option value="">-- Pilih Bahagian / Unit --</option>
+                        <option value="Pejabat Direktorat" {{ old('bahagian') == 'Pejabat Direktorat' ? 'selected' : '' }}>Pejabat Direktorat</option>
+                        <option value="Bahagian Perancangan dan Pengurusan Hutan" {{ old('bahagian') == 'Bahagian Perancangan dan Pengurusan Hutan' ? 'selected' : '' }}>Bahagian Perancangan dan Pengurusan Hutan</option>
+                        <option value="Bahagian Pelesenan" {{ old('bahagian') == 'Bahagian Pelesenan' ? 'selected' : '' }}>Bahagian Pelesenan</option>
+                        <option value="Bahagian Penyelidikan dan Pembangunan" {{ old('bahagian') == 'Bahagian Penyelidikan dan Pembangunan' ? 'selected' : '' }}>Bahagian Penyelidikan dan Pembangunan</option>
+                        <option value="Bahagian Hasil dan Pengurusan Data" {{ old('bahagian') == 'Bahagian Hasil dan Pengurusan Data' ? 'selected' : '' }}>Bahagian Hasil dan Pengurusan Data</option>
+                        <option value="Bahagian Hal Ehwal Antarabangsa" {{ old('bahagian') == 'Bahagian Hal Ehwal Antarabangsa' ? 'selected' : '' }}>Bahagian Hal Ehwal Antarabangsa</option>
+                        <option value="Bahagian Teknologi Hutan dan Geospatial" {{ old('bahagian') == 'Bahagian Teknologi Hutan dan Geospatial' ? 'selected' : '' }}>Bahagian Teknologi Hutan dan Geospatial</option>
+                        <option value="Bahagian Restorasi dan Hutan Industri" {{ old('bahagian') == 'Bahagian Restorasi dan Hutan Industri' ? 'selected' : '' }}>Bahagian Restorasi dan Hutan Industri</option>
+                        <option value="Bahagian Pewartaan dan Konservasi" {{ old('bahagian') == 'Bahagian Pewartaan dan Konservasi' ? 'selected' : '' }}>Bahagian Pewartaan dan Konservasi</option>
+                        <option value="Bahagian Perhutanan Sosial" {{ old('bahagian') == 'Bahagian Perhutanan Sosial' ? 'selected' : '' }}>Bahagian Perhutanan Sosial</option>
+                        <option value="Bahagian Pencegahan dan Penguatkuasaan" {{ old('bahagian') == 'Bahagian Pencegahan dan Penguatkuasaan' ? 'selected' : '' }}>Bahagian Pencegahan dan Penguatkuasaan</option>
+                        <option value="Bahagian Khidmat Pengurusan" {{ old('bahagian') == 'Bahagian Khidmat Pengurusan' ? 'selected' : '' }}>Bahagian Khidmat Pengurusan</option>
+                        <option value="Bahagian Pembangunan Projek" {{ old('bahagian') == 'Bahagian Pembangunan Projek' ? 'selected' : '' }}>Bahagian Pembangunan Projek</option>
+                        <option value="Unit Integriti dan Audit Dalaman" {{ old('bahagian') == 'Unit Integriti dan Audit Dalaman' ? 'selected' : '' }}>Unit Integriti dan Audit Dalaman</option>
+                        <option value="Unit Korporat dan Permodenan Perkhidmatan" {{ old('bahagian') == 'Unit Korporat dan Permodenan Perkhidmatan' ? 'selected' : '' }}>Unit Korporat dan Permodenan Perkhidmatan</option>
+                        <option value="Unit Pengurusan Geopark" {{ old('bahagian') == 'Unit Pengurusan Geopark' ? 'selected' : '' }}>Unit Pengurusan Geopark</option>
+                        <option value="Unit Perancangan Strategik" {{ old('bahagian') == 'Unit Perancangan Strategik' ? 'selected' : '' }}>Unit Perancangan Strategik</option>
+                        <option value="Unit Perundangan dan Khidmat Nasihat" {{ old('bahagian') == 'Unit Perundangan dan Khidmat Nasihat' ? 'selected' : '' }}>Unit Perundangan dan Khidmat Nasihat</option>
+                        <option value="Pejabat Wilayah" {{ old('bahagian') == 'Pejabat Wilayah' ? 'selected' : '' }}>Pejabat Wilayah</option>
+                    </select>
                 </div>
                 <div class="field">
-                <label>Wilayah <span class="required">*</span></label>
-                <select name="wilayah_id" required>
-                    <option value="">-- Pilih Wilayah --</option>
-                    @foreach($wilayahs as $w)
-                        <option value="{{ $w->id }}" {{ old('wilayah_id') == $w->id ? 'selected' : '' }}>
-                            {{ $w->nama_wilayah }}
-                        </option>
-                    @endforeach
-                </select>
-            </div>
+                    <label>Wilayah <span class="required">*</span></label>
+                    <select name="wilayah_id" required>
+                        <option value="">-- Pilih Wilayah --</option>
+                        @foreach($wilayahs as $w)
+                            <option value="{{ $w->id }}" {{ old('wilayah_id') == $w->id ? 'selected' : '' }}>
+                                {{ $w->nama_wilayah }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
                 <div class="field">
                     <label>No. Telefon</label>
                     <input type="text" name="phone" value="{{ old('phone') }}" placeholder="Cth: 0123456789">
@@ -102,5 +125,6 @@
             @endguest
         @endguest
     </div>
-</footer></body>
+</footer>
+</body>
 </html>

@@ -479,8 +479,16 @@
                                 (int)substr($b->masa_tamat, 0, 2) > $hour
                             );
                         @endphp
-<div class="bk-cell {{ $loop->parent->index % 2 === 0 ? 'row-light' : 'row-dark' }} {{ $isPast ? 'past-cell' : '' }}"
-    @if(!$isPast && !$viewMode) onclick="openBookSlot('{{ $dateStr }}', '{{ str_pad($hour, 2, '0', STR_PAD_LEFT) }}:00')" @endif>
+                        <div class="bk-cell {{ $loop->parent->index % 2 === 0 ? 'row-light' : 'row-dark' }} {{ $isPast ? 'past-cell' : '' }}"
+                            @if(!$isPast && !$viewMode)
+                                onclick="openBookSlot('{{ $dateStr }}', '{{ str_pad($hour, 2, '0', STR_PAD_LEFT) }}:00')"
+                            @endif
+                            @auth('booking_user')
+                            @if($viewMode)
+                                onclick="window.location.href='/booking/book'"
+                            @endif
+                            @endauth> 
+                           
                             @php
                                 $dayItems = collect($dayColumnData[$dateStr] ?? [])->filter(fn($it) =>
                                     $it['b']->tarikh === $dateStr &&
@@ -514,11 +522,12 @@
                                             )'
                                         @endif
                                         title="{{ $viewMode ? ($b->bilik->nama_bilik ?? '').' — '.$b->tajuk_mesyuarat : $b->tajuk_mesyuarat.' — '.$b->user->name }}">
+                                        <strong>{{ Str::limit($b->tajuk_mesyuarat, 18) }}</strong>
                                         @if($viewMode)
-                                            <span style="font-weight:600; font-size:9.5px; opacity:.95; display:block;">{{ Str::limit($b->bilik->nama_bilik ?? '', 16) }}</span>
+                                            <span style="font-weight:600; font-size:10px; opacity:.95; display:block;">{{ Str::limit($b->bilik->nama_bilik ?? '', 16) }}</span>
+                                        @else
+                                            <br>{{ substr($b->masa_mula,0,5) }}–{{ substr($b->masa_tamat,0,5) }}
                                         @endif
-                                        <strong>{{ Str::limit($b->tajuk_mesyuarat, 18) }}</strong><br>
-                                        {{ substr($b->masa_mula,0,5) }}–{{ substr($b->masa_tamat,0,5) }}
                                     </div>
                                 @endif
                             @endforeach

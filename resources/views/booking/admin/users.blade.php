@@ -4,13 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Urus Pengguna — Tempahan</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:opsz,wght@6..144,1..1000&family=Lora:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet"><link rel="stylesheet" href="{{ asset('style.css') }}">    <link rel="icon" href="{{ asset('images/logo-icon.png')}}">
+    <link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:opsz,wght@6..144,1..1000&family=Lora:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ asset('style.css') }}">    
+    <link rel="icon" href="{{ asset('images/logo-icon.png')}}">
 </head>
 <body>
 <header>
-        <div class="logo"></div>
+    <div class="logo"></div>
     <div>
         <a href="/" style="color: white; text-decoration: none;"><h1>Jabatan Hutan Sarawak</h1></a>
         <p> Hub Aplikasi Perkhidmatan Atas Talian</p>
@@ -54,7 +56,28 @@
                 <div class="field-row">
                     <div class="field">
                         <label>Bahagian</label>
-                        <input type="text" name="bahagian" value="{{ old('bahagian') }}" placeholder="Cth: Bahagian ICT">
+                        <select name="bahagian">
+                            <option value="">-- Pilih Bahagian --</option>
+                            <option value="Pejabat Direktorat" {{ old('bahagian') == 'Pejabat Direktorat' ? 'selected' : '' }}>Pejabat Direktorat</option>
+                            <option value="Bahagian Perancangan dan Pengurusan Hutan" {{ old('bahagian') == 'Bahagian Perancangan dan Pengurusan Hutan' ? 'selected' : '' }}>Bahagian Perancangan dan Pengurusan Hutan</option>
+                            <option value="Bahagian Pelesenan" {{ old('bahagian') == 'Bahagian Pelesenan' ? 'selected' : '' }}>Bahagian Pelesenan</option>
+                            <option value="Bahagian Penyelidikan dan Pembangunan" {{ old('bahagian') == 'Bahagian Penyelidikan dan Pembangunan' ? 'selected' : '' }}>Bahagian Penyelidikan dan Pembangunan</option>
+                            <option value="Bahagian Hasil dan Pengurusan Data" {{ old('bahagian') == 'Bahagian Hasil dan Pengurusan Data' ? 'selected' : '' }}>Bahagian Hasil dan Pengurusan Data</option>
+                            <option value="Bahagian Hal Ehwal Antarabangsa" {{ old('bahagian') == 'Bahagian Hal Ehwal Antarabangsa' ? 'selected' : '' }}>Bahagian Hal Ehwal Antarabangsa</option>
+                            <option value="Bahagian Teknologi Hutan dan Geospatial" {{ old('bahagian') == 'Bahagian Teknologi Hutan dan Geospatial' ? 'selected' : '' }}>Bahagian Teknologi Hutan dan Geospatial</option>
+                            <option value="Bahagian Restorasi dan Hutan Industri" {{ old('bahagian') == 'Bahagian Restorasi dan Hutan Industri' ? 'selected' : '' }}>Bahagian Restorasi dan Hutan Industri</option>
+                            <option value="Bahagian Pewartaan dan Konservasi" {{ old('bahagian') == 'Bahagian Pewartaan dan Konservasi' ? 'selected' : '' }}>Bahagian Pewartaan dan Konservasi</option>
+                            <option value="Bahagian Perhutanan Sosial" {{ old('bahagian') == 'Bahagian Perhutanan Sosial' ? 'selected' : '' }}>Bahagian Perhutanan Sosial</option>
+                            <option value="Bahagian Pencegahan dan Penguatkuasaan" {{ old('bahagian') == 'Bahagian Pencegahan dan Penguatkuasaan' ? 'selected' : '' }}>Bahagian Pencegahan dan Penguatkuasaan</option>
+                            <option value="Bahagian Khidmat Pengurusan" {{ old('bahagian') == 'Bahagian Khidmat Pengurusan' ? 'selected' : '' }}>Bahagian Khidmat Pengurusan</option>
+                            <option value="Bahagian Pembangunan Projek" {{ old('bahagian') == 'Bahagian Pembangunan Projek' ? 'selected' : '' }}>Bahagian Pembangunan Projek</option>
+                            <option value="Unit Integriti dan Audit Dalaman" {{ old('bahagian') == 'Unit Integriti dan Audit Dalaman' ? 'selected' : '' }}>Unit Integriti dan Audit Dalaman</option>
+                            <option value="Unit Korporat dan Permodenan Perkhidmatan" {{ old('bahagian') == 'Unit Korporat dan Permodenan Perkhidmatan' ? 'selected' : '' }}>Unit Korporat dan Permodenan Perkhidmatan</option>
+                            <option value="Unit Pengurusan Geopark" {{ old('bahagian') == 'Unit Pengurusan Geopark' ? 'selected' : '' }}>Unit Pengurusan Geopark</option>
+                            <option value="Unit Perancangan Strategik" {{ old('bahagian') == 'Unit Perancangan Strategik' ? 'selected' : '' }}>Unit Perancangan Strategik</option>
+                            <option value="Unit Perundangan dan Khidmat Nasihat" {{ old('bahagian') == 'Unit Perundangan dan Khidmat Nasihat' ? 'selected' : '' }}>Unit Perundangan dan Khidmat Nasihat</option>
+                            <option value="Pejabat Wilayah" {{ old('bahagian') == 'Pejabat Wilayah' ? 'selected' : '' }}>Pejabat Wilayah</option>
+                        </select>
                     </div>
                     <div class="field">
                         <label>No. Telefon</label>
@@ -66,11 +89,11 @@
                         <label>Wilayah</label>
                         <select name="wilayah_id" required>
                             <option value="">-- Pilih Wilayah --</option>
-                            @foreach($wilayahs as $w)
-                                <option value="{{ $w->id }}" {{ old('wilayah_id') == $w->id ? 'selected' : '' }}>
+                            <option value="{{ $w->id }}" {{ old('wilayah_id') == $w->id ? 'selected' : '' }}>
+                                @foreach($wilayahs as $w)
                                     {{ $w->nama_wilayah }}
-                                </option>
-                            @endforeach
+                                @endforeach
+                            </option>
                         </select>
                     </div>
                     <div class="field">
@@ -217,7 +240,28 @@
                     </div>
                     <div class="field">
                         <label>Bahagian</label>
-                        <input type="text" id="edit-bahagian" name="bahagian" placeholder="Cth: Bahagian ICT">
+                        <select id="edit-bahagian" name="bahagian">
+                            <option value="">-- Pilih Bahagian --</option>
+                            <option value="Pejabat Direktorat">Pejabat Direktorat</option>
+                            <option value="Bahagian Perancangan dan Pengurusan Hutan">Bahagian Perancangan dan Pengurusan Hutan</option>
+                            <option value="Bahagian Pelesenan">Bahagian Pelesenan</option>
+                            <option value="Bahagian Penyelidikan dan Pembangunan">Bahagian Penyelidikan dan Pembangunan</option>
+                            <option value="Bahagian Hasil dan Pengurusan Data">Bahagian Hasil dan Pengurusan Data</option>
+                            <option value="Bahagian Hal Ehwal Antarabangsa">Bahagian Hal Ehwal Antarabangsa</option>
+                            <option value="Bahagian Teknologi Hutan dan Geospatial">Bahagian Teknologi Hutan dan Geospatial</option>
+                            <option value="Bahagian Restorasi dan Hutan Industri">Bahagian Restorasi dan Hutan Industri</option>
+                            <option value="Bahagian Pewartaan dan Konservasi">Bahagian Pewartaan dan Konservasi</option>
+                            <option value="Bahagian Perhutanan Sosial">Bahagian Perhutanan Sosial</option>
+                            <option value="Bahagian Pencegahan dan Penguatkuasaan">Bahagian Pencegahan dan Penguatkuasaan</option>
+                            <option value="Bahagian Khidmat Pengurusan">Bahagian Khidmat Pengurusan</option>
+                            <option value="Bahagian Pembangunan Projek">Bahagian Pembangunan Projek</option>
+                            <option value="Unit Integriti dan Audit Dalaman">Unit Integriti dan Audit Dalaman</option>
+                            <option value="Unit Korporat dan Permodenan Perkhidmatan">Unit Korporat dan Permodenan Perkhidmatan</option>
+                            <option value="Unit Pengurusan Geopark">Unit Pengurusan Geopark</option>
+                            <option value="Unit Perancangan Strategik">Unit Perancangan Strategik</option>
+                            <option value="Unit Perundangan dan Khidmat Nasihat">Unit Perundangan dan Khidmat Nasihat</option>
+                            <option value="Pejabat Wilayah">Pejabat Wilayah</option>
+                        </select>
                     </div>
                     <div class="field">
                         <label>Wilayah</label>
