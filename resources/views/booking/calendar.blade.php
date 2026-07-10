@@ -448,8 +448,10 @@
             @if($bilik)
                 @auth('booking_user')
                     <a href="/booking/book" class="btn-submit" style="text-decoration:none; font-size:12px; padding:6px 14px;">+ Tempah</a>
-                    @else
+                    @elseif ($viewMode)
                         <button onclick="openModal('loginModal')" style="font-size:12px; padding:6px 14px; background:#194169; color:#fff; border:none; border-radius:6px; cursor:pointer;">Log Masuk untuk Tempah</button>
+                    @else
+                        <button onclick="openModal('loginModal')" style="font-size:12px; padding:6px 14px; background:#194169; color:#fff; border:none; border-radius:6px; cursor:pointer;">Log Masuk untuk Tempah</button> 
                     @endauth
             @endif
         </div>
@@ -482,13 +484,10 @@
                         <div class="bk-cell {{ $loop->parent->index % 2 === 0 ? 'row-light' : 'row-dark' }} {{ $isPast ? 'past-cell' : '' }}"
                             @if(!$isPast && !$viewMode)
                                 onclick="openBookSlot('{{ $dateStr }}', '{{ str_pad($hour, 2, '0', STR_PAD_LEFT) }}:00')"
-                            @endif
-                            @auth('booking_user')
-                            @if($viewMode)
-                                onclick="window.location.href='/booking/book'"
-                            @endif
-                            @endauth> 
-                           
+                            @elseif($viewMode)
+                                onclick="handleViewModeClick()"
+                            @endif>
+
                             @php
                                 $dayItems = collect($dayColumnData[$dateStr] ?? [])->filter(fn($it) =>
                                     $it['b']->tarikh === $dateStr &&
@@ -522,9 +521,9 @@
                                             )'
                                         @endif
                                         title="{{ $viewMode ? ($b->bilik->nama_bilik ?? '').' — '.$b->tajuk_mesyuarat : $b->tajuk_mesyuarat.' — '.$b->user->name }}">
-                                        <strong>{{ Str::limit($b->tajuk_mesyuarat, 18) }}</strong>
+                                        <span style="font-weight: 800; font-size:13px;">{{ Str::limit($b->tajuk_mesyuarat, 18) }}</span>
                                         @if($viewMode)
-                                            <span style="font-weight:600; font-size:10px; opacity:.95; display:block;">{{ Str::limit($b->bilik->nama_bilik ?? '', 16) }}</span>
+                                            <span style="font-weight:400; font-size:10px; opacity:.95; display:block;">{{ Str::limit($b->bilik->nama_bilik ?? '', 16) }}</span>
                                         @else
                                             <br>{{ substr($b->masa_mula,0,5) }}–{{ substr($b->masa_tamat,0,5) }}
                                         @endif
@@ -973,6 +972,17 @@ function toggleWilayah(btn) {
         arrow.textContent = '▾';
         btn.classList.add('open');
     }
+}
+
+function handleViewModeClick() {
+    const wrap   = document.querySelector('.bk-grid-wrap');
+    const isAuth = wrap?.dataset.auth === '1';
+
+    if (!isAuth) {
+        openModal('loginModal');
+        return;
+    }
+    window.location.href = '/booking/book';
 }
 </script>
 
