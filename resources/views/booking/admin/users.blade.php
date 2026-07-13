@@ -89,11 +89,11 @@
                         <label>Wilayah</label>
                         <select name="wilayah_id" required>
                             <option value="">-- Pilih Wilayah --</option>
-                            <option value="{{ $w->id }}" {{ old('wilayah_id') == $w->id ? 'selected' : '' }}>
-                                @foreach($wilayahs as $w)
+                            @foreach($wilayahs as $w)
+                                <option value="{{ $w->id }}" {{ old('wilayah_id') == $w->id ? 'selected' : '' }}>
                                     {{ $w->nama_wilayah }}
-                                @endforeach
-                            </option>
+                                </option>
+                            @endforeach
                         </select>
                     </div>
                     <div class="field">
