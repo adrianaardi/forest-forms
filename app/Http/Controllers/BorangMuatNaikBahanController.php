@@ -2,14 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\BrevoMailer;
 use App\Models\BahagianSupervisor;
 use App\Models\BorangMuatNaikBahan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Mail;
-use App\Mail\UserSubmissionMail;
-use App\Mail\UserStatusMail;
-use App\Mail\SupervisorApprovalMail;
 
 class BorangMuatNaikBahanController extends Controller
 {
@@ -69,8 +66,12 @@ class BorangMuatNaikBahanController extends Controller
         $this->sendSupervisorEmail($upload);
 
         if ($this->hasEmail($upload->telefon_email)) {
-            Mail::to($upload->telefon_email, $upload->nama)
-                ->send(new UserSubmissionMail($upload));
+            BrevoMailer::send(
+                $upload->telefon_email,
+                $upload->nama,
+                'Pengesahan Permohonan — ' . $upload->no_tiket,
+                view('emails.user-submission', ['permohonan' => $upload])->render()
+            );
         }
 
         return redirect('/')->with('new_tiket', $upload->no_tiket);
@@ -98,8 +99,12 @@ class BorangMuatNaikBahanController extends Controller
         ]);
 
         if ($this->hasEmail($permohonan->telefon_email)) {
-            Mail::to($permohonan->telefon_email, $permohonan->nama)
-                ->send(new UserStatusMail($permohonan));
+            BrevoMailer::send(
+                $permohonan->telefon_email,
+                $permohonan->nama,
+                'Status Permohonan — ' . $permohonan->no_tiket,
+                view('emails.user-status', ['permohonan' => $permohonan])->render()
+            );
         }
 
         return $newStatus === 'Dalam Semakan'
@@ -111,8 +116,15 @@ class BorangMuatNaikBahanController extends Controller
 
     public function sendSupervisorEmail(BorangMuatNaikBahan $upload): void
     {
-        Mail::to($upload->supervisor_email, $upload->bahagian_nama)
-            ->send(new SupervisorApprovalMail($upload));
+        BrevoMailer::send(
+            $upload->supervisor_email,
+            $upload->bahagian_nama,
+            'Permohonan Muat Naik Portal — Kelulusan Diperlukan',
+            view('emails.supervisor-approval', [
+                'permohonan'  => $upload,
+                'approvalUrl' => url('/semak/' . $upload->token),
+            ])->render()
+        );
     }
 
     private function hasEmail(?string $value): bool
