@@ -38,7 +38,7 @@ class DisplayController extends Controller
             $pegawaiQuery->where('nama', 'like', '%' . $search . '%');
         }
 
-        $pegawaiList  = $pegawaiQuery->paginate(18);
+        $pegawaiList  = $pegawaiQuery->paginate(20);
         $aktivitiList = $this->aktivitiMingguIni($selectedBahagianId);
         $newsTicker   = News::where('bahagian_id', $selectedBahagianId)
                             ->latest()
