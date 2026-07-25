@@ -5,134 +5,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hub Aplikasi Perkhidmatan</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:opsz,wght@6..144,1..1000&family=Lora:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('style.css') }}">
     <link rel="icon" href="{{ asset('images/logo-icon.png')}}">
-    <style>
-        /* ── overlay ── */
-        .ticket-modal-overlay {
-            display: flex;
-            position: fixed; inset: 0;
-            background: rgba(0, 0, 0, 0);
-            justify-content: center; align-items: center;
-            z-index: 999;
-            pointer-events: none;
-            transition: background 0.3s ease;
-        }
-        .ticket-modal-overlay.active {
-            background: rgba(0, 0, 0, 0.45);
-            pointer-events: auto;
-        }
-
-        /* ── modal ── */
-        .ticket-modal {
-            background:#f7f4f4;
-            border-radius: 14px;
-            padding: 0;
-            width: 100%;
-            max-width: 480px;
-            box-shadow: 0 16px 48px rgba(0, 0, 0, 0);
-            transform: translateY(24px) scale(0.96);
-            opacity: 0;
-            transition:
-                transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
-                opacity   0.3s ease,
-                box-shadow 0.3s ease;
-            overflow: hidden;
-        }
-        .ticket-modal-overlay.active .ticket-modal {
-            transform: translateY(0) scale(1);
-            opacity: 1;
-            box-shadow: 0 16px 48px rgba(0, 0, 0, 0.18);
-        }
-
-        /* ── header ── */
-        .ticket-modal-header {
-            background: #194169;
-            padding: 1rem 1.25rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .ticket-modal-header h3 {
-            color:#f7f4f4;
-            font-size: 14px;
-            margin: 0;
-            font-weight: 500;
-        }
-        .ticket-modal-close {
-            background: none;
-            border: none;
-            color: rgba(255, 255, 255, 0.6);
-            font-size: 22px;
-            cursor: pointer;
-            line-height: 1;
-            padding: 0;
-            transition: color 0.2s ease, transform 0.2s ease;
-            display: flex; align-items: center;
-        }
-        .ticket-modal-close:hover {
-            color:#f7f4f4;
-            transform: rotate(90deg) scale(1.1);
-        }
-
-        /* ── body ── */
-        .ticket-modal-body { padding: 1.25rem; }
-
-        .ticket-field { margin-bottom: 0.75rem; }
-        .ticket-field label {
-            font-size: 11px;
-            color: #999;
-            display: block;
-            margin-bottom: 3px;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-        .ticket-field p {
-            font-size: 13px;
-            color: #222;
-            margin: 0;
-            font-weight: 500;
-        }
-
-        .ticket-field-row { display: flex; gap: 1rem; }
-        .ticket-field-row .ticket-field { flex: 1; }
-
-        /* ── field fade-in stagger ── */
-        .ticket-modal-overlay.active .ticket-field,
-        .ticket-modal-overlay.active .ticket-field-row {
-            animation: fieldFadeUp 0.35s ease both;
-        }
-        .ticket-modal-overlay.active .ticket-field:nth-child(1),
-        .ticket-modal-overlay.active .ticket-field-row:nth-child(1) { animation-delay: 0.12s; }
-        .ticket-modal-overlay.active .ticket-field:nth-child(2),
-        .ticket-modal-overlay.active .ticket-field-row:nth-child(2) { animation-delay: 0.18s; }
-        .ticket-modal-overlay.active .ticket-field:nth-child(3),
-        .ticket-modal-overlay.active .ticket-field-row:nth-child(3) { animation-delay: 0.24s; }
-        .ticket-modal-overlay.active .ticket-field:nth-child(4),
-        .ticket-modal-overlay.active .ticket-field-row:nth-child(4) { animation-delay: 0.30s; }
-
-        @keyframes fieldFadeUp {
-            from { opacity: 0; transform: translateY(6px); }
-            to   { opacity: 1; transform: translateY(0); }
-        }
-
-        /* ── not found ── */
-        .ticket-not-found { text-align: center; padding: 1rem 0; }
-        .ticket-not-found p { color: #a32d2d; font-size: 13px; }
-    </style>
 </head>
 <body>
 
-<header>
-        <div class="logo"></div>
-    <div>
-        <a href="/" style="color: white; text-decoration: none;"><h1>Jabatan Hutan Sarawak</h1></a>
-        <p> Hub Aplikasi Perkhidmatan Atas Talian</p>
-    </div>
-</header>
+<x-header />
 
 <x-navbar />
 
@@ -193,29 +71,7 @@
     </div>
 </div>
 
-<footer>
-    <div class="footer-content">
-        <strong>Seksyen Pengurusan Dan Transformasi Digital</strong> 
-        <span class="divider">|</span> 
-        Tingkat 15, Bangunan Baitul Makmur II, Medan Raya, Petra Jaya, 93050 Kuching, Sarawak
-    </div>
-    
-    <div class="footer-right">
-        <span>© <?php echo date("Y"); ?> Jabatan Hutan Sarawak. Hak Cipta Terpelihara.</span>
-        
-        @guest('web')
-            @guest('booking_user')      
-                <a href="/login" class="footer-login-link" title="Login">
-                    <svg class="user-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <circle cx="12" cy="12" r="10" />
-                        <circle cx="12" cy="10" r="3" />
-                        <path d="M7 18c0-2.5 2-4.5 5-4.5s5 2 5 4.5" />
-                    </svg>
-                </a>
-            @endguest
-        @endguest
-    </div>
-</footer>
+<x-footer />
 
 {{-- Ticket result modal --}}
 @isset($tiket)
@@ -262,7 +118,7 @@
                     </div>
                 @endif
 
-                <div class="ticket-field" style="margin-top:0.25rem;">
+                <div class="ticket-field">
                     <label>Status</label>
                     @php $status = $result->status; @endphp
                     @if(in_array($status, ['Belum Selesai', 'Pending']))
@@ -275,18 +131,18 @@
                 </div>
 
                 @if($type === 'mnb' && !empty($result->catatan_semakan))
-                    <div class="ticket-field" style="margin-top:0.75rem;">
+                    <div class="ticket-field">
                         <label>Catatan Penyelia</label>
-                        <div style="background:#f9fafb; border:1px solid #eee; border-radius:8px; padding:0.75rem; font-size:13px; color:#333; line-height:1.6; margin-top:4px;">
+                        <div>
                             {{ $result->catatan_semakan }}
                         </div>
                     </div>
                 @endif
             @else
                 <div class="ticket-not-found">
-                    <p style="font-size:32px; margin-bottom:0.5rem;">🔍</p>
+                    <p>🔍</p>
                     <p>Tiket <strong>{{ $tiket }}</strong> tidak dijumpai.</p>
-                    <p style="color:#777; margin-top:0.25rem;">Sila semak semula No. Rujukan anda.</p>
+                    <p>Sila semak semula No. Rujukan anda.</p>
                 </div>
             @endif
         </div>
@@ -330,18 +186,16 @@
             <h3>Permohonan Berjaya Dihantar!</h3>
             <button class="ticket-modal-close" onclick="closeNewTicket()" aria-label="Tutup">×</button>
         </div>
-        <div class="ticket-modal-body" style="text-align:center; padding:1.5rem 1.25rem;">
-            <div style="font-size:36px; margin-bottom:0.75rem;">✅</div>
-            <p style="font-size:13px; color:#555; line-height:1.7; margin-bottom:1rem;">
+        <div class="ticket-modal-body">
+            <p>
                 Permohonan anda telah berjaya dihantar. Sila simpan No. Rujukan berikut untuk semakan dan rujukan anda.
             </p>
-            <div style="background:#f0f4f1; border:1px solid #dde8e1; border-radius:10px; padding:1rem 1.5rem; display:inline-block;">
-                <div style="font-size:11px; color:#999; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:4px;">No. Rujukan</div>
-                <div style="font-size:18px; font-weight:700; color:#1a4731; letter-spacing:0.03em;">{{ session('new_tiket') }}</div>
+            <div>
+                <div>No. Rujukan</div>
+                <div style="font-weight: bold; font-size: 1.5em;">{{ session('new_tiket') }}</div>
             </div>
-            <p style="font-size:12px; color:#aaa; margin-top:1rem;">Simpan nombor ini untuk semak status permohonan anda pada masa hadapan.</p>
-            <button onclick="closeNewTicket()"
-                style="margin-top:1.25rem; background:#1a1d47; color:#fff; border:none; padding:10px 28px; border-radius:8px; font-size:13px; cursor:pointer; transition:background 0.15s;">
+            <p>Simpan nombor ini untuk semak status permohonan anda pada masa hadapan.</p>
+            <button onclick="closeNewTicket()">
                 Tutup
             </button>
         </div>

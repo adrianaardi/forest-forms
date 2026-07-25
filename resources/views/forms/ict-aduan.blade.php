@@ -3,29 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Borang Aduan ICT — Jabatan Hutan Sarawak</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:opsz,wght@6..144,1..1000&family=Lora:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet"><link rel="stylesheet" href="{{ asset('style.css') }}">    <link rel="icon" href="{{ asset('images/logo-icon.png')}}">
-
+    <title>Hub Aplikasi Perkhidmatan</title>
+    <link rel="stylesheet" href="{{ asset('style.css') }}">
+    <link rel="icon" href="{{ asset('images/logo-icon.png')}}">
 </head>
 
 <body class="pg">
 
-<header>
-    <div class="logo"></div>
-    <div>
-<a href="/" style="color: white; text-decoration: none;"><h1>Jabatan Hutan Sarawak</h1></a>
-        <p> Hub Aplikasi Perkhidmatan Atas Talian</p>
-    </div>
-</header>
+<x-header />
 
 <x-navbar :breadcrumbs="[['label' => 'Aduan ICT']]" />    
 <div class="pg-body">
 
     @if($errors->any())
-        <div style="background:#fdf0f0; border:1px solid #f5c1c1; color:#a32d2d; padding:0.75rem 1rem; border-radius:8px; margin-bottom:1rem; font-size:14px;">
-            <ul style="margin:0; padding-left:1.2rem;">
+        <div class="form-error-box">
+            <ul class="form-error-list">
                 @foreach($errors->all() as $error)
                     <li>{{ $error }}</li>
                 @endforeach
@@ -47,7 +39,7 @@
 
                 <div class="field-row">
                     <div class="field">
-                        <label>Nama <span style="color:#c0392b">*</span></label>
+                        <label>Nama <span class="required-mark">*</span></label>
                         <input type="text" name="nama" value="{{ old('nama') }}" placeholder="Nama penuh" required>
                     </div>
 
@@ -96,7 +88,7 @@
                             <option value="lain" {{ old('bahagian') == 'lain' ? 'selected' : '' }}>Lain-lain (Sila nyatakan)</option>
                         </select>
 
-                        <div id="bahagian-lain-box" style="display:none; margin-top:8px;">
+                        <div id="bahagian-lain-box" class="hidden-alt-box">
                             <input type="text" name="bahagian_lain" value="{{ old('bahagian_lain') }}" placeholder="Sila nyatakan bahagian">
                         </div>
                     </div>
@@ -104,7 +96,7 @@
                     <!-- WILAYAH -->
                     <div class="field">
                         <label>Wilayah</label>
-                        <select name="wilayah" id="wilayah" onchange="toggleWilayahLain()">
+                        <select name="wilayah" id="wilayah">
                             <option value="">-- Pilih Wilayah --</option>
                             <option value="Ibu Pejabat" {{ old('wilayah') == 'Ibu Pejabat' ? 'selected' : '' }}>Ibu Pejabat</option>
                             <option value="Kuching" {{ old('wilayah') == 'Kuching' ? 'selected' : '' }}>Kuching</option>
@@ -137,7 +129,7 @@
                 <div class="section-label">Bahagian B — Maklumat Kerosakan</div>
 
                 <div class="field">
-                    <label>Kategori Masalah <span style="color:#c0392b">*</span></label>
+                    <label>Kategori Masalah <span class="required-mark">*</span></label>
                     <select name="kategori_masalah" id="kategori" onchange="toggleLain()" required>
                         <option value="">-- Pilih kategori --</option>
                         <option value="CPU" {{ old('kategori_masalah') == 'CPU' ? 'selected' : '' }}>CPU</option>
@@ -149,7 +141,7 @@
                         <option value="lain" {{ old('kategori_masalah') == 'lain' ? 'selected' : '' }}>Lain-lain (Nyatakan)</option>
                     </select>
 
-                    <div id="lain-box" style="display:none; margin-top:8px;">
+                    <div id="lain-box" class="hidden-alt-box">
                         <input type="text" name="masalah_lain" value="{{ old('masalah_lain') }}" placeholder="Sila nyatakan masalah">
                     </div>
                 </div>
@@ -167,9 +159,10 @@
                 <div class="field">
 
                     <label>Attachment (maksimum 5 fail)</label>
-                    <input type="file" id="fileInput" multiple name="attachments[]" onchange="handleFiles(this)">                    <div id="file-preview" style="margin-top:10px;"></div>
+                    <input type="file" id="fileInput" multiple name="attachments[]" onchange="handleFiles(this)">
+                    <div id="file-preview" class="file-preview"></div>
 
-                    <small style="color:gray;">
+                    <small class="help-text-muted">
                         Anda boleh pilih banyak fail sekaligus atau satu per satu
                     </small>
 
@@ -186,61 +179,30 @@
     </div>
 </div>
 
-<footer>
-        <div>
-            <strong>Seksyen Pengurusan Dan Transformasi Digital</strong>
-            &nbsp;|&nbsp;
-            Tingkat 15, Bangunan Baitul Makmur II, Medan Raya, Petra Jaya, 93050 Kuching, Sarawak
-        </div>
-        <div>
-            © {{ date('Y') }} Jabatan Hutan Sarawak. Hak Cipta Terpelihara.
-        </div>
-</footer>
+<x-footer />
 
-<div id="imageModal" style="
-    display:none;
-    position:fixed;
-    top:0;
-    left:0;
-    width:100%;
-    height:100%;
-    background:rgba(0,0,0,0.85);
-    justify-content:center;
-    align-items:center;
-    z-index:9999;
-">
+<div id="imageModal" class="image-modal-overlay">
 
-    <span onclick="closeModal()" style="
-        position:absolute;
-        top:20px;
-        right:30px;
-        color:white;
-        font-size:35px;
-        cursor:pointer;
-    ">×</span>
+    <span onclick="closeModal()" class="image-modal-close">×</span>
 
-    <img id="modalImg" style="
-        max-width:90%;
-        max-height:90%;
-        border-radius:10px;
-    ">
+    <img id="modalImg" class="image-modal-content">
 </div>
 
 
 <script>
 function toggleLain() {
     var v = document.getElementById('kategori').value;
-    document.getElementById('lain-box').style.display = (v === 'lain') ? 'block' : 'none';
+    document.getElementById('lain-box').classList.toggle('is-visible', v === 'lain');
 }
 
 function toggleBahagianLain() {
     var v = document.getElementById('bahagian').value;
-    document.getElementById('bahagian-lain-box').style.display = (v === 'lain') ? 'block' : 'none';
+    document.getElementById('bahagian-lain-box').classList.toggle('is-visible', v === 'lain');
 }
 
 document.addEventListener("DOMContentLoaded", function () {
     toggleBahagianLain();
-    toggleWilayahLain();
+    toggleLain();
 });
 
 let selectedFiles = [];
@@ -278,29 +240,17 @@ function renderPreview() {
 
             reader.onload = function(e) {
                 preview.innerHTML += `
-                    <div style="display:inline-block;margin:5px;text-align:center;position:relative;">
+                    <div class="file-preview-item file-preview-image-item">
                         
                         <img src="${e.target.result}"
-                            style="width:100px;height:100px;object-fit:cover;border-radius:8px;cursor:pointer"
+                            class="file-preview-image"
                             onclick="openModal('${e.target.result}')">
 
                         <!-- DELETE BUTTON -->
                         <button type="button" onclick="removeFile(${index})"
-                            style="
-                                position:absolute;
-                                top:-5px;
-                                right:-5px;
-                                background:red;
-                                color:white;
-                                border:none;
-                                border-radius:50%;
-                                width:20px;
-                                height:20px;
-                                cursor:pointer;
-                                font-size:12px;
-                            ">×</button>
+                            class="file-preview-delete file-preview-delete-circle">×</button>
 
-                        <div style="font-size:12px;">${file.name}</div>
+                        <div class="file-preview-filename">${file.name}</div>
                     </div>
                 `;
             };
@@ -309,19 +259,12 @@ function renderPreview() {
 
         } else {
             preview.innerHTML += `
-                <div style="margin:5px; position:relative; display:inline-block;">
+                <div class="file-preview-item file-preview-doc-item">
                     📄 ${file.name}
 
                     <!-- DELETE BUTTON -->
                     <button type="button" onclick="removeFile(${index})"
-                        style="
-                            margin-left:10px;
-                            background:red;
-                            color:white;
-                            border:none;
-                            border-radius:5px;
-                            cursor:pointer;
-                        ">Remove</button>
+                        class="file-preview-delete file-preview-delete-rect">Remove</button>
                 </div>
             `;
         }
@@ -348,11 +291,11 @@ function attachFilesToForm() {
 
 function openModal(src) {
     document.getElementById('modalImg').src = src;
-    document.getElementById('imageModal').style.display = 'flex';
+    document.getElementById('imageModal').classList.add('active');
 }
 
 function closeModal() {
-    document.getElementById('imageModal').style.display = 'none';
+    document.getElementById('imageModal').classList.remove('active');
 }
 </script>
 </body>

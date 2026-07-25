@@ -10,13 +10,7 @@
     <link rel="stylesheet" href="{{ asset('style.css') }}">
 </head>
 <body>
-<header>
-    <div class="logo"></div>
-    <div>
-        <a href="/" style="color: white; text-decoration: none;"><h1>Jabatan Hutan Sarawak</h1></a>
-        <p> Hub Aplikasi Perkhidmatan Atas Talian</p>
-    </div>
-</header>
+<x-header />
 <x-navbar :breadcrumbs="[['label' => 'Tempahan Bilik', 'url' => '/booking/admin/dashboard'], ['label' => 'Log Aktiviti']]" />
 <div class="dashboard-body">
     <div class="page-header">

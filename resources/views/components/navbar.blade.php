@@ -1,32 +1,24 @@
 @props(['breadcrumbs' => []])
 
-<nav style="background:#213458; padding:0 1.5rem; display:flex; flex-wrap:wrap; align-items:center; gap:1.5rem; row-gap:0.5rem; position:relative;">    {{-- LEFT SIDE --}}
-    <div style="display:flex; align-items:center; gap:1.5rem; white-space:nowrap;">
+<nav>  
+    <div>
 
         {{-- Hub Aplikasi always shows --}}
-        <a href="/"
-           style="color:{{ count($breadcrumbs) > 0 || request()->is('admin*') || request()->is('booking*') ? 'rgba(255,255,255,0.5)' : '#fff' }};
-                  text-decoration:none;
-                  font-size:13px;
-                  white-space:nowrap;">
+        <a href="/">
             Hub Aplikasi
         </a>
 
         {{-- Breadcrumbs --}}
         @if(count($breadcrumbs) > 0)
             @foreach($breadcrumbs as $i => $crumb)
-                <span style="color:rgba(255,255,255,0.25); font-size:12px;">›</span>
+                <span>›</span>
 
                 @if(isset($crumb['url']))
-                    <a href="{{ $crumb['url'] }}"
-                       style="color:{{ $i === count($breadcrumbs)-1 ? '#fff' : 'rgba(255,255,255,0.5)' }};
-                              text-decoration:none;
-                              font-size:13px;
-                              white-space:nowrap;">
+                    <a href="{{ $crumb['url'] }}">
                         {{ $crumb['label'] }}
                     </a>
                 @else
-                    <span style="color:#fff; font-size:13px; white-space:nowrap;">
+                    <span>
                         {{ $crumb['label'] }}
                     </span>
                 @endif
@@ -35,11 +27,8 @@
 
     </div>
 
-    {{-- FLEX SPACER (THIS FIXES ALIGNMENT) --}}
-    <div style="flex:1;"></div>
 
-    {{-- RIGHT SIDE --}}
-    <div style="display:flex; align-items:center; gap:1rem; white-space:nowrap;">
+    <div>
 
         {{-- ── Web Admin ── --}}
         @auth('web')
@@ -52,7 +41,7 @@
             <div class="nav-dropdown-wrap">
                 <button class="nav-dropdown-trigger">
                     👤 {{ $user->name }}
-                    <span style="font-size:10px; opacity:0.5; margin-left:2px;">▾</span>
+                    <span>▾</span>
                 </button>
 
                 <div class="nav-dropdown">
@@ -110,11 +99,7 @@
 
         @endauth
 
-        <a href="{{ url('/help') }}"
-            style="color:rgba(255,255,255,0.7);
-                    text-decoration:none;
-                    font-size:13px;
-                    white-space:nowrap;">
+        <a href="{{ url('/help') }}">
                 Manual Pengguna
         </a>
         {{-- ── Booking User ── --}}
@@ -123,7 +108,7 @@
             <div class="nav-dropdown-wrap">
                 <button class="nav-dropdown-trigger">
                     👤 {{ Auth::guard('booking_user')->user()->name }}
-                    <span style="font-size:10px; opacity:0.5; margin-left:2px;">▾</span>
+                    <span>▾</span>
                 </button>
 
                 <div class="nav-dropdown">
@@ -149,81 +134,3 @@
     </div>
 
 </nav>
-
-<style>
-.nav-dropdown-wrap {
-    position: relative;
-    display: flex;
-    align-items: center;
-}
-
-.nav-dropdown-trigger {
-    background: none;
-    border: none;
-    color: rgba(255,255,255,0.75);
-    font-size: 13px;
-    cursor: pointer;
-    padding: 0.6rem 0.5rem;
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    white-space: nowrap;
-}
-
-.nav-dropdown-trigger:hover {
-    color: #fff;
-}
-
-.nav-dropdown {
-    display: none;
-    position: absolute;
-    top: calc(100% + 8px);
-    right: 0;
-    background: #fff;
-    border: 1px solid #e8e8e8;
-    border-radius: 10px;
-    box-shadow: 0 8px 28px rgba(0,0,0,0.13);
-    min-width: 200px;
-    z-index: 1000;
-    overflow: hidden;
-}
-
-.nav-dropdown-wrap:hover .nav-dropdown,
-.nav-dropdown-wrap:focus-within .nav-dropdown {
-    display: block;
-}
-
-.nav-dropdown-section {
-    font-size: 10px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.07em;
-    color: #bbb;
-    padding: 8px 14px 4px;
-}
-
-.nav-dropdown a,
-.nav-dropdown form button {
-    display: block;
-    width: 100%;
-    padding: 8px 14px;
-    font-size: 13px;
-    color: #333;
-    text-decoration: none;
-    background: none;
-    border: none;
-    text-align: left;
-    cursor: pointer;
-}
-
-.nav-dropdown a:hover,
-.nav-dropdown form button:hover {
-    background: #f5f5f5;
-}
-
-.nav-dropdown-divider {
-    height: 1px;
-    background: #eee;
-    margin: 4px 0;
-}
-</style>

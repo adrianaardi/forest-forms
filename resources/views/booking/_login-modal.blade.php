@@ -1,26 +1,26 @@
-<div class="modal-overlay" id="loginModal">
-    <div class="modal" style="max-width:420px;">
-        <div class="modal-header">
-            <h2 style="font-size:14px; color:#fff; margin:0;">Log Masuk — Sistem Tempahan</h2>
-            <button class="modal-close" onclick="closeLoginModal()" style="color:rgba(255,255,255,0.7);">×</button>
+<div class="ticket-modal-overlay" id="loginModal">
+    <div class="ticket-modal">
+        <div class="ticket-modal-header">
+            <h3>Log Masuk — Sistem Tempahan</h3>
+            <button class="ticket-modal-close" onclick="closeLoginModal()">×</button>
         </div>
-        <div class="modal-body">
+        <div class="ticket-modal-body">
 
             @auth('web')
-                <div style="background:#faeeda; border:1px solid #f5d5a0; color:#854f0b; padding:0.75rem 1rem; border-radius:8px; margin-bottom:1rem; font-size:13px; display:flex; align-items:center; gap:0.75rem;">
-                    <span style="font-size:18px;">⚠️</span>
+                <div class="detail-field login-admin-warning">
+                    <span class="bk-room-pill-icon">⚠️</span>
                     <div>
                         <strong>Anda sedang log masuk sebagai admin.</strong><br>
                         Sila log keluar dahulu sebelum log masuk sebagai pengguna tempahan.
-                        <form method="POST" action="{{ route('logout') }}" style="display:inline; margin-left:0.5rem;">
+                        <form method="POST" action="{{ route('logout') }}" class="logout-inline-form">
                             @csrf
-                            <button type="submit" style="background:none; border:none; color:#854f0b; font-size:13px; cursor:pointer; text-decoration:underline; padding:0;">Log Keluar</button>
+                            <button type="submit" class="logout-inline-btn">Log Keluar</button>
                         </form>
                     </div>
                 </div>
             @endauth
 
-            <div id="login-error" style="display:none; background:#fdf0f0; border:1px solid #f5c1c1; color:#a32d2d; padding:0.75rem 1rem; border-radius:8px; margin-bottom:1rem; font-size:13px;"></div>
+            <div id="login-error" class="form-error-box is-hidden"></div>
 
             <form id="login-form">
                 @csrf
@@ -35,10 +35,13 @@
                     </div>
                 </div>
                 <div class="form-footer">
-                    <a href="{{ route('booking.daftar') }}" style="font-size:13px;">Belum ada akaun? Daftar</a>
-                    <div style="display:flex; flex-direction:column; align-items:flex-end; gap:4px;">
+                    <div class="login-links">
+                        <a href="{{ route('booking.daftar') }}" class="login-register-link">Daftar akaun disini</a><br>
+                        <a href="{{ route('booking.password.request') }}" class="login-forgot-link">Lupa kata laluan?</a>
+                    </div>
+                    <div class="login-actions">
                         <button type="submit" id="login-btn" class="btn-submit">Log Masuk</button>
-                        <a href="{{ route('booking.password.request') }}" style="font-size:11px; color:#aaa;">Lupa kata laluan?</a>                    </div>
+                    </div>
                 </div>
             </form>
         </div>

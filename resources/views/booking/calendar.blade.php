@@ -5,48 +5,47 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kalendar — {{ $bilik?->nama_bilik ?? 'Tempahan' }}</title>
     <link rel="icon" href="{{ asset('images/logo-icon.png')}}">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:opsz,wght@6..144,1..1000&family=Lora:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet"><link rel="stylesheet" href="{{ asset('style.css') }}">    <style>
+<link rel="stylesheet" href="{{ asset('style.css') }}">
+<style>
         /* ── layout ── */
         .bk-wrap { display: flex; height: calc(100vh - 180px); overflow: hidden; }
 
         /* ── sidebar ── */
         .bk-sidebar {
             width: 210px; flex-shrink: 0;
-            background: #fafafa;
-            border-right: 1px solid #e0e0e0;
+            background: var(--bg-surface);
+            border-right: 1px solid var(--border-color);
             overflow-y: auto; padding: 0.75rem 0;
             transition: width 0.25s ease;
         }
         .bk-sidebar-section { padding: 0 0.75rem; margin-bottom: 0.75rem; }
         .bk-sidebar-label {
             font-size: 10px; font-weight: 600; text-transform: uppercase;
-            letter-spacing: 0.07em; color: #313e69; margin-bottom: 0.4rem; display: block;
+            letter-spacing: 0.07em; color: var(--primary); margin-bottom: 0.4rem; display: block;
         }
         .bk-room-link {
             display: block; padding: 6px 10px; border-radius: 8px;
-            font-size: 12px; text-decoration: none; color: #000000;
+            font-size: 12px; text-decoration: none; color: var(--text-dark);
             transition: background 0.15s, color 0.15s, transform 0.1s;
             margin-bottom: 2px;
         }
-        .bk-room-link span { font-size: 10px; color: #000000; display: block; margin-top: 1px; }
-        .bk-room-link:hover { background: #eaf3de; color: #194169; transform: translateX(2px); }
-        .bk-room-link.active { background: #194169; color:#f7f4f4; }
+        .bk-room-link span { font-size: 10px; color: var(--text-muted); display: block; margin-top: 1px; }
+        .bk-room-link:hover { background: var(--bg-main); color: var(--primary); transform: translateX(2px); }
+        .bk-room-link.active { background: var(--primary); color: #ffffff; }
         .bk-room-link.active span { color: rgba(255,255,255,0.6); }
 
         /* ── mini calendar ── */
-        .mini-cal { padding: 0.75rem; border-bottom: 1px solid #e0e0e0; margin-bottom: 0.75rem; }
+        .mini-cal { padding: 0.75rem; border-bottom: 1px solid var(--border-color); margin-bottom: 0.75rem; }
         .mini-cal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; }
-        .mini-cal-header span { font-size: 12px; font-weight: 500; color: #333; }
+        .mini-cal-header span { font-size: 12px; font-weight: 500; color: var(--text-dark); }
         .mini-cal-header a {
-            font-size: 14px; color: #aaa; text-decoration: none;
+            font-size: 14px; color: var(--text-muted); text-decoration: none;
             padding: 2px 6px; border-radius: 4px;
             transition: background 0.15s, color 0.15s;
         }
-        .mini-cal-header a:hover { background: #eaf3de; color: #194169; }
+        .mini-cal-header a:hover { background: var(--bg-main); color: var(--primary); }
         .mini-cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; }
-        .mini-cal-dow { font-size: 9px; color: #bbb; text-align: center; padding: 2px 0; font-weight: 600; }
+        .mini-cal-dow { font-size: 9px; color: var(--text-muted); text-align: center; padding: 2px 0; font-weight: 600; }
         .mini-cal-day {
             font-size: 10px; text-align: center; padding: 4px 2px;
             border-radius: 5px; line-height: 1.4;
@@ -55,20 +54,23 @@
         .mini-cal-day:not(.empty):not(.past) { cursor: pointer; }
         .mini-cal-day:not(.empty):not(.past):hover { transform: scale(1.15); opacity: 0.85; }
         .mini-cal-day.empty { cursor: default; }
-        .mini-cal-day.past { color: #ddd; cursor: default; }
-        .mini-cal-day.available { background: #deeccb; color: #27500a; }
-        .mini-cal-day.partial { background: #fff2c4; color: #854f0b; }
-        .mini-cal-day.full { background: #ffe0e0; color: #a32d2d; }
-        .mini-cal-day.today-dot { outline: 2px solid #194169; outline-offset: -1px; font-weight: 600; }
+        .mini-cal-day.past { color: #d0d7de; cursor: default; }
+        .mini-cal-day.available { background: #d1fae5; color: #065f46; }
+        .mini-cal-day.partial { background: #fef3c7; color: #92400e; }
+        .mini-cal-day.full { background: #ffe4e6; color: #9f1239; }
+        .mini-cal-day.today-dot { outline: 2px solid var(--primary); outline-offset: -1px; font-weight: 600; }
         .mini-cal-day.in-week { outline: 2px solid #7ec0c9; outline-offset: -1px; }
         .mini-cal-legend { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 8px; }
-        .mini-cal-legend span { font-size: 9px; display: flex; align-items: center; gap: 3px; color: #000000; }
+        .mini-cal-legend span { font-size: 9px; display: flex; align-items: center; gap: 3px; color: var(--text-dark); }
         .mini-cal-legend .dot { width: 8px; height: 8px; border-radius: 2px; flex-shrink: 0; }
+        .mini-cal-legend .dot.available { background: #d1fae5; border-radius: 50%; }
+        .mini-cal-legend .dot.partial { background: #fef3c7; border-radius: 50%; }
+        .mini-cal-legend .dot.full { background: #ffe4e6; border-radius: 50%; }
 
         /* ── guide ── */
         .bk-guide-text {
-            font-size: 11px; color: #262525; line-height: 1.5;
-            background: #deeccb; border-left: 3px solid #7ec0c9;
+            font-size: 11px; color: var(--text-dark); line-height: 1.5;
+            background: #eef7f2; border-left: 3px solid #9dc8b0;
             padding: 8px 10px; border-radius: 0 6px 6px 0;
         }
         .bk-wilayah-toggle {
@@ -84,70 +86,104 @@
         font-weight: 600;
         text-transform: uppercase;
         letter-spacing: 0.07em;
-        color: #313e69;
+        color: var(--primary);
         margin-bottom: 0.3rem;
         transition: color 0.15s;
     }
-    .bk-wilayah-toggle:hover { color: #194169; }
+    .bk-wilayah-toggle:hover { color: var(--primary-hover); }
     .bk-wilayah-toggle.open .bk-wilayah-arrow { transform: rotate(0deg); }
     .bk-wilayah-arrow {
         font-size: 11px;
         transition: transform 0.2s;
-        color: #aaa;
+        color: var(--text-muted);
     }
     .bk-wilayah-rooms {
         padding-left: 4px;
         overflow: hidden;
         transition: max-height 0.25s ease;
     }
+    .bk-wilayah-rooms.is-collapsed { display: none; }
 
         /* ── main ── */
         .bk-main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
         .bk-toolbar {
             display: flex; align-items: center; gap: 0.6rem;
-            padding: 0.75rem 1rem; border-bottom: 1px solid #e0e0e0;
-            background:#f7f4f4; flex-shrink: 0; flex-wrap: wrap;
+            padding: 0.75rem 1rem; border-bottom: 1px solid var(--border-color);
+            background: var(--bg-surface); flex-shrink: 0; flex-wrap: wrap;
         }
-        .bk-toolbar-title { font-size: 13px; font-weight: 500; flex: 1; color: #333; }
+        .bk-toolbar-title { font-size: 13px; font-weight: 500; flex: 1; color: var(--text-dark); }
         .bk-btn {
-            padding: 5px 12px; border: 1px solid #e0e0e0; border-radius: 6px;
-            background:#f7f4f4; font-size: 12px; cursor: pointer;
-            text-decoration: none; color: #000000;
+            padding: 5px 12px; border: 1px solid var(--border-color); border-radius: 6px;
+            background: var(--bg-main); font-size: 12px; cursor: pointer;
+            text-decoration: none; color: var(--text-dark);
             transition: background 0.15s, border-color 0.15s;
         }
-        .bk-btn:hover { background: #f5f5f5; border-color: #ccc; }
-        .bk-btn-today { border-color: #194169; color: #194169; font-weight: 500; }
+        .bk-btn:hover { background: #eef4f0; border-color: #c8d4cb; }
+        .bk-btn-today { border-color: var(--primary); color: var(--primary); font-weight: 500; }
         .bk-btn-today:hover { background: #eaf3de; }
+        .bk-btn-inline { display: flex; align-items: center; gap: 5px; }
+        .bk-btn-inline-text { font-size: 12px; }
+        .bk-toolbar-room-name { color: var(--primary); font-weight: 600; }
+        .bk-toolbar-room-meta { color: var(--text-muted); font-size: 11px; }
+        .bk-toolbar-action { text-decoration: none; font-size: 12px; padding: 6px 14px; }
+        .bk-toolbar-login {
+            font-size: 12px; padding: 6px 14px; background: var(--primary); color: #ffffff;
+            border: none; border-radius: 6px; cursor: pointer;
+        }
+        .bk-toolbar-login:hover { background: var(--primary-hover); }
+        .login-register-link { font-size: 13px; }
+        .login-actions { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
+        .login-forgot-link { font-size: 11px; color: var(--text-muted); }
+        .login-links { line-height: 1.5; }
+        .login-admin-warning {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+            background: #faeeda;
+            border-color: #f5d5a0;
+            color: #854f0b;
+        }
+        .logout-inline-form { display: inline; margin-left: 0.5rem; }
+        .logout-inline-btn {
+            background: none;
+            border: none;
+            color: #854f0b;
+            font-size: 13px;
+            cursor: pointer;
+            text-decoration: underline;
+            padding: 0;
+        }
 
         /* ── grid ── */
         .bk-grid-wrap { flex: 1; overflow-y: auto; scroll-behavior: smooth; }
         .bk-grid { display: grid; grid-template-columns: 48px repeat(7, 1fr); min-width: 600px; }
         .bk-col-header {
             text-align: center; padding: 8px 2px;
-            border-bottom: 2px solid #e0e0e0; border-right: 1px solid #e0e0e0;
-            font-size: 11px; background:#f7f4f4;
+            border-bottom: 2px solid var(--border-color); border-right: 1px solid var(--border-color);
+            font-size: 11px; background: var(--bg-main);
             position: sticky; top: 0; z-index: 2;
         }
-        .bk-col-header .dname { color: #302f2f; font-weight: 400; font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; }
+        .bk-col-header .dname { color: var(--text-muted); font-weight: 500; font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; }
         .bk-col-header .dnum {
             font-size: 18px; font-weight: 500; width: 32px; height: 32px;
             line-height: 32px; border-radius: 50%; margin: 3px auto 0;
             transition: background 0.2s, color 0.2s;
         }
-        .bk-col-header .dnum.today { background: #194169; color:#f7f4f4; }
+        .bk-col-header .dnum.today { background: var(--primary); color: #ffffff; }
         .bk-time-gutter {
-            font-size: 10px; color: #232121; text-align: right;
-            padding: 2px 8px 0 0; height: 48px; border-right: 1px solid #e0e0e0;
+            font-size: 10px; color: var(--text-muted); text-align: right;
+            padding: 2px 8px 0 0; height: 48px; border-right: 1px solid var(--border-color);
         }
         .bk-cell {
-            border-right: 1px solid #e0e0e0; border-bottom: 1px solid #e0e0e0;
+            border-right: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color);
             height: 48px; position: relative;
             transition: background 0.1s;
         }
         .bk-cell:not(.past-cell) { cursor: pointer; }
         .bk-cell:not(.past-cell):hover { background: #f0f9f4 !important; }
-        .row-light { background:#f7f4f4; }
-        .row-dark { background: #fafafa; }
+        .row-light { background: #f8faf9; }
+        .row-dark { background: #fcfdfc; }
         .past-cell { background: #f7f7f7 !important; cursor: not-allowed; opacity: 0.5; }
 
         /* ── events ── */
@@ -155,36 +191,154 @@
             position: absolute; left: 2px; right: 2px; border-radius: 5px;
             padding: 3px 5px; font-size: 10px; overflow: hidden; cursor: pointer;
             z-index: 1; line-height: 1.3;
-            box-shadow: 0 1px 4px rgba(0,0,0,0.12);
+            box-shadow: var(--shadow-sm);
             transition: opacity 0.15s, transform 0.1s;
         }
         .bk-event:hover { opacity: 0.88; transform: scale(1.01); }
-
-        /* ── modals ── */
-        .modal-overlay {
-            display: none; position: fixed; inset: 0;
-            background: rgba(0,0,0,0);
-            justify-content: center; align-items: center; z-index: 999;
-            transition: background 0.25s;
-            overflow: hidden;
-        }
-        .modal-overlay.active { display: flex; background: rgba(0,0,0,0.4); }
-        .modal-overlay .modal {
-            transform: translateY(20px) scale(0.97);
-            opacity: 0;
-            transition: transform 0.25s ease, opacity 0.25s ease;
-        }
-        .modal-overlay.active .modal {
-            transform: translateY(0) scale(1);
-            opacity: 1;
-        }
+        .bk-event-title { font-weight: 700; font-size: 13px; }
+        .bk-event-sub { font-weight: 400; font-size: 10px; opacity: .95; display: block; }
 
         .btn-secondary {
             padding: 8px 16px; font-size: 13px; border-radius: 6px;
-            border: 1px solid #ddd; background: #f5f5f5; color: #000000; cursor: pointer;
+            border: 1px solid var(--border-color); background: var(--bg-main); color: var(--text-dark); cursor: pointer;
             transition: background 0.15s;
         }
-        .btn-secondary:hover { background: #eaeaea; }
+        .btn-secondary:hover { background: #e7ece9; }
+
+        .cal-modal-lg { max-width: 520px; max-height: 80vh; display: flex; flex-direction: column; }
+        .ev-remarks { color: var(--text-dark); }
+        .ev-cancel-wrap {
+            display: none;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid #f0f0f0;
+        }
+        .ev-own-note { font-size: 12px; color: var(--text-muted); margin-bottom: 0.5rem; }
+        .bk-room-pill {
+            background: #f0f4f1;
+            border: 1px solid #dde8e1;
+            border-radius: 8px;
+            padding: 0.6rem 0.9rem;
+            margin-bottom: 0.75rem;
+            font-size: 12px;
+            color: var(--text-dark);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .bk-room-pill-icon { font-size: 15px; }
+        .no-resize { resize: none; }
+        .form-footer-tight { margin-top: 0.5rem; }
+        .ws-subtitle {
+            font-size: 11px;
+            color: var(--text-muted);
+            font-weight: 400;
+            display: block;
+            margin-top: 2px;
+        }
+        .ws-body-scroll { overflow-y: auto; }
+        .ws-day-group { margin-bottom: 1rem; }
+        .ws-day-label {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--primary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.4rem;
+            padding-bottom: 0.3rem;
+            border-bottom: 1px solid #eee;
+        }
+        .ws-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 7px 8px;
+            border-radius: 7px;
+            cursor: pointer;
+            transition: background 0.15s;
+            margin-bottom: 3px;
+        }
+        .ws-item:hover { background: #f0f9f4; }
+        .ws-item-bar {
+            width: 5px;
+            height: 32px;
+            border-radius: 3px;
+            background: #7ec0c9;
+            flex-shrink: 0;
+        }
+        .ws-item-main { flex: 1; min-width: 0; }
+        .ws-item-title {
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--text-dark);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .ws-item-meta { font-size: 11px; color: #777; }
+        .ws-item-arrow { font-size: 14px; color: #bbb; }
+        .ws-empty {
+            font-size: 12px;
+            color: #888;
+            text-align: center;
+            padding: 1.5rem 0;
+        }
+        .ws-footer {
+            padding: 0.75rem 1rem;
+            border-top: 1px solid #f0f0f0;
+            text-align: right;
+        }
+        .is-hidden { display: none !important; }
+
+        .flash-msg {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            z-index: 9999;
+            padding: 0.75rem 1.25rem;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 500;
+            box-shadow: var(--shadow-md);
+            transition: opacity 0.5s, transform 0.5s;
+            transform: translateY(0);
+        }
+        .flash-msg.success { background: #eaf3de; color: #27500a; border: 1px solid #c0dd97; }
+        .flash-msg.info { background: #e6f1fb; color: #0c447c; border: 1px solid #b5d4f4; }
+
+        .daftar-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.4);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+        .daftar-card {
+            background: #ffffff;
+            border-radius: 14px;
+            padding: 2rem;
+            max-width: 400px;
+            width: 90%;
+            text-align: center;
+            box-shadow: var(--shadow-lg);
+            animation: slideUp 0.3s ease;
+        }
+        .daftar-emoji { font-size: 42px; margin-bottom: 0.75rem; }
+        .daftar-title { font-size: 15px; font-weight: 600; margin-bottom: 0.5rem; color: var(--text-dark); }
+        .daftar-text { font-size: 13px; color: var(--text-muted); line-height: 1.6; margin-bottom: 1.25rem; }
+        .daftar-btn {
+            background: var(--primary);
+            color: #ffffff;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 8px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+        .daftar-btn:hover { background: var(--primary-hover); }
 
         /* ── booking modal error/success banners ── */
         #bk-error, #bk-success {
@@ -200,30 +354,25 @@
         #bk-error ul   { margin: 0; padding-left: 1.2rem; }
         #bk-submit-btn:disabled { opacity: 0.6; cursor: not-allowed; }
 
-        @media (max-width: 700px) { .bk-sidebar { display: none; } }
+        @media (max-width: 700px) {
+            .bk-sidebar { display: none; }
+        }
     </style>
 </head>
 <body>
 
-<header>
-    <div class="logo"></div>
-    <div>
-<a href="/" style="color: white; text-decoration: none;"><h1>Jabatan Hutan Sarawak</h1></a>
-        <p> Hub Aplikasi Perkhidmatan Atas Talian</p>
-    </div>
-</header>
+<x-header />
 <x-navbar :breadcrumbs="[['label' => 'Tempah Bilik Mesyuarat', 'url' => '/booking/calendar'], ['label' => $bilik?->nama_bilik ?? 'Kalendar']]" />
         @if(session('daftar_success'))
-<div id="daftar-modal" style="position:fixed; inset:0; background:rgba(0,0,0,0.4); display:flex; justify-content:center; align-items:center; z-index:9999;">
-    <div style="background:#fff; border-radius:14px; padding:2rem; max-width:400px; width:90%; text-align:center; box-shadow:0 8px 32px rgba(0,0,0,0.15); animation:slideUp 0.3s ease;">
-        <div style="font-size:42px; margin-bottom:0.75rem;">🎉</div>
-        <h3 style="font-size:15px; font-weight:500; margin-bottom:0.5rem; color:#1a1a1a;">Pendaftaran Berjaya!</h3>
-        <p style="font-size:13px; color:#666; line-height:1.6; margin-bottom:1.25rem;">
+<div id="daftar-modal" class="daftar-overlay">
+    <div class="daftar-card">
+        <div class="daftar-emoji">🎉</div>
+        <h3 class="daftar-title">Pendaftaran Berjaya!</h3>
+        <p class="daftar-text">
             Akaun anda telah didaftarkan. Sila tunggu kelulusan admin sebelum anda boleh membuat tempahan.
             Anda akan dihubungi melalui emel apabila akaun diluluskan.
         </p>
-        <button onclick="document.getElementById('daftar-modal').remove()"
-            style="background:#194169; color:#fff; border:none; padding:10px 24px; border-radius:8px; font-size:13px; cursor:pointer; transition:background 0.15s;">
+        <button onclick="document.getElementById('daftar-modal').remove()" class="daftar-btn">
             Faham, Terima Kasih
         </button>
     </div>
@@ -237,8 +386,7 @@
 @endif
 
 @if(session('success') || session('info'))
-    <div id="flash-msg" style="position:fixed; top:1rem; right:1rem; z-index:9999; padding:0.75rem 1.25rem; border-radius:8px; font-size:13px; font-weight:500; box-shadow:0 4px 16px rgba(0,0,0,0.12); transition:opacity 0.5s, transform 0.5s; transform:translateY(0);
-        {{ session('success') ? 'background:#eaf3de; color:#27500a; border:1px solid #c0dd97;' : 'background:#e6f1fb; color:#0c447c; border:1px solid #b5d4f4;' }}">
+    <div id="flash-msg" class="flash-msg {{ session('success') ? 'success' : 'info' }}">
         {{ session('success') ?? session('info') }}
     </div>
     <script>
@@ -382,9 +530,9 @@
                 @endfor
             </div>
             <div class="mini-cal-legend">
-                <span><span class="dot" style="background:#d5e6c0; border-radius: 50%;"></span>Tersedia</span>
-                <span><span class="dot" style="background:#fff0b8; border-radius: 50%;"></span>Sebahagian</span>
-                <span><span class="dot" style="background:#ffd3d3; border-radius: 50%;"></span>Penuh</span>
+                <span><span class="dot available"></span>Tersedia</span>
+                <span><span class="dot partial"></span>Sebahagian</span>
+                <span><span class="dot full"></span>Penuh</span>
             </div>
         </div>
         @endif
@@ -405,7 +553,7 @@
                 <span>{{ $wilayah }}</span>
                 <span class="bk-wilayah-arrow">{{ $isActiveWilayah ? '▾' : '›' }}</span>
             </button>
-            <div class="bk-wilayah-rooms" style="{{ $isActiveWilayah ? '' : 'display:none;' }}">
+            <div class="bk-wilayah-rooms {{ $isActiveWilayah ? '' : 'is-collapsed' }}">
                 @foreach($rooms as $room)
                     <a href="/booking/calendar?bilik={{ $room->id }}&week={{ $weekStart->toDateString() }}"
                     class="bk-room-link {{ $bilik && $bilik->id == $room->id ? 'active' : '' }}">
@@ -431,27 +579,27 @@
             @php
                 $toggleViewUrl = '/booking/calendar?bilik='.$bilik?->id.'&week='.$weekStart->toDateString().($viewMode ? '' : '&view=all');
             @endphp
-            <a href="{{ $toggleViewUrl }}" class="bk-btn {{ $viewMode ? 'bk-btn-today' : '' }}" style="display:flex; align-items:center; gap:5px;" title="Lihat semua bilik (RDD & Ibu Pejabat)">
+            <a href="{{ $toggleViewUrl }}" class="bk-btn bk-btn-inline {{ $viewMode ? 'bk-btn-today' : '' }}" title="Lihat semua bilik (RDD & Ibu Pejabat)">
                 <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8Z"/><circle cx="12" cy="12" r="3"/>
                 </svg>
-                <span style="font-size:12px;">{{ $viewMode ? 'Semua Bilik' : 'Lihat Semua' }}</span>
+                <span class="bk-btn-inline-text">{{ $viewMode ? 'Semua Bilik' : 'Lihat Semua' }}</span>
             </a>
             <span class="bk-toolbar-title">
                 {{ $weekStart->translatedFormat('j F') }} — {{ $weekEnd->translatedFormat('j F Y') }}
                 @if($bilik)
                     &nbsp;·&nbsp;
-                    <span style="color:#194169; font-weight:500;">{{ $bilik->nama_bilik }}</span>
-                    <span style="color:#302f2f; font-size:11px;"> {{ $bilik->aras }}, {{ $bilik->wing }}</span>
+                    <span class="bk-toolbar-room-name">{{ $bilik->nama_bilik }}</span>
+                    <span class="bk-toolbar-room-meta"> {{ $bilik->aras }}, {{ $bilik->wing }}</span>
                 @endif
             </span>
             @if($bilik)
                 @auth('booking_user')
-                    <a href="/booking/book" class="btn-submit" style="text-decoration:none; font-size:12px; padding:6px 14px;">+ Tempah</a>
+                    <a href="/booking/book" class="btn-submit bk-toolbar-action">+ Tempah</a>
                     @elseif ($viewMode)
-                        <button onclick="openModal('loginModal')" style="font-size:12px; padding:6px 14px; background:#194169; color:#fff; border:none; border-radius:6px; cursor:pointer;">Log Masuk untuk Tempah</button>
+                        <button onclick="openModal('loginModal')" class="bk-toolbar-login">Log Masuk untuk Tempah</button>
                     @else
-                        <button onclick="openModal('loginModal')" style="font-size:12px; padding:6px 14px; background:#194169; color:#fff; border:none; border-radius:6px; cursor:pointer;">Log Masuk untuk Tempah</button> 
+                        <button onclick="openModal('loginModal')" class="bk-toolbar-login">Log Masuk untuk Tempah</button>
                     @endauth
             @endif
         </div>
@@ -505,7 +653,7 @@
                                     $cols = max($it['cols'], 1);
                                     $widthPct = 100 / $cols;
                                     $leftPct  = $it['col'] * $widthPct;
-                                    $bg = $viewMode ? ($roomColorMap[$b->bilik_id] ?? '#194169') : ($isOwn ? '#7ec0c9' : '#194169');
+                                    $bg = $viewMode ? ($roomColorMap[$b->bilik_id] ?? '#1b4332') : ($isOwn ? '#7ec0c9' : '#1b4332');
                                 @endphp
                                 @if($startsHere)
                                     <div class="bk-event {{ $viewMode ? 'bk-event-nav' : '' }}"
@@ -521,9 +669,9 @@
                                             )'
                                         @endif
                                         title="{{ $viewMode ? ($b->bilik->nama_bilik ?? '').' — '.$b->tajuk_mesyuarat : $b->tajuk_mesyuarat.' — '.$b->user->name }}">
-                                        <span style="font-weight: 800; font-size:13px;">{{ Str::limit($b->tajuk_mesyuarat, 18) }}</span>
+                                        <span class="bk-event-title">{{ Str::limit($b->tajuk_mesyuarat, 18) }}</span>
                                         @if($viewMode)
-                                            <span style="font-weight:400; font-size:10px; opacity:.95; display:block;">{{ Str::limit($b->bilik->nama_bilik ?? '', 16) }}</span>
+                                            <span class="bk-event-sub">{{ Str::limit($b->bilik->nama_bilik ?? '', 16) }}</span>
                                         @else
                                             <br>{{ substr($b->masa_mula,0,5) }}–{{ substr($b->masa_tamat,0,5) }}
                                         @endif
@@ -540,37 +688,35 @@
 </div>
 
 {{-- Event detail modal --}}
-<div class="modal-overlay" id="eventModal">
-    <div class="modal" style="max-width:440px;">
-        <div class="modal-header">
-            <h2 id="ev-tajuk" style="font-size:14px;"></h2>
-            <button class="modal-close" onclick="closeEvent()">×</button>
+<div class="ticket-modal-overlay" id="eventModal">
+    <div class="ticket-modal">
+        <div class="ticket-modal-header">
+            <h3 id="ev-tajuk"></h3>
+            <button class="ticket-modal-close" onclick="closeEvent()">×</button>
         </div>
-        <div class="modal-body">
-            <div class="detail-group">
-                <div class="detail-row">
-                    <div class="detail-field"><label>Bilik</label><p>{{ $bilik?->nama_bilik ?? '-' }}</p></div>
-                    <div class="detail-field"><label>Tarikh</label><p id="ev-tarikh"></p></div>
-                </div>
-                <div class="detail-row">
-                    <div class="detail-field"><label>Masa</label><p id="ev-masa"></p></div>
-                    <div class="detail-field"><label>Pemohon</label><p id="ev-nama"></p></div>
-                </div>
-
-                <div class="detail-row">
-                    <div class="detail-field"><label>Bahagian</label><p id="ev-bahagian"></p></div>
-                    <div class="detail-field"><label>No. Telefon</label><p id="ev-phone"></p></div>
-                </div>
-                <div class="detail-field" style="margin-top:0.5rem;">
-                    <label>Catatan</label>
-                    <p id="ev-remarks" style="color:#000000;"></p>
-                </div>
+        <div class="ticket-modal-body">
+            <div class="ticket-field-row">
+                <div class="ticket-field"><label>Bilik</label><p>{{ $bilik?->nama_bilik ?? '-' }}</p></div>
+                <div class="ticket-field"><label>Tarikh</label><p id="ev-tarikh"></p></div>
             </div>
-            <div id="ev-cancel-wrap" style="display:none; margin-top:1rem; padding-top:1rem; border-top:1px solid #f0f0f0;">
-                <p style="font-size:12px; color:#999; margin-bottom:0.5rem;">Ini adalah tempahan anda.</p>
+            <div class="ticket-field-row">
+                <div class="ticket-field"><label>Masa</label><p id="ev-masa"></p></div>
+                <div class="ticket-field"><label>Pemohon</label><p id="ev-nama"></p></div>
+            </div>
+
+            <div class="ticket-field-row">
+                <div class="ticket-field"><label>Bahagian</label><p id="ev-bahagian"></p></div>
+                <div class="ticket-field"><label>No. Telefon</label><p id="ev-phone"></p></div>
+            </div>
+            <div class="ticket-field">
+                <label>Catatan</label>
+                <p id="ev-remarks" class="ev-remarks"></p>
+            </div>
+            <div id="ev-cancel-wrap" class="ev-cancel-wrap">
+                <p class="ev-own-note">Ini adalah tempahan anda.</p>
                 <form id="ev-cancel-form" method="POST">
                     @csrf
-                    <button type="submit" class="btn-delete" style="padding:8px 16px; font-size:13px; cursor:pointer;"
+                    <button type="submit" class="btn-submit"
                         onclick="return confirm('Batalkan tempahan ini?')">
                         Batalkan Tempahan
                     </button>
@@ -581,13 +727,13 @@
 </div>
 
 {{-- Book modal --}}
-<div class="modal-overlay" id="bookModal">
-    <div class="modal" style="max-width:480px;">
-        <div class="modal-header">
-            <h2 style="font-size:14px;">Buat Tempahan</h2>
-            <button class="modal-close" onclick="closeBookModal()">×</button>
+<div class="ticket-modal-overlay" id="bookModal">
+    <div class="ticket-modal">
+        <div class="ticket-modal-header">
+            <h3>Buat Tempahan</h3>
+            <button class="ticket-modal-close" onclick="closeBookModal()">×</button>
         </div>
-        <div class="modal-body">
+        <div class="ticket-modal-body">
 
             {{-- Error banner (shown on validation/conflict errors) --}}
             <div id="bk-error"></div>
@@ -600,8 +746,8 @@
                 <input type="hidden" name="bilik_id" value="{{ $bilik?->id }}">
                 <div class="form-section">
                     @if($bilik)
-                    <div style="background:#f0f4f1; border:1px solid #dde8e1; border-radius:8px; padding:0.6rem 0.9rem; margin-bottom:0.75rem; font-size:12px; color:#000000; display:flex; align-items:center; gap:6px;">
-                        <span style="font-size:15px;">🌿</span>
+                    <div class="bk-room-pill">
+                        <span class="bk-room-pill-icon">🌿</span>
                         <span><strong>{{ $bilik->nama_bilik }}</strong> — {{ $bilik->aras }}, {{ $bilik->wing }}</span>
                     </div>
                     @endif
@@ -611,7 +757,7 @@
                     </div>
                     <div class="field">
                         <label>Catatan</label>
-                        <textarea name="remarks" rows="2" style="resize:none;"></textarea>
+                        <textarea name="remarks" rows="2" class="no-resize"></textarea>
                     </div>
                     <div class="field">
                         <label>Tarikh <span class="required">*</span></label>
@@ -649,7 +795,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="form-footer" style="margin-top:0.5rem;">
+                <div class="form-footer form-footer-tight">
                     <button type="submit" id="bk-submit-btn" class="btn-submit">Sahkan Tempahan</button>
                 </div>
             </form>
@@ -657,74 +803,50 @@
     </div>
 </div>
 
-<footer>
-    <div class="footer-content">
-        <strong>Seksyen Pengurusan Dan Transformasi Digital</strong> 
-        <span class="divider">|</span> 
-        Tingkat 15, Bangunan Baitul Makmur II, Medan Raya, Petra Jaya, 93050 Kuching, Sarawak
-    </div>
-    
-    <div class="footer-right">
-        <span>© <?php echo date("Y"); ?> Jabatan Hutan Sarawak. Hak Cipta Terpelihara.</span>
-        
-        @guest('web')
-            @guest('booking_user')      
-                <a href="/login" class="footer-login-link" title="Login">
-                    <svg class="user-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <circle cx="12" cy="12" r="10" />
-                        <circle cx="12" cy="10" r="3" />
-                        <path d="M7 18c0-2.5 2-4.5 5-4.5s5 2 5 4.5" />
-                    </svg>
-                </a>
-            @endguest
-        @endguest
-    </div>
-</footer>
+<x-footer />
 
 {{-- Weekly Booking Summary popup (RDD & Ibu Pejabat) --}}
-<div class="modal-overlay" id="weekSummaryModal">
-    <div class="modal" style="max-width:520px; max-height:80vh; display:flex; flex-direction:column;">
-        <div class="modal-header">
-            <h2 style="font-size:14px;">
+<div class="ticket-modal-overlay" id="weekSummaryModal">
+    <div class="ticket-modal cal-modal-lg">
+        <div class="ticket-modal-header">
+            <h3>
                 Ringkasan Tempahan Minggu Ini
-                <span style="font-size:11px; color:#888; font-weight:400; display:block; margin-top:2px;">
+                <span class="ws-subtitle">
                     {{ $weekStart->translatedFormat('d M') }} — {{ $weekEnd->translatedFormat('d M Y') }} · RDD &amp; Ibu Pejabat
                 </span>
-            </h2>
-            <button class="modal-close" onclick="closeModal('weekSummaryModal')">×</button>
+            </h3>
+            <button class="ticket-modal-close" onclick="closeModal('weekSummaryModal')">×</button>
         </div>
-        <div class="modal-body" style="overflow-y:auto;">
+        <div class="ticket-modal-body ws-body-scroll">
             @forelse($weekSummaryBookings as $tarikh => $dayBookings)
                 @php $dCarbon = \Carbon\Carbon::parse($tarikh); @endphp
-                <div style="margin-bottom:1rem;">
-                    <div style="font-size:11px; font-weight:600; color:#194169; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:0.4rem; padding-bottom:0.3rem; border-bottom:1px solid #eee;">
+                <div class="ws-day-group">
+                    <div class="ws-day-label">
                         {{ $dCarbon->translatedFormat('l, d F Y') }}
                     </div>
                     @foreach($dayBookings as $b)
                         <div class="ws-item"
-                            onclick="window.location='/booking/calendar?bilik={{ $b->bilik_id }}&week={{ \Carbon\Carbon::parse($tarikh)->startOfWeek(\Carbon\Carbon::MONDAY)->toDateString() }}'"
-                            style="display:flex; align-items:center; gap:8px; padding:7px 8px; border-radius:7px; cursor:pointer; transition:background 0.15s; margin-bottom:3px;"
-                            onmouseover="this.style.background='#f0f9f4'" onmouseout="this.style.background='transparent'">
-                            <div style="width:5px; height:32px; border-radius:3px; background:#7ec0c9; flex-shrink:0;"></div>
-                            <div style="flex:1; min-width:0;">
-                                <div style="font-size:12px; font-weight:500; color:#1a1a1a; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+                            onclick="window.location='/booking/calendar?bilik={{ $b->bilik_id }}&week={{ \Carbon\Carbon::parse($tarikh)->startOfWeek(\Carbon\Carbon::MONDAY)->toDateString() }}'">
+                            <div class="ws-item-bar"></div>
+                            <div class="ws-item-main">
+                                <div class="ws-item-title">
                                     {{ $b->tajuk_mesyuarat }}
                                 </div>
-                                <div style="font-size:11px; color:#777;">
+                                <div class="ws-item-meta">
                                     {{ $b->bilik->nama_bilik ?? '-' }} · {{ substr($b->masa_mula,0,5) }}–{{ substr($b->masa_tamat,0,5) }} · {{ $b->user->name ?? '-' }}
                                 </div>
                             </div>
-                            <span style="font-size:14px; color:#bbb;">›</span>
+                            <span class="ws-item-arrow">›</span>
                         </div>
                     @endforeach
                 </div>
             @empty
-                <p style="font-size:12px; color:#888; text-align:center; padding:1.5rem 0;">
+                <p class="ws-empty">
                     Tiada tempahan untuk minggu ini di wilayah RDD &amp; Ibu Pejabat.
                 </p>
             @endforelse
         </div>
-        <div class="form-footer" style="padding:0.75rem 1rem; border-top:1px solid #f0f0f0; text-align:right;">
+        <div class="form-footer ws-footer">
             <button class="btn-secondary" onclick="closeModal('weekSummaryModal')">Tutup</button>
         </div>
     </div>
@@ -742,7 +864,7 @@ function openModal(id) {
 
 function closeModal(id) {
     const overlay = document.getElementById(id);
-    const modal   = overlay.querySelector('.modal');
+    const modal   = overlay.querySelector('.ticket-modal');
     modal.style.transform = 'translateY(10px) scale(0.97)';
     modal.style.opacity   = '0';
     setTimeout(() => {
@@ -788,28 +910,6 @@ document.addEventListener('DOMContentLoaded', function() {
         observer.observe(document.body, { childList: true });
     }
 });
-
-// ── book slot (click on grid cell) ─────────────────────────────────────────
-
-function openBookSlot(date, time) {
-    const wrap    = document.querySelector('.bk-grid-wrap');
-    const isAuth  = wrap?.dataset.auth === '1';
-    const bilikId = wrap?.dataset.bilik;
-
-    if (!bilikId) return;
-    if (!isAuth) { window.location = '/booking/login'; return; }
-
-    document.getElementById('bk-tarikh').value = date;
-    document.getElementById('bk-mula').value   = time;
-
-    const [h] = time.split(':');
-    const endH = String(Math.min(parseInt(h) + 1, 17)).padStart(2, '0');
-    document.getElementById('bk-tamat').value = endH + ':00';
-
-    setBkError(null);
-    setBkSuccess(null);
-    openModal('bookModal');
-}
 
 // ── event detail modal ──────────────────────────────────────────────────────
 
@@ -961,16 +1061,16 @@ document.getElementById('login-form').addEventListener('submit', async function(
 function toggleWilayah(btn) {
     const rooms = btn.nextElementSibling;
     const arrow = btn.querySelector('.bk-wilayah-arrow');
-    const isOpen = rooms.style.display !== 'none';
+    const isCollapsed = rooms.classList.contains('is-collapsed');
 
-    if (isOpen) {
-        rooms.style.display = 'none';
-        arrow.textContent = '›';
-        btn.classList.remove('open');
-    } else {
-        rooms.style.display = 'block';
+    if (isCollapsed) {
+        rooms.classList.remove('is-collapsed');
         arrow.textContent = '▾';
         btn.classList.add('open');
+    } else {
+        rooms.classList.add('is-collapsed');
+        arrow.textContent = '›';
+        btn.classList.remove('open');
     }
 }
 

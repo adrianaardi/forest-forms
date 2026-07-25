@@ -18,13 +18,7 @@
 
 <body class="pg">
 
-<header>
-    <div class="logo"></div>
-    <div>
-<a href="/" style="color: white; text-decoration: none;"><h1>Jabatan Hutan Sarawak</h1></a>
-        <p>Hub Aplikasi Perkhidmatan Atas Talian</p>
-    </div>
-</header>
+<x-header />
 
 {{-- IMPORTANT: use SAME navbar system --}}
 <x-navbar :breadcrumbs="[['label' => 'Manual Pengguna']]" />
@@ -35,16 +29,7 @@
 
 </div>
 
-<footer>
-        <div>
-            <strong>Seksyen Pengurusan Dan Transformasi Digital</strong>
-            &nbsp;|&nbsp;
-            Tingkat 15, Bangunan Baitul Makmur II, Medan Raya, Petra Jaya, 93050 Kuching, Sarawak
-        </div>
-        <div>
-            © {{ date('Y') }} Jabatan Hutan Sarawak. Hak Cipta Terpelihara.
-        </div>
-</footer>
+<x-footer />
 
 </body>
 </html>

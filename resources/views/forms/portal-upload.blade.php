@@ -3,29 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Borang Permohonan Muat Naik Portal — Jabatan Hutan Sarawak</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:opsz,wght@6..144,1..1000&family=Lora:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet"><link rel="stylesheet" href="{{ asset('style.css') }}">  
-    <link rel="icon" href="{{ asset('images/logo-icon.png')}}">
-
+    <title>Borang Permohonan Muat Naik Portal - Jabatan Hutan Sarawak</title>
+    <link rel="stylesheet" href="{{ asset('style.css') }}">
+    <link rel="icon" href="{{ asset('images/logo-icon.png') }}">
 </head>
 <body>
 
-<header>
-    <div class="logo"></div>
-    <div>
-<a href="/" style="color: white; text-decoration: none;"><h1>Jabatan Hutan Sarawak</h1></a>
-        <p> Hub Aplikasi Perkhidmatan Atas Talian</p>
-    </div>
-</header>
+<x-header />
 
 <x-navbar :breadcrumbs="[['label' => 'Pengurusan Laman Web']]" />
-<div class="pg-body">
 
+<div class="pg-body">
     @if($errors->any())
-        <div style="background:#fdf0f0; border:1px solid #f5c1c1; color:#a32d2d; padding:0.75rem 1rem; border-radius:8px; margin-bottom:1rem; font-size:14px;">
-            <ul style="margin:0; padding-left:1.2rem;">
+        <div class="form-error-box">
+            <ul class="form-error-list">
                 @foreach($errors->all() as $error)
                     <li>{{ $error }}</li>
                 @endforeach
@@ -43,17 +34,20 @@
             @csrf
 
             <div class="form-section">
-                <div class="section-label">Bahagian A — Maklumat Pemohon</div>
+                <div class="section-label">Bahagian A - Maklumat Pemohon</div>
+
                 <div class="field-row">
                     <div class="field">
                         <label>Nama <span class="required">*</span></label>
                         <input type="text" name="nama" value="{{ old('nama') }}" placeholder="Nama penuh" required>
                     </div>
+
                     <div class="field">
-                        <label>Jawatan <span class="required">*</span></label></label>
+                        <label>Jawatan <span class="required">*</span></label>
                         <input type="text" name="jawatan" value="{{ old('jawatan') }}" placeholder="Jawatan anda" required>
                     </div>
                 </div>
+
                 <div class="field-row">
                     <div class="field">
                         <label>Bahagian / Unit <span class="required">*</span></label>
@@ -66,18 +60,19 @@
                             @endforeach
                         </select>
                         @error('bahagian_id')
-                            <div style="color:#a32d2d; font-size:12px; margin-top:4px;">{{ $message }}</div>
+                            <div class="field-error">{{ $message }}</div>
                         @enderror
                     </div>
+
                     <div class="field">
-                        <label>Email <span class="required">*</span></label></label>
-                        <input type="text" name="telefon_email" value="{{ old('telefon_email') }}" placeholder="Email anda" required>
+                        <label>Email <span class="required">*</span></label>
+                        <input type="email" name="telefon_email" value="{{ old('telefon_email') }}" placeholder="Email anda" required>
                     </div>
                 </div>
             </div>
 
             <div class="form-section">
-                <div class="section-label">Bahagian B — Maklumat Bahan</div>
+                <div class="section-label">Bahagian B - Maklumat Bahan</div>
 
                 <div class="field">
                     <label>Tajuk Maklumat <span class="required">*</span></label>
@@ -122,13 +117,13 @@
                 </div>
 
                 <div class="field">
-                    <label>Upload Bahan <span style="font-size:11px; color:#777;">(Maks 5 fail, video tidak dibenarkan.)</span></label>
+                    <label>Upload Bahan <span class="help-text-muted">(Maks 5 fail, video tidak dibenarkan.)</span></label>
                     <input type="file" id="fileInput" name="fail[]" multiple accept=".jpg,.jpeg,.png,.gif,.pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.zip">
                     @error('fail')
-                        <div style="color:#a32d2d; font-size:12px; margin-top:4px;">{{ $message }}</div>
+                        <div class="field-error">{{ $message }}</div>
                     @enderror
                     @error('fail.*')
-                        <div style="color:#a32d2d; font-size:12px; margin-top:4px;">{{ $message }}</div>
+                        <div class="field-error">{{ $message }}</div>
                     @enderror
                 </div>
 
@@ -137,6 +132,7 @@
                         <label>Tarikh Mula Paparan</label>
                         <input type="date" name="tarikh_mula" value="{{ old('tarikh_mula') }}">
                     </div>
+
                     <div class="field">
                         <label>Tarikh Akhir Paparan</label>
                         <input type="date" name="tarikh_akhir" value="{{ old('tarikh_akhir') }}">
@@ -152,13 +148,24 @@
     </div>
 </div>
 
-<footer>
-        <div>
-            <strong>Seksyen Pengurusan Dan Transformasi Digital</strong>
-            &nbsp;|&nbsp;
-            Tingkat 15, Bangunan Baitul Makmur II, Medan Raya, Petra Jaya, 93050 Kuching, Sarawak
-        </div>
-        <div>
-            © {{ date('Y') }} Jabatan Hutan Sarawak. Hak Cipta Terpelihara.
-        </div>
-</footer>
+<x-footer />
+
+<script>
+function toggleKategoriLain() {
+    var v = document.getElementById('kategori').value;
+    document.getElementById('kategori_lain_box').classList.toggle('is-visible', v === 'lain');
+}
+
+function toggleJenisLain() {
+    var v = document.getElementById('jenis').value;
+    document.getElementById('jenis_lain_box').classList.toggle('is-visible', v === 'lain');
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+    toggleKategoriLain();
+    toggleJenisLain();
+});
+</script>
+
+</body>
+</html>

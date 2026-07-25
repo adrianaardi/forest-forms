@@ -12,73 +12,14 @@
 
     <link rel="stylesheet" href="{{ asset('style.css') }}">
     <link rel="icon" href="{{ asset('images/logo-icon.png')}}">
-
-    <style>
-        /* 1. Main Page Header */
-        header {
-            background-color: #b07d7d !important; 
-            color: white !important;
-        }
-
-        nav {
-            background-color: #966666 !important; 
-        }
-
-        /* 2. Form Card Header - Now matches the button color */
-        .form-card-header {
-            background-color: #b07d7d !important; 
-            border-bottom: none !important;
-            color: white !important; /* Changed to white so text is readable on pink */
-        }
-        
-        .form-card-header p {
-            color: #fce4e6 !important; /* Light pink for the sub-text */
-        }
-
-        /* 3. The Submit Button */
-        .btn-submit {
-            background-color: #b07d7d !important;
-            border: none !important;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1) !important;
-        }
-
-        .btn-submit:hover {
-            background-color: #8e6262 !important;
-        }
-
-        /* 4. Link inside the form */
-        .form-footer a {
-            color: #b07d7d !important;
-            font-weight: 500 !important;
-        }
-
-        /* 5. The Page Footer (The bottom address bar) */
-        footer {
-            background-color: #b07d7d !important;
-            color: white !important;
-            padding: 20px 0 !important;
-            border-top: 3px solid #966666 !important;
-        }
-
-        /* 6. Page Background */
-        body {
-            background-color: #f8f1f1 !important;
-        }
-    </style>
 </head>
 <body>
 
-<header>
-        <div class="logo"></div>
-    <div>
-        <a href="/" style="color: white; text-decoration: none;"><h1>Jabatan Hutan Sarawak</h1></a>
-        <p> Hub Aplikasi Perkhidmatan Atas Talian</p>
-    </div>
-</header>
+<x-header />
 
 <x-navbar :breadcrumbs="[['label' => 'Lupa Password']]" />
 
-<div class="pg-body">
+<div class="pg-body" style="max-width:500px;">
     <div class="form-card">
 
         <div class="form-card-header">
@@ -113,8 +54,8 @@
 
             </div>
 
-            <div class="form-footer" style="display: flex; justify-content: space-between; align-items: center; width: 100%; gap: 1rem;">
-                <a href="{{ route('login') }}" style="font-size: 14px; white-space: nowrap;">
+            <div class="form-footer">
+                <a href="{{ route('login') }}" style="font-size: 14px; white-space: nowrap;" class="back-btn">
                     Kembali ke log masuk
                 </a>
 
@@ -128,28 +69,7 @@
     </div>
 </div>
 
-<footer>
-    <div class="footer-content">
-        <strong>Seksyen Pengurusan Dan Transformasi Digital</strong> 
-        <span class="divider">|</span> 
-        Tingkat 15, Bangunan Baitul Makmur II, Medan Raya, Petra Jaya, 93050 Kuching, Sarawak
-    </div>
-    
-    <div class="footer-right">
-        <span>© <?php echo date("Y"); ?> Jabatan Hutan Sarawak. Hak Cipta Terpelihara.</span>
-        
-        @guest('web')
-            @guest('booking_user')      
-                <a href="/login" class="footer-login-link" title="Login">
-                    <svg class="user-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <circle cx="12" cy="12" r="10" />
-                        <circle cx="12" cy="10" r="3" />
-                        <path d="M7 18c0-2.5 2-4.5 5-4.5s5 2 5 4.5" />
-                    </svg>
-                </a>
-            @endguest
-        @endguest
-    </div>
-</footer>
+<x-footer />
+
 </body>
 </html>

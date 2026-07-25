@@ -5,24 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Daftar — Sistem Tempahan</title>
     <link rel="icon" href="{{ asset('images/logo-icon.png')}}">
-
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:opsz,wght@6..144,1..1000&family=Lora:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('style.css') }}">
 </head>
 <body>
-<header>
-    <div class="logo"></div>
-    <div>
-        <a href="/" style="color: white; text-decoration: none;"><h1>Jabatan Hutan Sarawak</h1></a>
-        <p> Hub Aplikasi Perkhidmatan Atas Talian</p>
-    </div>
-</header>
+<x-header />
 <x-navbar :breadcrumbs="[['label' => 'Tempah Bilik Mesyuarat', 'url' => '/booking/calendar'], ['label' => 'Daftar Akaun']]" />
-<div class="pg-body" style="max-width:500px;">
+<div class="pg-body" style="max-width:600px;">
     <div class="form-card">
-        <div class="form-card-header" style="background:#194169;">
+        <div class="form-card-header">
             <h2>Daftar Akaun</h2>
             <p>Pendaftaran memerlukan kelulusan admin sebelum anda boleh membuat tempahan.</p>
         </div>
@@ -30,8 +20,8 @@
             @csrf
             <div class="form-section">
                 @if($errors->any())
-                    <div style="background:#fdf0f0; border:1px solid #f5c1c1; color:#a32d2d; padding:0.75rem 1rem; border-radius:8px; margin-bottom:1rem; font-size:13px;">
-                        <ul style="margin:0; padding-left:1.2rem;">
+                    <div class="form-error-box">
+                        <ul class="form-error-list">
                             @foreach($errors->all() as $error)<li>{{ $error }}</li>@endforeach
                         </ul>
                     </div>
@@ -96,35 +86,13 @@
                 </div>
             </div>
             <div class="form-footer">
-                <a href="/booking/calendar">← Kembali ke Kalendar</a>
-                <button type="submit" class="btn-submit" style="background:#194169;">Daftar</button>
+                <a href="/booking/calendar" class="btn-back">← Kembali ke Kalendar</a>
+                <button type="submit" class="btn-submit">Daftar</button>
             </div>
         </form>
     </div>
 </div>
 
-<footer>
-    <div class="footer-content">
-        <strong>Seksyen Pengurusan Dan Transformasi Digital</strong> 
-        <span class="divider">|</span> 
-        Tingkat 15, Bangunan Baitul Makmur II, Medan Raya, Petra Jaya, 93050 Kuching, Sarawak
-    </div>
-    
-    <div class="footer-right">
-        <span>© <?php echo date("Y"); ?> Jabatan Hutan Sarawak. Hak Cipta Terpelihara.</span>
-        
-        @guest('web')
-            @guest('booking_user')      
-                <a href="/login" class="footer-login-link" title="Login">
-                    <svg class="user-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <circle cx="12" cy="12" r="10" />
-                        <circle cx="12" cy="10" r="3" />
-                        <path d="M7 18c0-2.5 2-4.5 5-4.5s5 2 5 4.5" />
-                    </svg>
-                </a>
-            @endguest
-        @endguest
-    </div>
-</footer>
+<x-footer />
 </body>
 </html>

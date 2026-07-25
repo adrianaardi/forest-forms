@@ -10,13 +10,7 @@
 </head>
 <body>
 
-<header>
-    <div class="logo"></div>
-    <div>
-<a href="/" style="color: white; text-decoration: none;"><h1>Jabatan Hutan Sarawak</h1></a>
-        <p> Hub Aplikasi Perkhidmatan Atas Talian</p>
-    </div>
-</header>
+<x-header />
 
 <x-navbar :breadcrumbs="[['label' => 'Aduan ICT', 'url' => '/admin/ict-aduan'], ['label' => 'Senarai Aduan']]" />
 <div class="dashboard-body">
@@ -162,10 +156,7 @@
 
 </div>
 
-<footer>
-    <div><strong>Jabatan Hutan Sarawak</strong> | Wisma Sumber Alam, Petra Jaya, 93660 Kuching, Sarawak</div>
-    <div>© 2025 Jabatan Hutan Sarawak. Hak Cipta Terpelihara.</div>
-</footer>
+<x-footer />
 
 <!-- MODAL -->
 <div class="modal-overlay" id="modalOverlay" onclick="closeOnOverlay(event)">

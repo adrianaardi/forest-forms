@@ -59,13 +59,7 @@
 </head>
 <body>
 
-<header>
-        <div class="logo"></div>
-    <div>
-        <a href="/" style="color: white; text-decoration: none;"><h1>Jabatan Hutan Sarawak</h1></a>
-        <p> Hub Aplikasi Perkhidmatan Atas Talian</p>
-    </div>
-</header>
+<x-header />
 
 <x-navbar :breadcrumbs="[['label' => 'Pergerakan Pegawai', 'url' => route('admin.pergerakan.index')], ['label' => 'Pengurusan Cawangan']]" />
 
@@ -299,14 +293,7 @@
 
 </div>{{-- end dashboard-body --}}
 
-<footer>
-    <div style="text-align:center; font-size:13px; color:#666;">
-        <strong>Jabatan Hutan Sarawak</strong> | Wisma Sumber Alam, Petra Jaya, 93660 Kuching, Sarawak
-    </div>
-    <div style="text-align:center; font-size:12px; color:#888; margin-top:4px;">
-        © {{ date('Y') }} Jabatan Hutan Sarawak. Hak Cipta Terpelihara.
-    </div>
-</footer>
+<x-footer />
 
 <div class="modal-overlay" id="modalEditAktiviti" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:999; align-items:center; justify-content:center;">
     <div style="background:#fff; border-radius:12px; padding:1.5rem; width:100%; max-width:460px; box-shadow:0 8px 32px rgba(0,0,0,0.15);">
