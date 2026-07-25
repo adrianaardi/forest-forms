@@ -19,14 +19,14 @@
             <p>Senarai Kehadiran</p>
         </div>
 
-        <div class="form-section">
+<div class="form-section">
             <form method="GET" action="{{ route('display.pergerakan') }}">
-                <div class="field-row">
-                    <div class="field">
+                <div style="display:flex; flex-wrap:wrap; gap:1rem;">
+                    <div class="field" style="flex:1;">
                         <label>Cari Nama Pegawai</label>
                         <input type="text" name="search" value="{{ old('search', $search) }}" placeholder="Cari nama pegawai...">
                     </div>
-                    <div class="field">
+                    <div class="field" style="flex:1;">
                         <label>Pilih Bahagian</label>
                         <select name="bahagian_id">
                             @foreach($bahagianList as $bahagian)
@@ -34,13 +34,13 @@
                             @endforeach
                         </select>
                     </div>
-                </div>
-                <div class="form-footer">
-                    <a href="{{ route('display.pergerakan') }}" class="btn-back">Reset</a>
-                    <button type="submit" class="btn-submit">Tapis</button>
+                    <div class="field" style="margin-top: 1.9rem;">
+                        <a href="{{ route('display.pergerakan') }}" class="btn-back">Reset</a>
+                        <button type="submit" class="btn-submit">Tapis</button>
+                    </div>
                 </div>
             </form>
-            <div class="table-meta table-meta-right">
+            <div style="right:0; text-align:right; color:#444; font-size:13px;">
                 <a href="{{ route('display.full-display', ['bahagian_id' => $selectedBahagianId, 'search' => $search]) }}" target="_blank">Paparan Penuh</a>
             </div>
         </div>

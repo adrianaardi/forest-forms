@@ -822,7 +822,62 @@ footer {
 }
 
 .table-pagination {
+  display: flex;
   justify-content: center;
+  align-items: center;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+}
+
+.table-pagination nav,
+.table-pagination > div,
+.table-pagination > ul {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.table-pagination ul {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  flex-wrap: wrap;
+}
+
+.table-pagination a,
+.table-pagination span {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2rem;
+  height: 2rem;
+  padding: 0 0.6rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-color);
+  background: #ffffff;
+  color: #334155;
+  font-size: 0.82rem;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.table-pagination a:hover {
+  border-color: #b5c2cc;
+  background: #f8fafc;
+}
+
+.table-pagination [aria-current="page"] span,
+.table-pagination .active span {
+  border-color: var(--primary);
+  background: var(--primary);
+  color: #ffffff;
+}
+
+.table-pagination [aria-disabled="true"] span,
+.table-pagination .disabled span {
+  opacity: 0.55;
+  cursor: not-allowed;
 }
 
 .image-modal-overlay {
@@ -949,6 +1004,18 @@ footer {
 
   .app-table {
     min-width: 640px;
+  }
+
+  .table-pagination {
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .table-pagination nav,
+  .table-pagination > div,
+  .table-pagination > ul {
+    width: auto;
+    max-width: 100%;
   }
 
   .form-footer {
