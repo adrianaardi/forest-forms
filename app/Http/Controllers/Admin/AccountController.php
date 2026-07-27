@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
@@ -35,6 +36,30 @@ class AccountController extends Controller
         ]);
 
         return back()->with('success', 'Akaun berjaya ditambah.');
+    }
+
+    public function update(Request $request, $id)
+    {
+        $account = User::findOrFail($id);
+
+        $validated = $request->validate([
+            'name'       => 'required|string|max:255',
+            'email'      => ['required', 'email', Rule::unique('users', 'email')->ignore($account->id)],
+            'wilayah_id' => 'required|exists:wilayahs,id',
+            'password'   => 'nullable|min:8|confirmed',
+        ]);
+
+        $account->name = $validated['name'];
+        $account->email = $validated['email'];
+        $account->wilayah_id = $validated['wilayah_id'];
+
+        if (!empty($validated['password'])) {
+            $account->password = Hash::make($validated['password']);
+        }
+
+        $account->save();
+
+        return back()->with('success', 'Akaun berjaya dikemaskini.');
     }
 
     public function destroy($id)

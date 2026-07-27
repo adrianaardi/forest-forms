@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\BorangAduanKerosakan;
 use App\Models\BorangMuatNaikBahan;
+use App\Models\Wilayah;
 use Illuminate\Http\Request;
 use App\Mail\SupervisorApprovalMail;
 use Illuminate\Support\Facades\Mail;
@@ -36,38 +37,60 @@ class DashboardController extends Controller
 
         $query = BorangAduanKerosakan::query();
 
+        $selectedWilayah = $request->input('wilayah_id', $request->input('wilayah'));
+
         if ($user->role === 'sub_admin') {
 
             $wilayah = \App\Models\Wilayah::find($user->wilayah_id);
 
-            if ($wilayah) {
-                $query->where('wilayah', $wilayah->nama_wilayah);
+            if ($user->wilayah_id || $wilayah) {
+                $query->where(function ($q) use ($user, $wilayah) {
+                    if ($user->wilayah_id) {
+                        $q->where('wilayah_id', $user->wilayah_id);
+                    }
+
+                    if ($wilayah) {
+                        $q->orWhere('wilayah', $wilayah->nama_wilayah);
+                    }
+                });
             }
         }
 
-        // Admin can filter freely
-        if ($user->role === 'admin') {
+        if ($request->filled('search')) {
+            $query->where(function ($q) use ($request) {
+                $q->where('nama', 'like', '%' . $request->search . '%')
+                ->orWhere('bahagian', 'like', '%' . $request->search . '%')
+                ->orWhere('kategori_masalah', 'like', '%' . $request->search . '%');
+            });
+        }
 
-            if ($request->filled('search')) {
-                $query->where(function ($q) use ($request) {
-                    $q->where('nama', 'like', '%' . $request->search . '%')
-                    ->orWhere('bahagian', 'like', '%' . $request->search . '%')
-                    ->orWhere('kategori_masalah', 'like', '%' . $request->search . '%');
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        // Admin can filter by either query key: wilayah_id or wilayah.
+        if ($user->role === 'admin' && filled($selectedWilayah)) {
+            if (is_numeric($selectedWilayah)) {
+                $wilayahNama = Wilayah::whereKey((int) $selectedWilayah)->value('nama_wilayah');
+
+                $query->where(function ($q) use ($selectedWilayah, $wilayahNama) {
+                    $q->where('wilayah_id', (int) $selectedWilayah);
+
+                    if ($wilayahNama) {
+                        $q->orWhere('wilayah', $wilayahNama);
+                    }
                 });
-            }
-
-            if ($request->filled('status')) {
-                $query->where('status', $request->status);
-            }
-
-            if ($request->filled('wilayah')) {
-                $query->where('wilayah', $request->wilayah);
+            } else {
+                $query->where('wilayah', $selectedWilayah);
             }
         }
 
         $complaints = $query->latest()->paginate(15)->withQueryString();
+        
+        // Fetch wilayahs so Blade view has access to $wilayahs
+        $wilayahs = Wilayah::all();
 
-        return view('admin.ict-aduan', compact('complaints'));
+        return view('admin.ict-aduan', compact('complaints', 'wilayahs'));
     }
 
     public function portalUpload(Request $request)

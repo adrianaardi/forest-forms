@@ -50,6 +50,7 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     // accounts
     Route::get('/accounts',         [AccountController::class, 'index'])->name('accounts');
     Route::post('/accounts',        [AccountController::class, 'store'])->name('accounts.store');
+    Route::put('/accounts/{id}',    [AccountController::class, 'update'])->name('accounts.update');
     Route::delete('/accounts/{id}', [AccountController::class, 'destroy'])->name('accounts.destroy');
 
     // bahagian supervisor

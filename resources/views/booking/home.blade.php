@@ -17,7 +17,7 @@
 <div class="pg-body">
 
     @if(session('success'))
-        <div style="background:#eaf3de; border:1px solid #c0dd97; color:#3b6d11; padding:0.75rem 1rem; border-radius:8px; margin-bottom:1rem; font-size:13px;">
+        <div class="alert alert-success" style="margin-bottom:1rem;">
             {{ session('success') }}
         </div>
     @endif

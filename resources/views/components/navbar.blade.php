@@ -39,7 +39,7 @@
             @endphp
 
             <div class="nav-dropdown-wrap">
-                <button class="nav-dropdown-trigger">
+                <button type="button" class="nav-dropdown-trigger">
                     👤 {{ $user->name }}
                     <span>▾</span>
                 </button>
@@ -102,11 +102,12 @@
         <a href="{{ url('/help') }}">
                 Manual Pengguna
         </a>
+
         {{-- ── Booking User ── --}}
         @auth('booking_user')
 
             <div class="nav-dropdown-wrap">
-                <button class="nav-dropdown-trigger">
+                <button type="button" class="nav-dropdown-trigger">
                     👤 {{ Auth::guard('booking_user')->user()->name }}
                     <span>▾</span>
                 </button>
@@ -134,3 +135,31 @@
     </div>
 
 </nav>
+
+{{-- JS to handle Click Toggle and Click-Outside behavior --}}
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const dropdownWraps = document.querySelectorAll('.nav-dropdown-wrap');
+
+        dropdownWraps.forEach(wrap => {
+            const trigger = wrap.querySelector('.nav-dropdown-trigger');
+
+            trigger.addEventListener('click', (e) => {
+                e.stopPropagation();
+
+                // Close all other open dropdowns
+                dropdownWraps.forEach(other => {
+                    if (other !== wrap) other.classList.remove('is-open');
+                });
+
+                // Toggle current dropdown
+                wrap.classList.toggle('is-open');
+            });
+        });
+
+        // Close dropdown when clicking anywhere outside
+        document.addEventListener('click', () => {
+            dropdownWraps.forEach(wrap => wrap.classList.remove('is-open'));
+        });
+    });
+</script>

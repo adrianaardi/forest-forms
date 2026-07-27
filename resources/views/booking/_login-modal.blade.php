@@ -20,7 +20,7 @@
                 </div>
             @endauth
 
-            <div id="login-error" class="form-error-box is-hidden"></div>
+            <div id="login-error" class="form-error-box alert alert-error is-hidden"></div>
 
             <form id="login-form">
                 @csrf

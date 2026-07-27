@@ -16,7 +16,7 @@
 <div class="pg-body">
 
     @if($errors->any())
-        <div class="form-error-box">
+        <div class="form-error-box alert alert-error">
             <ul class="form-error-list">
                 @foreach($errors->all() as $error)
                     <li>{{ $error }}</li>
@@ -95,21 +95,16 @@
 
                     <!-- WILAYAH -->
                     <div class="field">
-                        <label>Wilayah</label>
-                        <select name="wilayah" id="wilayah">
-                            <option value="">-- Pilih Wilayah --</option>
-                            <option value="Ibu Pejabat" {{ old('wilayah') == 'Ibu Pejabat' ? 'selected' : '' }}>Ibu Pejabat</option>
-                            <option value="Kuching" {{ old('wilayah') == 'Kuching' ? 'selected' : '' }}>Kuching</option>
-                            <option value="Sibu" {{ old('wilayah') == 'Sibu' ? 'selected' : '' }}>Sibu</option>
-                            <option value="Bintulu" {{ old('wilayah') == 'Bintulu' ? 'selected' : '' }}>Bintulu</option>
-                            <option value="Miri" {{ old('wilayah') == 'Miri' ? 'selected' : '' }}>Miri</option>
-                            <option value="Sri Aman" {{ old('wilayah') == 'Sri Aman' ? 'selected' : '' }}>Sri Aman</option>
-                            <option value="Sarikei" {{ old('wilayah') == 'Sarikei' ? 'selected' : '' }}>Sarikei</option>
-                            <option value="Kapit" {{ old('wilayah') == 'Kapit' ? 'selected' : '' }}>Kapit</option>
-                            <option value="Limbang" {{ old('wilayah') == 'Limbang' ? 'selected' : '' }}>Limbang</option>
-                            <option value="Lawas" {{ old('wilayah') == 'Lawas' ? 'selected' : '' }}>Lawas</option>
-                        </select>
-                    </div> 
+                    <label>Wilayah</label>
+                    <select name="wilayah_id" required>
+                        <option value="">-- Pilih Wilayah --</option>
+                        @foreach($wilayahs as $wilayah)
+                            <option value="{{ $wilayah->id }}">
+                                {{ $wilayah->nama_wilayah }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
                 </div>
                 <div class="field-row">
                     <div class="field">

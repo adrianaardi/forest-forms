@@ -22,13 +22,13 @@
             <div class="form-section">
 
                 @if(session('error'))
-                    <div style="background:#fdf0f0; border:1px solid #f5c1c1; color:#a32d2d; padding:0.75rem 1rem; border-radius:8px; margin-bottom:1rem; font-size:13px;">
+                    <div class="alert alert-error" style="margin-bottom:1rem;">
                         {{ session('error') }}
                     </div>
                 @endif
                 @if($errors->any())
-                    <div style="background:#fdf0f0; border:1px solid #f5c1c1; color:#a32d2d; padding:0.75rem 1rem; border-radius:8px; margin-bottom:1rem; font-size:13px;">
-                        <ul style="margin:0; padding-left:1.2rem;">
+                    <div class="form-error-box alert alert-error">
+                        <ul class="form-error-list">
                             @foreach($errors->all() as $e)<li>{{ $e }}</li>@endforeach
                         </ul>
                     </div>

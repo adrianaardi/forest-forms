@@ -40,7 +40,7 @@
                     x-show="show"
                     x-transition
                     x-init="setTimeout(() => show = false, 2000)"
-                    class="text-sm text-gray-600"
+                    class="alert alert-success"
                 >{{ __('Saved.') }}</p>
             @endif
         </div>

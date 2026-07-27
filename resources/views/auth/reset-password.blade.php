@@ -77,7 +77,7 @@
 
                 {{-- ERROR MESSAGE --}}
                 @if ($errors->any())
-                    <div style="background:#ffe5e5; border:1px solid #ffb3b3; color:#a32d2d; padding:0.75rem 1rem; border-radius:8px; margin-bottom:1rem; font-size:13px;">
+                    <div class="alert alert-error" style="margin-bottom:1rem;">
                         {{ $errors->first() }}
                     </div>
                 @endif

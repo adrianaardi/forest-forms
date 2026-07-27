@@ -4,9 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Urus Akaun — Admin</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:opsz,wght@6..144,1..1000&family=Lora:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet"><link rel="stylesheet" href="{{ asset('style.css') }}">    <link rel="icon" href="{{ asset('images/logo-icon.png')}}">
+<link rel="stylesheet" href="{{ asset('style.css') }}"> 
+   <link rel="icon" href="{{ asset('images/logo-icon.png')}}">
 </head>
 <body>
 
@@ -17,20 +16,16 @@
 <div class="pg-body">
 
     @if(session('success'))
-        <div style="background:#eaf3de; border:1px solid #c0dd97; color:#3b6d11; padding:0.75rem 1rem; border-radius:8px; margin-bottom:1rem; font-size:13px;">
+        <div class="alert alert-success" style="margin-bottom:1rem;">
             {{ session('success') }}
         </div>
     @endif
 
     @if($errors->has('delete'))
-        <div style="background:#fdf0f0; border:1px solid #f5c1c1; color:#a32d2d; padding:0.75rem 1rem; border-radius:8px; margin-bottom:1rem; font-size:13px;">
+        <div class="alert alert-error" style="margin-bottom:1rem;">
             {{ $errors->first('delete') }}
         </div>
     @endif
-
-    <div style="margin-bottom: 1rem;">
-        <a href="/admin/profile" class="btn-back">← Kembali ke Profil</a>
-    </div>
 
     {{-- Add account form --}}
     <div class="form-card" style="margin-bottom: 1.5rem;">
@@ -93,8 +88,7 @@
             <h2>Senarai Akaun</h2>
             <p>Semua akaun admin yang berdaftar.</p>
         </div>
-        <div class="form-section" style="padding: 0;">
-            <table class="data-table" style="margin-bottom:0; border-radius:0; border:none;">
+            <table class="app-table" style="margin-bottom:0; border-radius:0; border:none;">
                 <tr>
                     <th>Nama</th>
                     <th>Email</th>
@@ -116,15 +110,26 @@
                     </td>
                     <td>{{ \Carbon\Carbon::parse($account->created_at)->format('d/m/Y') }}</td>
                     <td>
-                        @if($account->id !== Auth::id())
-                            <form method="POST" action="{{ route('admin.accounts.destroy', $account->id) }}" onsubmit="return confirm('Padam akaun {{ $account->name }}?')">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn-delete" style="padding:4px 12px; font-size:12px;">Padam</button>
-                            </form>
-                        @else
-                            <span style="font-size:12px; color:#aaa;">—</span>
-                        @endif
+                        <div class="table-actions">
+                            <button
+                                type="button"
+                                class="table-btn table-btn-info"
+                                onclick="openEditAccount(this)"
+                                data-id="{{ $account->id }}"
+                                data-name="{{ $account->name }}"
+                                data-email="{{ $account->email }}"
+                                data-wilayah-id="{{ $account->wilayah_id }}">
+                                Edit
+                            </button>
+
+                            @if($account->id !== Auth::id())
+                                <form method="POST" action="{{ route('admin.accounts.destroy', $account->id) }}" onsubmit="return confirm('Padam akaun {{ $account->name }}?')">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="table-btn table-btn-danger">Padam</button>
+                                </form>
+                            @endif
+                        </div>
                     </td>
                 </tr>
                 @endforeach
@@ -135,6 +140,87 @@
 </div>
 
 <x-footer />
+
+<div class="ticket-modal-overlay" id="editAccountModal" onclick="closeEditAccountOnOverlay(event)">
+    <div class="ticket-modal">
+        <div class="ticket-modal-header">
+            <h3>Kemaskini Akaun</h3>
+            <button type="button" class="ticket-modal-close" onclick="closeEditAccount()">&times;</button>
+        </div>
+
+        <div class="ticket-modal-body">
+            <form id="editAccountForm" method="POST">
+                @csrf
+                @method('PUT')
+
+                <div class="field">
+                    <label>Nama</label>
+                    <input type="text" name="name" id="editAccountName" required>
+                </div>
+
+                <div class="field">
+                    <label>Email</label>
+                    <input type="email" name="email" id="editAccountEmail" required>
+                </div>
+
+                <div class="field">
+                    <label>Wilayah</label>
+                    <select name="wilayah_id" id="editAccountWilayah" required>
+                        <option value="">-- Pilih Wilayah --</option>
+                        @foreach($wilayahs as $wilayah)
+                            <option value="{{ $wilayah->id }}">{{ $wilayah->nama_wilayah }}</option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div class="field-row">
+                    <div class="field">
+                        <label>Kata Laluan Baharu (Opsyenal)</label>
+                        <input type="password" name="password" placeholder="Biarkan kosong jika tiada perubahan">
+                    </div>
+                    <div class="field">
+                        <label>Sahkan Kata Laluan</label>
+                        <input type="password" name="password_confirmation" placeholder="Taip semula jika ubah kata laluan">
+                    </div>
+                </div>
+
+                <div class="form-footer">
+                    <button type="button" class="btn-back" onclick="closeEditAccount()">Batal</button>
+                    <button type="submit" class="btn-submit">Simpan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+function openEditAccount(button) {
+    const id = button.dataset.id;
+    const name = button.dataset.name || '';
+    const email = button.dataset.email || '';
+    const wilayahId = button.dataset.wilayahId || '';
+
+    document.getElementById('editAccountForm').action = `/admin/accounts/${id}`;
+    document.getElementById('editAccountName').value = name;
+    document.getElementById('editAccountEmail').value = email;
+    document.getElementById('editAccountWilayah').value = wilayahId;
+
+    document.querySelector('#editAccountForm input[name="password"]').value = '';
+    document.querySelector('#editAccountForm input[name="password_confirmation"]').value = '';
+
+    document.getElementById('editAccountModal').classList.add('active');
+}
+
+function closeEditAccount() {
+    document.getElementById('editAccountModal').classList.remove('active');
+}
+
+function closeEditAccountOnOverlay(event) {
+    if (event.target === document.getElementById('editAccountModal')) {
+        closeEditAccount();
+    }
+}
+</script>
 
 </body>
 </html>

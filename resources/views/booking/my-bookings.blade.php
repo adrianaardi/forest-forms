@@ -15,14 +15,14 @@
 
     @if(session('success'))
         <div class="form-card">
-            <div class="form-section">
+            <div class="form-section alert alert-success">
             {{ session('success') }}
             </div>
         </div>
     @endif
     @if(session('info'))
         <div class="form-card">
-            <div class="form-section">
+            <div class="form-section alert alert-info">
             {{ session('info') }}
             </div>
         </div>

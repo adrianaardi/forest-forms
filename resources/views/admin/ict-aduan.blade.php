@@ -4,65 +4,48 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Aduan ICT — Admin</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:opsz,wght@6..144,1..1000&family=Lora:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet"><link rel="stylesheet" href="{{ asset('style.css') }}">    <link rel="icon" href="{{ asset('images/logo-icon.png')}}">
+    <link rel="stylesheet" href="{{ asset('style.css') }}">
+    <link rel="icon" href="{{ asset('images/logo-icon.png')}}">
 </head>
 <body>
 
 <x-header />
 
 <x-navbar :breadcrumbs="[['label' => 'Aduan ICT', 'url' => '/admin/ict-aduan'], ['label' => 'Senarai Aduan']]" />
+
 <div class="dashboard-body">
 
-    <div style="margin-bottom: 1rem;">
-        <a href="/admin/dashboard" class="btn-back">← Kembali ke Dashboard</a>
-    </div>
-
-    <p class="section-heading">Senarai Aduan ICT</p>
+    <p class="page-heading">Senarai Aduan ICT</p>
 
     <form method="GET" action="/admin/ict-aduan">
-        <div class="toolbar">
+        <div class="listing-toolbar">
             <input type="text" name="search" placeholder="Cari nama, bahagian, kategori..." value="{{ request('search') }}">
+
             <select name="status">
                 <option value="">-- Semua Status --</option>
-
-                <option value="Belum Selesai" {{ request('status') == 'Belum Selesai' ? 'selected' : '' }}>
-                    Belum Selesai
-                </option>
-
-                <option value="Dalam Tindakan" {{ request('status') == 'Dalam Tindakan' ? 'selected' : '' }}>
-                    Dalam Tindakan
-                </option>
-
-                <option value="Selesai" {{ request('status') == 'Selesai' ? 'selected' : '' }}>
-                    Selesai
-                </option>
-
-                <option value="Tindakan Pembekal SAINS/Luar" {{ request('status') == 'Tindakan Pembekal SAINS/Luar' ? 'selected' : '' }}>
-                    Tindakan Pembekal SAINS/Luar
-                </option>
-
-                <option value="Tangguh/KIV" {{ request('status') == 'Tangguh/KIV' ? 'selected' : '' }}>
-                    Tangguh / KIV
-                </option>
+                <option value="Belum Selesai" {{ request('status') == 'Belum Selesai' ? 'selected' : '' }}>Belum Selesai</option>
+                <option value="Dalam Tindakan" {{ request('status') == 'Dalam Tindakan' ? 'selected' : '' }}>Dalam Tindakan</option>
+                <option value="Selesai" {{ request('status') == 'Selesai' ? 'selected' : '' }}>Selesai</option>
+                <option value="Tindakan Pembekal SAINS/Luar" {{ request('status') == 'Tindakan Pembekal SAINS/Luar' ? 'selected' : '' }}>Tindakan Pembekal SAINS/Luar</option>
+                <option value="Tangguh/KIV" {{ request('status') == 'Tangguh/KIV' ? 'selected' : '' }}>Tangguh / KIV</option>
             </select>
+
             @if(Auth::user()->role === 'admin')
-                <select name="wilayah">
-                    <option value="">-- Semua Wilayah --</option>
-                    <option value="Ibu Pejabat" {{ request('wilayah') == 'Ibu Pejabat' ? : '' }}>Ibu Pejabat</option>
-                    <option value="Kuching" {{ request('wilayah') == 'Kuching' ? 'selected' : '' }}>Kuching</option>
-                    <option value="Sibu" {{ request('wilayah') == 'Sibu' ? 'selected' : '' }}>Sibu</option>
-                    <option value="Miri" {{ request('wilayah') == 'Miri' ? 'selected' : '' }}>Miri</option>
-                    <option value="Bintulu" {{ request('wilayah') == 'Bintulu' ? 'selected' : '' }}>Bintulu</option>
-                    <option value="Limbang" {{ request('wilayah') == 'Limbang' ? 'selected' : '' }}>Limbang</option>
-                    <option value="Sri Aman" {{ request('wilayah') == 'Sri Aman' ? 'selected' : '' }}>Sri Aman</option>
-                    <option value="Kapit" {{ request('wilayah') == 'Kapit' ? 'selected' : '' }}>Kapit</option>
-                </select>
+                <select name="wilayah_id">
+                        <option value="">-- Pilih Wilayah --</option>
+                        @foreach($wilayahs as $wilayah)
+                            <option
+                                value="{{ $wilayah->id }}"
+                                {{ ((string) request('wilayah_id', request('wilayah')) === (string) $wilayah->id || request('wilayah') === $wilayah->nama_wilayah) ? 'selected' : '' }}>
+                                {{ $wilayah->nama_wilayah }}
+                            </option>
+                        @endforeach
+                    </select>
             @endif
-            <button type="submit">Tapis</button>
-            <a href="/admin/ict-aduan" class="btn-reset">Set Semula</a>
-            <button type="button" class="btn-delete" id="deleteBtn" onclick="submitDelete()" disabled>Padam</button>
+
+            <button type="submit" class="table-btn table-btn-info">Tapis</button>
+            <a href="/admin/ict-aduan" class="table-btn table-btn-neutral">Set Semula</a>
+            <button type="button" class="table-btn table-btn-danger" id="deleteBtn" onclick="submitDelete()" disabled>Padam</button>
         </div>
     </form>
 
@@ -71,86 +54,84 @@
         <div id="deleteInputs"></div>
     </form>
 
-    <table class="data-table">
-        <tr>
-            <th style="width:36px;"><input type="checkbox" id="checkAll" onclick="toggleAll(this)"></th>
-            <th>No. Rujukan</th>
-            <th>Nama</th>
-            <th>Bahagian</th>
-            <th>Wilayah</th>
-            <th>Kategori</th>
-            <th>Tarikh</th>
-            <th>Status</th>
-            <th>Tindakan</th>
-        </tr>
+    <div class="table-card">
+        <div class="table-wrap">
+            <table class="app-table">
+                <tr>
+                    <th class="check-col"><input type="checkbox" id="checkAll" onclick="toggleAll(this)"></th>
+                    <th>No. Rujukan</th>
+                    <th>Nama</th>
+                    <th>Bahagian</th>
+                    <th>Wilayah</th>
+                    <th>Kategori</th>
+                    <th>Tarikh</th>
+                    <th>Status</th>
+                    <th>Tindakan</th>
+                </tr>
 
-        @forelse($complaints as $item)
-        <tr>
-            <td><input type="checkbox" class="row-check" value="{{ $item->id }}" onchange="updateDelete()"></td>
-            <td>{{ $item->no_tiket }}</td>
-            <td>{{ $item->nama }}</td>
-            <td>{{ $item->bahagian ?? '-' }}</td>
-            <td>{{ $item->wilayah ?? '-' }}</td>
-            <td>{{ $item->kategori_masalah }}</td>
-            <td>{{ \Carbon\Carbon::parse($item->tarikh_aduan)->format('d/m/Y') }}</td>
-                <td>
-                    @if($item->status === 'Belum Selesai')
-                        <span class="badge badge-pending">Belum Selesai</span>
+                @forelse($complaints as $item)
+                <tr>
+                    <td><input type="checkbox" class="row-check" value="{{ $item->id }}" onchange="updateDelete()"></td>
+                    <td>{{ $item->no_tiket }}</td>
+                    <td>{{ $item->nama }}</td>
+                    <td>{{ $item->bahagian ?? '-' }}</td>
+                    <td>{{ $item->nama_wilayah ?? $item->wilayah ?? '-' }}</td>
+                    <td>{{ $item->kategori_masalah }}</td>
+                    <td>{{ \Carbon\Carbon::parse($item->tarikh_aduan)->format('d/m/Y') }}</td>
+                    <td>
+                        @if($item->status === 'Belum Selesai')
+                            <span class="badge badge-pending">Belum Selesai</span>
+                        @elseif($item->status === 'Dalam Tindakan')
+                            <span class="badge badge-progress">Dalam Tindakan</span>
+                        @elseif($item->status === 'Tindakan Pembekal SAINS/Luar')
+                            <span class="badge badge-warning">Tindakan Pembekal SAINS/Luar</span>
+                        @elseif($item->status === 'Tangguh/KIV')
+                            <span class="badge badge-kiv">Tangguh / KIV</span>
+                        @elseif($item->status === 'Selesai')
+                            <span class="badge badge-done">Selesai</span>
+                        @else
+                            <span class="badge">{{ $item->status }}</span>
+                        @endif
+                    </td>
+                    <td>
+                        <div class="table-actions">
+                            <button class="table-btn table-btn-info"
+                                data-id="{{ $item->id }}"
+                                data-nama="{{ $item->nama }}"
+                                data-jawatan="{{ $item->jawatan ?? '-' }}"
+                                data-bahagian="{{ $item->bahagian ?? '-' }}"
+                                data-wilayah="{{ $item->nama_wilayah ?? $item->wilayah ?? '-' }}"
+                                data-telefon="{{ $item->telefon ?? '-' }}"
+                                data-emel="{{ $item->emel ?? '-' }}"
+                                data-tarikh="{{ \Carbon\Carbon::parse($item->tarikh_aduan)->format('d/m/Y') }}"
+                                data-masa="{{ $item->masa_aduan }}"
+                                data-kategori="{{ $item->kategori_masalah }}"
+                                data-lain="{{ $item->masalah_lain ?? '-' }}"
+                                data-keterangan="{{ $item->keterangan_kerosakan ?? '-' }}"
+                                data-status="{{ $item->status }}"
+                                data-nama_syarikat="{{ $item->nama_syarikat ?? '' }}"
+                                data-no_tel_syarikat="{{ $item->no_tel_syarikat ?? '' }}"
+                                data-tarikh_tindakan="{{ $item->tarikh_tindakan ?? '' }}"
+                                data-tarikh_selesai="{{ $item->tarikh_selesai ?? '' }}"
+                                data-catatan_pembekal="{{ $item->catatan_pembekal ?? '' }}"
+                                data-remarks="{{ $item->remarks ?? '' }}"
+                                data-attachments='@json($item->attachments ? json_decode($item->attachments, true) : [])'
+                                onclick="openModalFromButton(this)">
+                                Lihat
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+                @empty
+                <tr>
+                    <td colspan="9" class="table-empty">Tiada rekod ditemui.</td>
+                </tr>
+                @endforelse
+            </table>
+        </div>
+    </div>
 
-                    @elseif($item->status === 'Dalam Tindakan')
-                        <span class="badge badge-progress">Dalam Tindakan</span>
-
-                    @elseif($item->status === 'Tindakan Pembekal SAINS/Luar')
-                        <span class="badge badge-warning">Tindakan Pembekal SAINS/Luar</span>
-
-                    @elseif($item->status === 'Tangguh/KIV')
-                        <span class="badge badge-kiv">Tangguh / KIV</span>
-
-                    @elseif($item->status === 'Selesai')
-                        <span class="badge badge-done">Selesai</span>
-
-                    @else
-                        <span class="badge">{{ $item->status }}</span>
-                    @endif
-                </td>
-
-            <td>
-                <button class="btn-view"
-                    data-id="{{ $item->id }}"
-                    data-nama="{{ $item->nama }}"
-                    data-jawatan="{{ $item->jawatan ?? '-' }}"
-                    data-bahagian="{{ $item->bahagian ?? '-' }}"
-                    data-wilayah="{{ $item->wilayah ?? '-' }}"
-                    data-telefon="{{ $item->telefon ?? '-' }}"
-                    data-emel="{{ $item->emel ?? '-' }}"
-                    data-tarikh="{{ \Carbon\Carbon::parse($item->tarikh_aduan)->format('d/m/Y') }}"
-                    data-masa="{{ $item->masa_aduan }}"
-                    data-kategori="{{ $item->kategori_masalah }}"
-                    data-lain="{{ $item->masalah_lain ?? '-' }}"
-                    data-keterangan="{{ $item->keterangan_kerosakan ?? '-' }}"
-                    data-status="{{ $item->status }}"
-                    data-nama_syarikat="{{ $item->nama_syarikat ?? '' }}"
-                    data-no_tel_syarikat="{{ $item->no_tel_syarikat ?? '' }}"
-                    data-tarikh_tindakan="{{ $item->tarikh_tindakan ?? '' }}"
-                    data-tarikh_selesai="{{ $item->tarikh_selesai ?? '' }}"
-                    data-catatan_pembekal="{{ $item->catatan_pembekal ?? '' }}"
-                    data-remarks="{{ $item->remarks ?? '' }}"
-                    data-attachments='@json($item->attachments ? json_decode($item->attachments, true) : [])'
-                    onclick="openModalFromButton(this)">
-                    Lihat
-                </button>
-            </td>
-        </tr>
-        @empty
-        <tr>
-            <td colspan="8" style="text-align:center; color:#999; padding:1.5rem;">
-                Tiada rekod ditemui.
-            </td>
-        </tr>
-        @endforelse
-    </table>
-
-    <div class="pagination-wrap">
+    <div class="table-pagination">
         {{ $complaints->links() }}
     </div>
 
@@ -159,14 +140,14 @@
 <x-footer />
 
 <!-- MODAL -->
-<div class="modal-overlay" id="modalOverlay" onclick="closeOnOverlay(event)">
-    <div class="modal">
-        <div class="modal-header">
-            <h2>Borang Aduan Baikpulih ICT / Digital</h2>
-            <button class="modal-close" onclick="closeModal()">×</button>
+<div class="ticket-modal-overlay" id="modalOverlay" onclick="closeOnOverlay(event)">
+    <div class="ticket-modal">
+        <div class="ticket-modal-header">
+            <h3>Borang Aduan Baikpulih ICT / Digital</h3>
+            <button class="ticket-modal-close" onclick="closeModal()">&times;</button>
         </div>
 
-        <div class="modal-body">
+        <div class="ticket-modal-body">
 
             <div class="detail-group">
                 <div class="detail-section-label">Bahagian A — Maklumat Pengadu</div>
@@ -200,14 +181,14 @@
                     <div class="detail-field"><label>Masalah Lain-lain</label><p id="d-lain"></p></div>
                 </div>
 
-                <div class="detail-field" style="margin-top:0.5rem;">
+                <div class="detail-field detail-field-spaced">
                     <label>Keterangan Kerosakan</label>
-                    <p id="d-keterangan" style="white-space:pre-wrap;"></p>
+                    <p id="d-keterangan" class="text-pre-wrap"></p>
                 </div>
 
-                <div class="detail-field" style="margin-top:0.5rem;">
+                <div class="detail-field detail-field-spaced">
                     <label>Attachment</label>
-                    <div id="d-attachments">-</div>
+                    <div id="d-attachments" class="attachment-list">-</div>
                 </div>
             </div>
 
@@ -215,7 +196,7 @@
                 <div class="detail-section-label">Bahagian C — Tindakan / Penyelesaian</div>
 
                 <!-- CURRENT STATUS -->
-                <div id="d-status" style="margin-bottom: 1rem;"></div>
+                <div id="d-status" class="status-display"></div>
 
                 <!-- FORM -->
                 <form id="updateStatusForm" method="POST">
@@ -225,7 +206,7 @@
 
                     <!-- STATUS -->
                     <div class="detail-row">
-                        <div class="detail-field">
+                        <div class="field full-width-field">
                             <label>Status Tindakan</label>
                             <select name="status" id="statusSelect" onchange="toggleSupplierSection()" required>
                                 <option value="">-- Pilih Status --</option>
@@ -236,63 +217,57 @@
                             </select>
                         </div>
                     </div>
+
                     <!-- PREVIOUS REMARKS -->
                     <div class="detail-field">
                         <label>Catatan Sebelumnya</label>
                         <p id="d-remarks">-</p>
                     </div>
-                    
+
                     <!-- REMARKS -->
-                    <div class="detail-row">
-                        <div class="detail-field" style="width:100%;">
-                            <label>Catatan / Remarks</label>
-                            <textarea name="remarks" rows="3" placeholder="Masukkan catatan..."></textarea>
-                        </div>
+                    <div class="field full-width-field">
+                        <label>Catatan / Remarks</label>
+                        <textarea name="remarks" rows="3" placeholder="Masukkan catatan..."></textarea>
                     </div>
 
                     <!-- SUPPLIER SECTION -->
-                    <div id="supplierSection" style="display:none; margin-top:10px;">
+                    <div id="supplierSection" class="detail-group supplier-section is-hidden">
 
                         <div class="detail-section-label">Maklumat Pembekal</div>
 
-                        <!-- ROW 1 -->
-                        <div class="detail-row">
-                            <div class="detail-field">
+                        <div class="field-row">
+                            <div class="field">
                                 <label>Nama Syarikat</label>
                                 <input type="text" name="nama_syarikat">
                             </div>
 
-                            <div class="detail-field">
+                            <div class="field">
                                 <label>No Telefon</label>
                                 <input type="text" name="no_tel_syarikat">
                             </div>
                         </div>
 
-                        <!-- ROW 2 -->
-                        <div class="detail-row">
-                            <div class="detail-field">
+                        <div class="field-row">
+                            <div class="field">
                                 <label>Tarikh Tindakan</label>
                                 <input type="date" name="tarikh_tindakan">
                             </div>
 
-                            <div class="detail-field">
+                            <div class="field">
                                 <label>Tarikh Selesai</label>
                                 <input type="date" name="tarikh_selesai">
                             </div>
                         </div>
 
-                        <!-- ROW 3 -->
-                        <div class="detail-row">
-                            <div class="detail-field" style="width:100%;">
-                                <label>Catatan Pembekal</label>
-                                <input type="text" name="catatan_pembekal">
-                            </div>
+                        <div class="field">
+                            <label>Catatan Pembekal</label>
+                            <input type="text" name="catatan_pembekal">
                         </div>
 
                     </div>
 
                     <!-- SUBMIT -->
-                    <div class="modal-actions" style="margin-top:15px;">
+                    <div class="modal-actions">
                         <button type="submit" class="btn-submit">Simpan Status</button>
                     </div>
 
@@ -303,7 +278,7 @@
 </div>
 
 <!-- STATUS FORM -->
-<form id="statusForm" method="POST" style="display:none;">
+<form id="statusForm" method="POST" class="is-hidden">
     @csrf
     <input type="hidden" name="status" id="statusInput">
 </form>
@@ -326,14 +301,12 @@ function openModalFromButton(btn) {
     document.getElementById('d-kategori').textContent = btn.dataset.kategori;
     document.getElementById('d-lain').textContent = btn.dataset.lain;
     document.getElementById('d-keterangan').textContent = btn.dataset.keterangan;
+
     // SET FORM ACTION + ID
     document.getElementById('updateStatusForm').action = `/admin/ict-aduan/${currentId}/status`;
     document.getElementById('complaintId').value = currentId;
+
     document.querySelector('input[name="nama_syarikat"]').value = btn.dataset.nama_syarikat || '';
-    document.querySelector('input[name="no_tel_syarikat"]').value = btn.dataset.no_tel_syarikat || '';
-    document.querySelector('input[name="tarikh_tindakan"]').value = btn.dataset.tarikh_tindakan || '';
-    document.querySelector('input[name="tarikh_selesai"]').value = btn.dataset.tarikh_selesai || '';
-    document.querySelector('input[name="catatan_pembekal"]').value = btn.dataset.catatan_pembekal || '';document.querySelector('input[name="nama_syarikat"]').value = btn.dataset.nama_syarikat || '';
     document.querySelector('input[name="no_tel_syarikat"]').value = btn.dataset.no_tel_syarikat || '';
     document.querySelector('input[name="tarikh_tindakan"]').value = btn.dataset.tarikh_tindakan || '';
     document.querySelector('input[name="tarikh_selesai"]').value = btn.dataset.tarikh_selesai || '';
@@ -343,10 +316,10 @@ function openModalFromButton(btn) {
 
     // reset form
     document.getElementById('statusSelect').value = '';
-    document.getElementById('supplierSection').style.display = 'none';
+    document.getElementById('supplierSection').classList.add('is-hidden');
 
     if (btn.dataset.status === 'Tindakan Pembekal SAINS/Luar') {
-        document.getElementById('supplierSection').style.display = 'block';
+        document.getElementById('supplierSection').classList.remove('is-hidden');
         document.getElementById('statusSelect').value = 'Tindakan Pembekal SAINS/Luar';
     }
 
@@ -364,10 +337,10 @@ function openModalFromButton(btn) {
     if (attachments.length > 0) {
         attachments.forEach(file => {
             attBox.innerHTML +=
-                `<a href="/storage/${file}" target="_blank">📎 ${file.split('/').pop()}</a><br>`;
+                `<a class="attachment-item" href="/storage/${file}" target="_blank">📎 ${file.split('/').pop()}</a>`;
         });
     } else {
-        attBox.innerHTML = 'Tiada lampiran';
+        attBox.innerHTML = '<span class="attachment-empty">Tiada lampiran</span>';
     }
 
     const status = btn.dataset.status;
@@ -375,6 +348,8 @@ function openModalFromButton(btn) {
     const badges = {
         'Belum Selesai': '<span class="badge badge-pending">Belum Selesai</span>',
         'Dalam Tindakan': '<span class="badge badge-progress">Dalam Tindakan</span>',
+        'Tindakan Pembekal SAINS/Luar': '<span class="badge badge-warning">Tindakan Pembekal SAINS/Luar</span>',
+        'Tangguh/KIV': '<span class="badge badge-kiv">Tangguh / KIV</span>',
         'Selesai': '<span class="badge badge-done">Selesai</span>'
     };
 
@@ -388,9 +363,9 @@ function toggleSupplierSection() {
     const section = document.getElementById('supplierSection');
 
     if (status === 'Tindakan Pembekal SAINS/Luar') {
-        section.style.display = 'block';
+        section.classList.remove('is-hidden');
     } else {
-        section.style.display = 'none';
+        section.classList.add('is-hidden');
     }
 }
 
@@ -405,12 +380,11 @@ function closeOnOverlay(e) {
 // 1. Handles the main header checkbox (Check/Uncheck all rows)
 function toggleAll(masterCheckbox) {
     const rowCheckboxes = document.querySelectorAll('.row-check');
-    
+
     rowCheckboxes.forEach(checkbox => {
         checkbox.checked = masterCheckbox.checked;
     });
-    
-    // Update the delete button status after changing all states
+
     updateDelete();
 }
 
@@ -419,17 +393,15 @@ function updateDelete() {
     const rowCheckboxes = document.querySelectorAll('.row-check');
     const deleteBtn = document.getElementById('deleteBtn');
     const deleteInputsContainer = document.getElementById('deleteInputs');
-    
-    // Clear previously injected IDs from the hidden form container
+
     deleteInputsContainer.innerHTML = '';
-    
+
     let anyChecked = false;
-    
+
     rowCheckboxes.forEach(checkbox => {
         if (checkbox.checked) {
             anyChecked = true;
-            
-            // Inject a hidden input element for each checked item into your deleteForm
+
             const hiddenInput = document.createElement('input');
             hiddenInput.type = 'hidden';
             hiddenInput.name = 'ids[]';
@@ -437,8 +409,7 @@ function updateDelete() {
             deleteInputsContainer.appendChild(hiddenInput);
         }
     });
-    
-    // Enable button if at least one checkbox is selected, otherwise disable it
+
     deleteBtn.disabled = !anyChecked;
 }
 
@@ -448,7 +419,6 @@ function submitDelete() {
         document.getElementById('deleteForm').submit();
     }
 }
-
 </script>
 
 </body>

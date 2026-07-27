@@ -102,7 +102,7 @@
             <div class="section-label">Keputusan Semakan</div>
 
             @if($permohonan->status === 'Diluluskan')
-                <div style="background:#eaf3de; border:1px solid #c0dd97; color:#3b6d11; padding:0.75rem 1rem; border-radius:8px; font-size:13px;">
+                <div class="alert alert-success">
                     Permohonan ini telah pun diluluskan.
                     @if($permohonan->catatan_semakan)
                         <div style="margin-top:0.5rem; padding-top:0.5rem; border-top:1px solid #c0dd97;">

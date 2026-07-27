@@ -16,7 +16,7 @@
 <div class="pg-body" style="max-width:560px;">
 
     @if(session('success'))
-        <div style="background:#eaf3de; border:1px solid #c0dd97; color:#3b6d11; padding:0.75rem 1rem; border-radius:8px; margin-bottom:1rem; font-size:13px;">
+        <div class="alert alert-success" style="margin-bottom:1rem;">
             {{ session('success') }}
         </div>
     @endif
@@ -31,8 +31,8 @@
             @csrf
             <div class="form-section">
                 @if($errors->has('name') || $errors->has('email') || $errors->has('bahagian'))
-                    <div style="background:#fdf0f0; border:1px solid #f5c1c1; color:#a32d2d; padding:0.75rem 1rem; border-radius:8px; margin-bottom:1rem; font-size:13px;">
-                        <ul style="margin:0; padding-left:1.2rem;">
+                    <div class="form-error-box alert alert-error">
+                        <ul class="form-error-list">
                             @foreach($errors->all() as $e)<li>{{ $e }}</li>@endforeach
                         </ul>
                     </div>
@@ -82,7 +82,7 @@
             @csrf
             <div class="form-section">
                 @error('current_password')
-                    <div style="background:#fdf0f0; border:1px solid #f5c1c1; color:#a32d2d; padding:0.75rem 1rem; border-radius:8px; margin-bottom:1rem; font-size:13px;">
+                    <div class="alert alert-error" style="margin-bottom:1rem;">
                         {{ $message }}
                     </div>
                 @enderror

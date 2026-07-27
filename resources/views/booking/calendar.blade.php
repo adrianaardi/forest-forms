@@ -386,7 +386,7 @@
 @endif
 
 @if(session('success') || session('info'))
-    <div id="flash-msg" class="flash-msg {{ session('success') ? 'success' : 'info' }}">
+    <div id="flash-msg" class="flash-msg alert {{ session('success') ? 'alert-success' : 'alert-info' }}">
         {{ session('success') ?? session('info') }}
     </div>
     <script>
@@ -1030,7 +1030,8 @@ document.getElementById('login-form').addEventListener('submit', async function(
     btn.textContent = 'Memproses…';
 
     const errorEl = document.getElementById('login-error');
-    errorEl.style.display = 'none';
+    errorEl.classList.add('is-hidden');
+    errorEl.textContent = '';
 
     const formData = new FormData(this);
 
@@ -1048,10 +1049,10 @@ document.getElementById('login-form').addEventListener('submit', async function(
         }
 
         errorEl.textContent  = data.message ?? 'Ralat tidak diketahui.';
-        errorEl.style.display = 'block';
+        errorEl.classList.remove('is-hidden');
     } catch {
         errorEl.textContent  = 'Gagal berhubung dengan pelayan.';
-        errorEl.style.display = 'block';
+        errorEl.classList.remove('is-hidden');
     }
 
     btn.disabled    = false;

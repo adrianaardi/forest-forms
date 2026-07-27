@@ -20,7 +20,7 @@
             @csrf
             <div class="form-section">
                 @if($errors->any())
-                    <div class="form-error-box">
+                    <div class="form-error-box alert alert-error">
                         <ul class="form-error-list">
                             @foreach($errors->all() as $error)<li>{{ $error }}</li>@endforeach
                         </ul>

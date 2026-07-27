@@ -6,14 +6,17 @@ use App\Models\BorangAduanKerosakan;
 use Illuminate\Http\Request;
 use App\Mail\ICTStatusMail;
 use App\Mail\ICTSubmissionMail;
+use App\Models\Wilayah;
 use Illuminate\Support\Facades\Mail;
 
 class BorangAduanKerosakanController extends Controller
 {
-    public function create()
-    {
-        return view('forms.ict-aduan');
-    }
+        public function create()
+        {
+            $wilayahs = Wilayah::all();
+
+            return view('forms.ict-aduan', compact('wilayahs'));
+        }
 
     public function store(Request $request)
     {
@@ -25,7 +28,8 @@ class BorangAduanKerosakanController extends Controller
             'bahagian'             => 'nullable|string|max:255',
             'bahagian_lain'       => 'nullable|string|max:255',
 
-            // 🆕 WILAYAH ADDED
+            // WILAYAH (supports both old and new form keys)
+            'wilayah_id'           => 'nullable|exists:wilayahs,id',
             'wilayah'              => 'nullable|string|max:255',
             'wilayah_lain'         => 'nullable|string|max:255',
 
@@ -47,10 +51,20 @@ class BorangAduanKerosakanController extends Controller
             ? $request->bahagian_lain
             : $request->bahagian;
 
-        // 🆕 CLEAN LOGIC FOR WILAYAH
-        $validated['wilayah'] = $request->wilayah == 'lain'
-            ? $request->wilayah_lain
-            : $request->wilayah;
+        // Normalize wilayah from either wilayah_id or wilayah input.
+        if ($request->filled('wilayah_id')) {
+            $selectedWilayah = Wilayah::find($request->wilayah_id);
+            $validated['wilayah_id'] = $request->wilayah_id;
+            $validated['wilayah'] = $selectedWilayah?->nama_wilayah;
+        } else {
+            $validated['wilayah'] = $request->wilayah == 'lain'
+                ? $request->wilayah_lain
+                : $request->wilayah;
+
+            if (!empty($validated['wilayah'])) {
+                $validated['wilayah_id'] = Wilayah::where('nama_wilayah', $validated['wilayah'])->value('id');
+            }
+        }
 
         $files = [];
 

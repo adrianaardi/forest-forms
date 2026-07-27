@@ -4,9 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Utama Pentadbir - Pergerakan Pegawai</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:opsz,wght@6..144,1..1000&family=Lora:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('style.css') }}">
     <link rel="icon" href="{{ asset('images/logo-icon.png')}}">
 </head>
@@ -15,22 +12,23 @@
 <x-header />
 <x-navbar :breadcrumbs="[['label' => 'Pergerakan Pegawai', 'url' => route('admin.pergerakan.index')], ['label' => 'Panel Pentadbir Utama']]" />
 
-<div class="dashboard-body">
+<div class="pg-body">
 
-    <div style="margin-bottom: 1rem;">
-        <a href="/admin/dashboard" class="btn-back">← Kembali ke Dashboard</a>
+    <div class="form-card">
+        <div class="form-card-header">
+            <h2>Sistem Pergerakan Pegawai (Super Admin)</h2>
+            <p>Urus bahagian dan akaun sub-admin</p>
+        </div>
     </div>
-
-    <p class="section-heading">Sistem Pergerakan Pegawai (Super Admin)</p>
 
     @if(session('success'))
         <div class="alert alert-success">{{ session('success') }}</div>
     @endif
 
-    <div class="admin-grid">
+    <div class="cards">
         <div class="form-card">
             <div class="form-card-header">
-                <h2>🏢 Urus Bahagian Jabatan</h2>
+                <h2>Urus Bahagian Jabatan</h2>
             </div>
             <div class="form-section">
             <form action="{{ route('admin.pergerakan.bahagian.store') }}" method="POST">
@@ -39,12 +37,13 @@
                     <label>Nama Bahagian Baru</label>
                     <input type="text" name="nama" placeholder="Cth: Bahagian ICT" required>
                 </div>
-                <button type="submit" class="btn-submit" style="background:#475569;">Daftar Bahagian Baru</button>
+                <button type="submit" class="btn-submit">Daftar Bahagian Baru</button>
             </form>
             </div>
 
-            <div class="data-table-container">
-                <table class="data-table">
+            <div class="form-section">
+                <div class="table-wrap">
+                <table class="app-table">
                     <thead>
                         <tr>
                             <th>ID</th>
@@ -57,25 +56,28 @@
                             <tr>
                                 <td>{{ $bahagian->id }}</td>
                                 <td><strong>{{ $bahagian->nama }}</strong></td>
-                                <td class="action-btns">
-                                    <button type="button" class="btn-edit" onclick="openEditBahagian({{ $bahagian->id }}, '{{ $bahagian->nama }}')">Edit</button>
+                                <td>
+                                    <div class="table-actions">
+                                    <button type="button" class="btn-back table-btn" onclick="openEditBahagian({{ $bahagian->id }}, '{{ $bahagian->nama }}')">Edit</button>
                                     <form action="{{ route('admin.pergerakan.bahagian.destroy', $bahagian->id) }}" method="POST" onsubmit="return confirm('Padam bahagian ini?')">
                                         @csrf @method('DELETE')
-                                        <button type="submit" class="btn-delete">Padam</button>
+                                        <button type="submit" class="btn-submit table-btn">Padam</button>
                                     </form>
+                                    </div>
                                 </td>
                             </tr>
                         @empty
-                            <tr><td colspan="3" style="text-align:center; color:#999;">Tiada bahagian berdaftar.</td></tr>
+                            <tr><td colspan="3" class="table-empty">Tiada bahagian berdaftar.</td></tr>
                         @endforelse
                     </tbody>
                 </table>
+                </div>
             </div>
         </div>
 
         <div class="form-card">
             <div class="form-card-header">
-                <h2>👥 Tambah Akaun Sub-Admin Bahagian</h2>
+                <h2>Tambah Akaun Sub-Admin Bahagian</h2>
             </div>
             <div class="form-section">
             <form action="{{ route('admin.pergerakan.subadmin.store') }}" method="POST">
@@ -105,8 +107,9 @@
             </form>
             </div>
 
-            <div class="data-table-container">
-                <table class="data-table">
+            <div class="form-section">
+                <div class="table-wrap">
+                <table class="app-table">
                     <thead>
                         <tr>
                             <th>Nama Pengurus</th>
@@ -119,41 +122,45 @@
                         @forelse($subadmins as $sub)
                             <tr>
                                 <td><strong>{{ $sub->name }}</strong></td>
-                                <td><span style="color: #194169; font-weight: 500;">{{ $sub->bahagian->nama ?? 'Tiada Bahagian' }}</span></td>
+                                <td><span>{{ $sub->bahagian->nama ?? 'Tiada Bahagian' }}</span></td>
                                 <td>{{ $sub->email }}</td>
-                                <td class="action-btns">
-                                    <button type="button" class="btn-edit" onclick="openEditSubAdmin({{ $sub->id }}, '{{ $sub->name }}', '{{ $sub->email }}', '{{ $sub->bahagian_id }}')">Edit</button>
+                                <td>
+                                    <div class="table-actions">
+                                    <button type="button" class="btn-back table-btn" onclick="openEditSubAdmin({{ $sub->id }}, '{{ $sub->name }}', '{{ $sub->email }}', '{{ $sub->bahagian_id }}')">Edit</button>
                                     <form action="{{ route('admin.pergerakan.subadmin.destroy', $sub->id) }}" method="POST" onsubmit="return confirm('Padam akaun ini?')">
                                         @csrf @method('DELETE')
-                                        <button type="submit" class="btn-delete">Padam</button>
+                                        <button type="submit" class="btn-submit table-btn">Padam</button>
                                     </form>
+                                    </div>
                                 </td>
                             </tr>
                         @empty
-                            <tr><td colspan="4" style="text-align:center; color:#999;">Tiada sub-admin berdaftar.</td></tr>
+                            <tr><td colspan="4" class="table-empty">Tiada sub-admin berdaftar.</td></tr>
                         @endforelse
                     </tbody>
                 </table>
+                </div>
             </div>
         </div>
     </div>
 </div>
 
 <!-- Edit Bahagian Modal -->
-<div class="modal-overlay" id="modalEditBahagian">
-    <div class="modal">
-        <div class="modal-header">
-            <h2>📝 Kemaskini Bahagian</h2>
-            <button class="modal-close" onclick="closeModal('modalEditBahagian')">&times;</button>
+<div class="ticket-modal-overlay" id="modalEditBahagian">
+    <div class="ticket-modal">
+        <div class="ticket-modal-header">
+            <h3>Kemaskini Bahagian</h3>
+            <button class="ticket-modal-close" onclick="closeModal('modalEditBahagian')">&times;</button>
         </div>
-        <div class="modal-body">
+        <div class="ticket-modal-body">
             <form id="formEditBahagian" method="POST">
                 @csrf @method('PUT')
                 <div class="field">
                     <label>Nama Bahagian</label>
                     <input type="text" name="nama" id="edit_bahagian_nama" required>
                 </div>
-                <div class="modal-actions">
+                <div class="form-footer">
+                    <span></span>
                     <button type="submit" class="btn-submit">Simpan Perubahan</button>
                 </div>
             </form>
@@ -162,13 +169,13 @@
 </div>
 
 <!-- Edit Sub-Admin Modal -->
-<div class="modal-overlay" id="modalEditSubAdmin">
-    <div class="modal">
-        <div class="modal-header">
-            <h2>📝 Kemaskini Akaun Sub-Admin</h2>
-            <button class="modal-close" onclick="closeModal('modalEditSubAdmin')">&times;</button>
+<div class="ticket-modal-overlay" id="modalEditSubAdmin">
+    <div class="ticket-modal">
+        <div class="ticket-modal-header">
+            <h3>Kemaskini Akaun Sub-Admin</h3>
+            <button class="ticket-modal-close" onclick="closeModal('modalEditSubAdmin')">&times;</button>
         </div>
-        <div class="modal-body">
+        <div class="ticket-modal-body">
             <form id="formEditSubAdmin" method="POST">
                 @csrf @method('PUT')
                 <div class="field">
@@ -191,7 +198,8 @@
                     <label>Kata Laluan Baru (Biarkan kosong jika tiada perubahan)</label>
                     <input type="password" name="password">
                 </div>
-                <div class="modal-actions">
+                <div class="form-footer">
+                    <span></span>
                     <button type="submit" class="btn-submit">Simpan Perubahan</button>
                 </div>
             </form>
@@ -236,7 +244,7 @@
 
     // Close modal when clicking on overlay
     window.onclick = function(event) {
-        if (event.target.classList.contains('modal-overlay')) {
+        if (event.target.classList.contains('ticket-modal-overlay')) {
             event.target.classList.remove('active');
         }
     }
@@ -244,7 +252,7 @@
     // Optional: Close modal on ESC key
     document.addEventListener('keydown', function(event) {
         if (event.key === "Escape") {
-            const actives = document.querySelectorAll('.modal-overlay.active');
+            const actives = document.querySelectorAll('.ticket-modal-overlay.active');
             actives.forEach(m => m.classList.remove('active'));
         }
     });

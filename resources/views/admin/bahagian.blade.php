@@ -5,9 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Urus Bahagian — Admin</title>
     <link rel="icon" href="{{ asset('images/logo-icon.png')}}">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:opsz,wght@6..144,1..1000&family=Lora:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet"><link rel="stylesheet" href="{{ asset('style.css') }}"></head>
+    <link rel="stylesheet" href="{{ asset('style.css') }}">
+</head>
 <body>
 
 <x-header />
@@ -16,7 +15,7 @@
     <div class="pg-body">
 
     @if(session('success'))
-        <div style="background:#eaf3de; border:1px solid #c0dd97; color:#3b6d11; padding:0.75rem 1rem; border-radius:8px; margin-bottom:1rem; font-size:13px;">
+        <div class="alert alert-success" style="margin-bottom:1rem;">
             {{ session('success') }}
         </div>
     @endif
@@ -61,7 +60,7 @@
             <p>Bahagian yang telah didaftarkan.</p>
         </div>
         <div class="form-section" style="padding:0;">
-            <table class="data-table" style="margin-bottom:0; border-radius:0; border:none;">
+            <table class="app-table" style="margin-bottom:0; border-radius:0; border:none;">
                 <tr>
                     <th>Nama Bahagian / Unit</th>
                     <th>Email Penyelia</th>
@@ -75,7 +74,7 @@
                         <form method="POST" action="{{ route('admin.bahagian.destroy', $item->id) }}" onsubmit="return confirm('Padam bahagian ini?')">
                             @csrf
                             @method('DELETE')
-                            <button type="submit" class="btn-delete" style="padding:4px 12px; font-size:12px;">Padam</button>
+                            <button type="submit" class="table-btn table-btn-danger" style="padding:4px 12px; font-size:12px;">Padam</button>
                         </form>
                     </td>
                 </tr>
