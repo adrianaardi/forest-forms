@@ -589,15 +589,13 @@
             <span class="bk-toolbar-title">
                 {{ $weekStart->translatedFormat('j F') }} — {{ $weekEnd->translatedFormat('j F Y') }}
                 @if($bilik)
-                    &nbsp;·&nbsp;
-                    
-                    <select class="bk-toolbar-room-meta" 
+                    <select class="bk-btn" 
                         onchange="if(this.value) window.location.href = '/booking/calendar?bilik=' + this.value + '&week={{ $weekStart->toDateString() }}';">
                     @foreach($bilikList as $wilayah => $rooms)
                         <optgroup label="{{ $wilayah }}">
                             @foreach($rooms as $room)
                                 <option value="{{ $room->id }}" {{ $bilik->id == $room->id ? 'selected' : '' }}>
-                                    {{ $room->nama_bilik }}
+                                    {{ $room->nama_bilik }} ({{ $room->aras }}{{ $room->wing && $room->wing !== '-' ? ', '.$room->wing : '' }})
                                 </option>
                             @endforeach
                         </optgroup>
