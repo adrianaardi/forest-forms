@@ -99,9 +99,11 @@
 
         @endauth
 
+        @if(request()->is('/'))
         <a href="{{ url('/help') }}">
                 Manual Pengguna
         </a>
+        @endif
 
         {{-- ── Booking User ── --}}
         @auth('booking_user')

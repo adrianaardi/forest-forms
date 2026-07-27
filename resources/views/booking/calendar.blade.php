@@ -121,6 +121,9 @@
         .bk-btn:hover { background: #eef4f0; border-color: #c8d4cb; }
         .bk-btn-today { border-color: var(--primary); color: var(--primary); font-weight: 500; }
         .bk-btn-today:hover { background: #eaf3de; }
+        .bk-btn-today.active {
+            background: var(--primary); color: #ffffff; border-color: var(--primary);
+        }
         .bk-btn-inline { display: flex; align-items: center; gap: 5px; }
         .bk-btn-inline-text { font-size: 12px; }
         .bk-toolbar-room-name { color: var(--primary); font-weight: 600; }
@@ -575,31 +578,40 @@
         <div class="bk-toolbar">
             <a href="/booking/calendar?bilik={{ $bilik?->id }}&week={{ $prevWeek }}" class="bk-btn">‹</a>
             <a href="/booking/calendar?bilik={{ $bilik?->id }}&week={{ $nextWeek }}" class="bk-btn">›</a>
-            <a href="/booking/calendar?bilik={{ $bilik?->id }}&week={{ $thisWeek }}" class="bk-btn bk-btn-today">Hari Ini</a>
             @php
                 $toggleViewUrl = '/booking/calendar?bilik='.$bilik?->id.'&week='.$weekStart->toDateString().($viewMode ? '' : '&view=all');
             @endphp
-            <a href="{{ $toggleViewUrl }}" class="bk-btn bk-btn-inline {{ $viewMode ? 'bk-btn-today' : '' }}" title="Lihat semua bilik (RDD & Ibu Pejabat)">
+            <a href="{{ $toggleViewUrl }}" class="bk-btn bk-btn-inline {{ $viewMode ? 'bk-btn-today active' : '' }}" title="Lihat semua bilik (RDD & Ibu Pejabat)">
                 <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8Z"/><circle cx="12" cy="12" r="3"/>
                 </svg>
-                <span class="bk-btn-inline-text">{{ $viewMode ? 'Semua Bilik' : 'Lihat Semua' }}</span>
             </a>
             <span class="bk-toolbar-title">
                 {{ $weekStart->translatedFormat('j F') }} — {{ $weekEnd->translatedFormat('j F Y') }}
                 @if($bilik)
                     &nbsp;·&nbsp;
-                    <span class="bk-toolbar-room-name">{{ $bilik->nama_bilik }}</span>
-                    <span class="bk-toolbar-room-meta"> {{ $bilik->aras }}, {{ $bilik->wing }}</span>
+                    
+                    <select class="bk-toolbar-room-meta" 
+                        onchange="if(this.value) window.location.href = '/booking/calendar?bilik=' + this.value + '&week={{ $weekStart->toDateString() }}';">
+                    @foreach($bilikList as $wilayah => $rooms)
+                        <optgroup label="{{ $wilayah }}">
+                            @foreach($rooms as $room)
+                                <option value="{{ $room->id }}" {{ $bilik->id == $room->id ? 'selected' : '' }}>
+                                    {{ $room->nama_bilik }}
+                                </option>
+                            @endforeach
+                        </optgroup>
+                    @endforeach
+                </select>
                 @endif
             </span>
             @if($bilik)
                 @auth('booking_user')
                     <a href="/booking/book" class="btn-submit bk-toolbar-action">+ Tempah</a>
                     @elseif ($viewMode)
-                        <button onclick="openModal('loginModal')" class="bk-toolbar-login">Log Masuk untuk Tempah</button>
+                        <button onclick="openModal('loginModal')" class="bk-toolbar-login">Log Masuk</button>
                     @else
-                        <button onclick="openModal('loginModal')" class="bk-toolbar-login">Log Masuk untuk Tempah</button>
+                        <button onclick="openModal('loginModal')" class="bk-toolbar-login">Log Masuk</button>
                     @endauth
             @endif
         </div>
