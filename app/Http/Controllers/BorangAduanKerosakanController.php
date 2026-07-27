@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\BrevoMailer;
 use App\Models\BorangAduanKerosakan;
 use Illuminate\Http\Request;
 use App\Mail\ICTStatusMail;
@@ -86,9 +87,12 @@ class BorangAduanKerosakanController extends Controller
 
         $complaint = BorangAduanKerosakan::create($validated);
 
-        Mail::to($complaint->emel)
-            ->send(new ICTSubmissionMail($complaint));
-
+        BrevoMailer::send(
+            $complaint->emel,
+            $complaint->nama,
+            'Makluman Aduan Kerosakan ICT',
+            view('emails.ict-submission', ['complaint' => $complaint])->render()
+        );
         return redirect('/')->with('new_tiket', $complaint->no_tiket);
 
     }
@@ -116,8 +120,12 @@ class BorangAduanKerosakanController extends Controller
 
         // send email ONLY if status changed
         if ($oldStatus !== $request->status || $request->remarks) {
-            Mail::to($aduan->emel)
-                ->send(new ICTStatusMail($aduan));
+            BrevoMailer::send(
+                $aduan->emel,
+                $aduan->nama,
+                'Makluman Status Aduan Kerosakan ICT',
+                view('emails.ict-status', ['aduan' => $aduan])->render()
+            );
         }
         
 

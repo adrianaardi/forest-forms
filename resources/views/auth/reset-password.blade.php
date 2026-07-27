@@ -5,57 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Reset Kata Laluan — Jabatan Hutan Sarawak</title>
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:opsz,wght@6..144,1..1000&family=Lora:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="{{ asset('style.css') }}">
     <link rel="icon" href="{{ asset('images/logo-icon.png')}}">
-
-    <style>
-        header, .form-card-header, .btn-submit {
-            background-color: #b07d7d !important; 
-            color: white !important;
-        }
-
-        nav {
-            background-color: #966666 !important; 
-        }
-
-        .form-card-header {
-            background-color: #b07d7d !important; 
-            border-bottom: none !important;
-        }
-        
-        .form-card-header p {
-            color: #fce4e6 !important; /* Soft rose-gray subtext */
-        }
-
-        .btn-submit {
-            background-color: #b07d7d !important;
-            border: none !important;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1) !important;
-        }
-
-        .btn-submit:hover {
-            background-color: #8e6262 !important;
-        }
-
-        .form-footer a {
-            color: #b07d7d !important;
-            font-weight: 500 !important;
-        }
-
-        footer {
-            background-color: #b07d7d !important;
-            color: white !important;
-            padding: 20px 0 !important;
-            border-top: 3px solid #966666 !important;
-        }
-
-        body {
-            background-color: #f8f1f1 !important;
-        }
-    </style>
 </head>
 <body>
 

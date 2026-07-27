@@ -47,7 +47,6 @@ a {
 header {
   background: url('images/header.png') no-repeat center center;
   background-size: cover;
-  border-bottom: 1px solid var(--border-color);
   padding: 1rem 2rem;
   display: flex;
   align-items: center;

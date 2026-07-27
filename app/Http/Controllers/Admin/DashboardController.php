@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Mail\BrevoMailer;
 use App\Http\Controllers\Controller;
 use App\Models\BorangAduanKerosakan;
 use App\Models\BorangMuatNaikBahan;
@@ -285,8 +286,12 @@ class DashboardController extends Controller
 
         // send email if status changed
         if ($oldStatus !== $aduan->status && $aduan->emel) {
-            Mail::to($aduan->emel)
-                ->send(new ICTStatusMail($aduan));
+            BrevoMailer::send(
+                $aduan->emel,
+                $aduan->nama,
+                'Makluman Status Aduan Kerosakan ICT',
+                view('emails.ict-status', ['aduan' => $aduan])->render()
+            );
         }
 
         return back()->with('success', 'Status berjaya dikemaskini');

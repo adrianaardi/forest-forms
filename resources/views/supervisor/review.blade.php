@@ -4,9 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Semakan Permohonan — Jabatan Hutan Sarawak</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:opsz,wght@6..144,1..1000&family=Lora:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet"><link rel="stylesheet" href="{{ asset('style.css') }}">    <link rel="icon" href="{{ asset('images/logo-icon.png')}}">
+    <link rel="stylesheet" href="{{ asset('style.css') }}">
+    <link rel="icon" href="{{ asset('images/logo-icon.png')}}">
 
 </head>
 <body>
@@ -87,13 +86,13 @@
             @if($permohonan->fail_paths && count($permohonan->fail_paths) > 0)
             <div class="field">
                 <label>Fail Dilampirkan</label>
-                @foreach($permohonan->fail_paths as $path)
-                    <div style="margin-bottom: 4px;">
-                        <a href="{{ asset('storage/' . $path) }}" target="_blank" style="font-size:13px; color:#185fa5;">
+                <div class="attachment-list">
+                    @foreach($permohonan->fail_paths as $path)
+                        <a href="{{ asset('storage/' . $path) }}" target="_blank" class="attachment-item">
                             {{ basename($path) }}
                         </a>
-                    </div>
-                @endforeach
+                    @endforeach
+                </div>
             </div>
             @endif
         </div>
@@ -105,8 +104,11 @@
                 <div class="alert alert-success">
                     Permohonan ini telah pun diluluskan.
                     @if($permohonan->catatan_semakan)
-                        <div style="margin-top:0.5rem; padding-top:0.5rem; border-top:1px solid #c0dd97;">
-                            <strong style="font-size:11px;">CATATAN:</strong> {{ $permohonan->catatan_semakan }}
+                        <div class="detail-group">
+                            <div class="detail-field">
+                                <label>Catatan</label>
+                                <p class="text-pre-wrap">{{ $permohonan->catatan_semakan }}</p>
+                            </div>
                         </div>
                     @endif
                 </div>
@@ -118,9 +120,9 @@
                         <label>Catatan <span class="required">*</span></label>
                         <textarea name="catatan_semakan" rows="3" placeholder="Tambah atau kemaskini catatan..." required>{{ $permohonan->catatan_semakan }}</textarea>
                     </div>
-                    <div class="modal-actions" style="margin-top:0.75rem;">
-                        <button type="submit" class="btn-lulus" onclick="document.getElementById('status_override').value='Diluluskan'">Luluskan</button>
-                        <button type="submit" class="btn-tolak" onclick="document.getElementById('status_override').value='Dalam Semakan'">Dalam Semakan</button>
+                    <div class="modal-actions">
+                        <button type="submit" class="table-btn table-btn-success" onclick="document.getElementById('status_override').value='Diluluskan'">Luluskan</button>
+                        <button type="submit" class="table-btn table-btn-warning" onclick="document.getElementById('status_override').value='Dalam Semakan'">Dalam Semakan</button>
                     </div>
                 </form>
             @endif

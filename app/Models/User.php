@@ -3,6 +3,7 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Mail\BrevoMailer;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -48,6 +49,18 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function sendPasswordResetNotification($token): void
+    {
+        $resetUrl = url('/reset-password/' . $token . '?email=' . urlencode($this->email));
+
+        BrevoMailer::send(
+            $this->email,
+            $this->name,
+            'Reset Kata Laluan — Sistem Forest Forms',
+            view('emails.password-reset', ['user' => $this, 'resetUrl' => $resetUrl])->render()
+        );
     }
 
     public function wilayah()
