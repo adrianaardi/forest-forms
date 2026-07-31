@@ -178,7 +178,7 @@
 
 <div id="imageModal" class="image-modal-overlay">
 
-    <span onclick="closeModal()" class="image-modal-close">×</span>
+    <span onclick="closeImageModal()" class="image-modal-close">×</span>
 
     <img id="modalImg" class="image-modal-content">
 </div>
@@ -239,7 +239,7 @@ function renderPreview() {
                         
                         <img src="${e.target.result}"
                             class="file-preview-image"
-                            onclick="openModal('${e.target.result}')">
+                            onclick="openImageModal('${e.target.result}')">
 
                         <!-- DELETE BUTTON -->
                         <button type="button" onclick="removeFile(${index})"
@@ -284,12 +284,12 @@ function attachFilesToForm() {
     input.files = dataTransfer.files;
 }
 
-function openModal(src) {
+function openImageModal(src) {
     document.getElementById('modalImg').src = src;
     document.getElementById('imageModal').classList.add('active');
 }
 
-function closeModal() {
+function closeImageModal() {
     document.getElementById('imageModal').classList.remove('active');
 }
 </script>

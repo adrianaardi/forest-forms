@@ -94,6 +94,9 @@ Route::post('/forms/ict-aduan',  [BorangAduanKerosakanController::class, 'store'
 Route::get('/forms/portal-upload',  [BorangMuatNaikBahanController::class, 'create'])->name('portal-upload');
 Route::post('/forms/portal-upload', [BorangMuatNaikBahanController::class, 'store']);
 
+Route::get('/forms/kelulusan-perjalanan', [\App\Http\Controllers\BorangKelulusanPerjalananController::class, 'create'])->name('kelulusan-perjalanan');
+Route::post('/forms/kelulusan-perjalanan', [\App\Http\Controllers\BorangKelulusanPerjalananController::class, 'store']);
+
 // ── Ticket Tracking ───────────────────────────────────────
 Route::get('/semak-tiket', fn() => view('track'))->name('track');
 Route::post('/semak-tiket', function (\Illuminate\Http\Request $request) {
@@ -136,12 +139,14 @@ Route::prefix('booking')->name('booking.')->group(function () {
     Route::post('/cancel/{token}', [BookingController::class, 'cancelBooking'])->name('cancel');    
     Route::get('/book/{bilik?}', [BookingController::class, 'showBook'])->name('book');
     Route::post('/book', [BookingController::class, 'storeBook'])->name('book.store');
+    Route::post('/apply-booking-access', [BookingController::class, 'applyBookingAccess'])->name('apply-booking-access');
 
     // auth
     Route::get('/login', fn() => redirect('/booking/calendar'))->name('login');
     Route::post('/login', [BookingAuthController::class, 'login'])->name('login.post');
     Route::get('/daftar', [BookingAuthController::class, 'showRegister'])->name('daftar');
     Route::post('/daftar',[BookingAuthController::class, 'register'])->name('daftar.post');
+    Route::get('/verify-email/{token}', [BookingAuthController::class, 'verifyEmail'])->name('verify');
     Route::post('/logout',[BookingAuthController::class, 'logout'])->name('logout');
     Route::get('/profile',           [\App\Http\Controllers\Booking\BookingUserProfileController::class, 'index'])->name('user.profile');
     Route::post('/profile',          [\App\Http\Controllers\Booking\BookingUserProfileController::class, 'update'])->name('user.profile.update');
@@ -160,6 +165,7 @@ Route::prefix('booking')->name('booking.')->group(function () {
         Route::get('/activity-log',       [AdminBookingController::class, 'activityLog'])->name('activity-log');
         Route::get('/users',              [AdminBookingController::class, 'users'])->name('users');
         Route::post('/users/{id}/status', [AdminBookingController::class, 'updateUserStatus'])->name('users.status');
+        Route::post('/users/{id}/can-book', [AdminBookingController::class, 'updateUserCanBook'])->name('users.can_book');
         Route::delete('/users/{id}',      [AdminBookingController::class, 'deleteUser'])->name('users.delete');
         Route::post('/users/{id}/edit', [AdminBookingController::class, 'editUser'])->name('users.edit');
         Route::post('/logout',            [BookingAuthController::class, 'logoutAdmin'])->name('logout');

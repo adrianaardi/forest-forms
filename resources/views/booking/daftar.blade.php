@@ -19,6 +19,11 @@
         <form method="POST" action="{{ route('booking.daftar.post') }}">
             @csrf
             <div class="form-section">
+                @if(session('error'))
+                    <div class="form-error-box alert alert-error">
+                        {{ session('error') }}
+                    </div>
+                @endif
                 @if($errors->any())
                     <div class="form-error-box alert alert-error">
                         <ul class="form-error-list">
@@ -71,6 +76,10 @@
                     </select>
                 </div>
                 <div class="field">
+                    <label>Jawatan/Gred</label>
+                    <input type="text" name="jawatan" value="{{ old('jawatan') }}" placeholder="Cth: Penolong Pegawai Hutan, G1">
+                </div>
+                <div class="field">
                     <label>No. Telefon</label>
                     <input type="text" name="phone" value="{{ old('phone') }}" placeholder="Cth: 0123456789">
                 </div>
@@ -84,13 +93,13 @@
                         <input type="password" name="password_confirmation" placeholder="Taip semula" required>
                     </div>
                 </div>
-            </div>
             <div class="form-footer">
-                <a href="/booking/calendar" class="btn-back">← Kembali ke Kalendar</a>
+                <a href="/" class="btn-back">← Kembali</a>
                 <button type="submit" class="btn-submit">Daftar</button>
             </div>
         </form>
     </div>
+</div>
 </div>
 
 <x-footer />

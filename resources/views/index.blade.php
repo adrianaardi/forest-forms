@@ -62,11 +62,25 @@
             <span class="card-link">Tempah Sekarang →</span>
         </a>
 
-        <a href="/display/pergerakan" class="card">
+        <a href="/display/pergerakan" class="card disabled">
             <div class="card-icon icon-track">📌</div>
             <h3>Aplikasi Pergerakan Pegawai</h3>
             <p>Pantau pergerakan pegawai dan program Jabatan Hutan Sarawak secara langsung melalui paparan papan pemuka berpusat.</p>
             <span class="card-link">Lihat Pergerakan →</span>
+        </a>
+
+        <a href="/forms/kelulusan-perjalanan" class="card disabled">
+            <div class="card-icon icon-track">🛫</div>
+            <h3>Aplikasi Kelulusan Perjalanan Pegawai</h3>
+            <p>Permohonan perjalanan rasmi pegawai jabatan secara digital untuk kelulusan dan pemantauan perjalanan yang lebih efisien.</p>
+            <span class="card-link">Hantar Permohonan →</span>
+        </a>
+
+        <a href="" class="card disabled">
+            <div class="card-icon icon-track">📚</div>
+            <h3>Katalog Khursus di Jabatan Hutan Sarawak</h3>
+            <p>Senarai kursus yang ditawarkan oleh Jabatan Hutan Sarawak untuk pembangunan profesional pegawai jabatan.</p>
+            <span class="card-link">Lihat Katalog →</span>
         </a>
     </div>
 </div>

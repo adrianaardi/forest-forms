@@ -10,7 +10,25 @@ class BookingUser extends Authenticatable
 
     protected $hidden = ['password'];
 
-    protected $fillable = ['name', 'email', 'password', 'bahagian', 'phone', 'wilayah_id', 'status'];
+    protected $fillable = [
+        'name',
+        'email',
+        'password',
+        'bahagian',
+        'jawatan',
+        'phone',
+        'wilayah_id',
+        'status',
+        'can_book',
+        'signature',
+        'email_verified_at',
+        'email_verification_token',
+    ];
+
+    protected $casts = [
+        'can_book' => 'boolean',
+        'email_verified_at' => 'datetime',
+    ];
 
     public function wilayah()
     {

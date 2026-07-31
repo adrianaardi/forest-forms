@@ -3,10 +3,13 @@
 namespace App\Http\Controllers\Booking;
 
 use App\Http\Controllers\Controller;
+use App\Mail\BrevoMailer;
 use App\Models\BookingUser;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
 class BookingAuthController extends Controller
 {
@@ -35,10 +38,13 @@ class BookingAuthController extends Controller
         // check booking user
         $user = BookingUser::where('email', $request->email)->first();
         if ($user && Hash::check($request->password, $user->password)) {
-            if ($user->status === 'pending') {
-                if ($request->ajax()) return response()->json(['message' => 'Akaun anda masih menunggu kelulusan admin.'], 422);
-                return back()->with('error', 'Akaun anda masih menunggu kelulusan admin.');
+            if (!$user->email_verified_at) {
+                if ($request->ajax()) {
+                    return response()->json(['message' => 'Sila sahkan emel anda terlebih dahulu melalui pautan yang dihantar.'], 422);
+                }
+                return back()->with('error', 'Sila sahkan emel anda terlebih dahulu melalui pautan yang dihantar.');
             }
+
             if ($user->status === 'rejected') {
                 if ($request->ajax()) return response()->json(['message' => 'Akaun anda telah ditolak.'], 422);
                 return back()->with('error', 'Akaun anda telah ditolak.');
@@ -47,7 +53,7 @@ class BookingAuthController extends Controller
             if ($request->ajax()) {
                 return response()->json(['success' => true, 'redirect' => url()->current()]);
             }
-            return redirect()->intended('/booking/calendar');
+            return redirect()->intended('/');
         }
 
         if ($request->ajax()) {
@@ -69,19 +75,42 @@ class BookingAuthController extends Controller
             'email'      => 'required|email|unique:booking_users,email',
             'password'   => 'required|min:8|confirmed',
             'bahagian'   => 'nullable|string|max:255',
+            'jawatan'    => 'nullable|string|max:255',
             'phone'      => 'nullable|string|max:20',
             'wilayah_id' => 'required|exists:wilayahs,id',
         ]);
 
-        BookingUser::create([
-            'name'       => $request->name,
-            'email'      => $request->email,
-            'password'   => Hash::make($request->password),
-            'bahagian'   => $request->bahagian,
-            'phone'      => $request->phone,
-            'wilayah_id' => $request->wilayah_id,
-            'status'     => 'pending',
-        ]);
+        $token = Str::random(64);
+
+        $user = DB::transaction(function () use ($request, $token) {
+            return BookingUser::create([
+                'name'       => $request->name,
+                'email'      => $request->email,
+                'password'   => Hash::make($request->password),
+                'bahagian'   => $request->bahagian,
+                'jawatan'    => $request->jawatan,
+                'phone'      => $request->phone,
+                'wilayah_id' => $request->wilayah_id,
+                'status'     => 'approved',
+                'can_book'   => false,
+                'email_verified_at' => null,
+                'email_verification_token' => $token,
+            ]);
+        });
+
+        $verifyUrl = url('/booking/verify-email/' . $token . '?email=' . urlencode($user->email));
+
+        $mailSent = BrevoMailer::send(
+            $user->email,
+            $user->name,
+            'Pengesahan Emel Akaun — Sistem Tempahan JHS',
+            view('emails.booking-verify-email', compact('user', 'verifyUrl'))->render()
+        );
+
+        if (!$mailSent) {
+            $user->delete();
+            return back()->with('error', 'Gagal menghantar emel pengesahan. Sila cuba daftar semula sebentar lagi.')->withInput();
+        }
 
         \App\Models\BookingActivityLog::log(
             'user', $request->name,
@@ -89,14 +118,49 @@ class BookingAuthController extends Controller
             $request->name . ' mendaftar akaun baharu'
         );
 
-        return redirect('/booking/calendar')
+        return redirect('/')
             ->with('daftar_success', true);
+    }
+
+    public function verifyEmail(Request $request, string $token)
+    {
+        $request->validate([
+            'email' => 'required|email',
+        ]);
+
+        $user = BookingUser::where('email', $request->email)->first();
+
+        if (!$user) {
+            return redirect('/')->with('error', 'Akaun tidak dijumpai.');
+        }
+
+        if ($user->email_verified_at) {
+            return redirect('/')->with('success', 'Emel anda telah pun disahkan. Sila log masuk.');
+        }
+
+        if (!$user->email_verification_token || !hash_equals($user->email_verification_token, $token)) {
+            return redirect('/')->with('error', 'Pautan pengesahan tidak sah atau telah tamat tempoh.');
+        }
+
+        $user->update([
+            'email_verified_at' => now(),
+            'email_verification_token' => null,
+            'status' => 'approved',
+        ]);
+
+        \App\Models\BookingActivityLog::log(
+            'user', $user->name,
+            'verified_email',
+            $user->name . ' berjaya mengesahkan emel akaun tempahan'
+        );
+
+        return redirect('/')->with('success', 'Emel berjaya disahkan. Anda kini boleh log masuk.');
     }
 
     public function logout()
     {
         Auth::guard('booking_user')->logout();
-        return redirect('/booking/calendar');
+        return redirect('/');
     }
 
     public function logoutAdmin()

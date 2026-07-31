@@ -41,6 +41,12 @@ a {
   text-decoration: none;
 }
 
+a.disabled {
+    pointer-events: none;
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
 /* ==========================================
    2. HEADER
    ========================================== */
@@ -106,8 +112,25 @@ nav a {
   transition: var(--transition);
 }
 
+
 nav a:hover {
   background-color: rgba(255, 255, 255, 0.12);
+}
+
+nav button {
+  font-size: 0.925rem;
+  font-weight: 500;
+  padding: 0.35rem 0.65rem;
+  border-radius: var(--radius-sm);
+  transition: var(--transition);
+  background: none;
+  color: #ffffff;
+  border: none;
+  cursor: pointer;
+}
+
+nav button:hover {
+  background-color: rgba(255, 255, 255, 0.2);
 }
 
 nav span {
@@ -1235,6 +1258,11 @@ footer {
 .table-btn:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+}
+
+.table-btn.active {
+    background-color: var(--primary);
+    color: #fff;
 }
 
 .table-card {

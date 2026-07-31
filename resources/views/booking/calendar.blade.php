@@ -158,29 +158,39 @@
             padding: 0;
         }
 
-        /* ── grid ── */
-        .bk-grid-wrap { flex: 1; overflow-y: auto; scroll-behavior: smooth; }
-        .bk-grid { display: grid; grid-template-columns: 48px repeat(7, 1fr); min-width: 600px; }
+        /* ── grid (day rows × hour columns) ── */
+        .bk-grid-wrap { flex: 1; overflow: auto; scroll-behavior: smooth; }
+        .bk-grid { display: grid; grid-template-columns: 90px repeat(9, minmax(90px, 1fr)); min-width: 900px; }
+
         .bk-col-header {
-            text-align: center; padding: 8px 2px;
+            padding: 6px 10px 0 5px;
+            text-align: left;
             border-bottom: 2px solid var(--border-color); border-right: 1px solid var(--border-color);
-            font-size: 11px; background: var(--bg-main);
-            position: sticky; top: 0; z-index: 2;
+            font-size: 12px; font-weight: 500; color: var(--text-dark);
+            background: var(--bg-main);
+            position: sticky; top: 0; z-index: 3;
         }
-        .bk-col-header .dname { color: var(--text-muted); font-weight: 500; font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; }
-        .bk-col-header .dnum {
-            font-size: 18px; font-weight: 500; width: 32px; height: 32px;
-            line-height: 32px; border-radius: 50%; margin: 3px auto 0;
+
+        .bk-row-header {
+            padding: 6px 10px;
+            text-align: center;
+            border-right: 2px solid var(--border-color); border-bottom: 1px solid var(--border-color);
+            background: var(--bg-main);
+            position: sticky; left: 0; z-index: 2;
+            display: flex; flex-direction: column; justify-content: center;
+        }
+        .bk-row-header .dname { color: var(--text-muted); font-weight: 500; font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; text-align: center; }
+        .bk-row-header .dnum {
+            font-size: 16px; font-weight: 500; width: 28px; height: 28px;
+            line-height: 28px; border-radius: 50%; margin-top: 2px;
             transition: background 0.2s, color 0.2s;
+            text-align: center; margin-left: auto; margin-right: auto;
         }
-        .bk-col-header .dnum.today { background: var(--primary); color: #ffffff; }
-        .bk-time-gutter {
-            font-size: 10px; color: var(--text-muted); text-align: right;
-            padding: 2px 8px 0 0; height: 48px; border-right: 1px solid var(--border-color);
-        }
+        .bk-row-header .dnum.today { background: var(--primary); color: #ffffff; }
+
         .bk-cell {
             border-right: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color);
-            height: 48px; position: relative;
+            height: 74px; position: relative;
             transition: background 0.1s;
         }
         .bk-cell:not(.past-cell) { cursor: pointer; }
@@ -191,7 +201,7 @@
 
         /* ── events ── */
         .bk-event {
-            position: absolute; left: 2px; right: 2px; border-radius: 5px;
+            position: absolute; top: 2px; bottom: 2px; border-radius: 5px;
             padding: 3px 5px; font-size: 10px; overflow: hidden; cursor: pointer;
             z-index: 1; line-height: 1.3;
             box-shadow: var(--shadow-sm);
@@ -372,8 +382,8 @@
         <div class="daftar-emoji">🎉</div>
         <h3 class="daftar-title">Pendaftaran Berjaya!</h3>
         <p class="daftar-text">
-            Akaun anda telah didaftarkan. Sila tunggu kelulusan admin sebelum anda boleh membuat tempahan.
-            Anda akan dihubungi melalui emel apabila akaun diluluskan.
+            Akaun anda telah didaftarkan. Kami telah menghantar pautan pengesahan ke emel anda.
+            Sila sahkan emel terlebih dahulu sebelum log masuk.
         </p>
         <button onclick="document.getElementById('daftar-modal').remove()" class="daftar-btn">
             Faham, Terima Kasih
@@ -388,9 +398,9 @@
 </style>
 @endif
 
-@if(session('success') || session('info'))
-    <div id="flash-msg" class="flash-msg alert {{ session('success') ? 'alert-success' : 'alert-info' }}">
-        {{ session('success') ?? session('info') }}
+@if(session('success') || session('info') || session('error'))
+    <div id="flash-msg" class="flash-msg alert {{ session('success') ? 'alert-success' : (session('error') ? 'alert-error' : 'alert-info') }}">
+        {{ session('success') ?? session('error') ?? session('info') }}
     </div>
     <script>
         setTimeout(function() {
@@ -468,7 +478,7 @@
         $displayBookings = $bookings; // existing single-room collection
     }
 
-    // greedy column assignment so overlapping bookings (any room) sit side-by-side
+    // greedy column assignment so overlapping bookings (any room) are stacked instead of overlapping
     function assignEventColumns($items) {
         usort($items, fn($a, $b) => $a['start'] <=> $b['start']);
         $colEnds = [];
@@ -587,6 +597,12 @@
                 </svg>
             </a>
             <span class="bk-toolbar-title">
+                @if($viewMode)
+                    Semua Bilik (RDD & Ibu Pejabat) pada
+                @else
+                    {{ $bilik->nama_bilik }} pada
+                @endif
+ 
                 {{ $weekStart->translatedFormat('j F') }} — {{ $weekEnd->translatedFormat('j F Y') }}
                 @if($bilik)
                     <select class="bk-btn" 
@@ -605,38 +621,45 @@
             </span>
             @if($bilik)
                 @auth('booking_user')
-                    <a href="/booking/book" class="btn-submit bk-toolbar-action">+ Tempah</a>
-                    @elseif ($viewMode)
-                        <button onclick="openModal('loginModal')" class="bk-toolbar-login">Log Masuk</button>
-                    @else
-                        <button onclick="openModal('loginModal')" class="bk-toolbar-login">Log Masuk</button>
-                    @endauth
+                <a href="/booking/book" class="btn-submit bk-toolbar-action">+ Tempah</a>
+                @endauth
             @endif
         </div>
 
-        <div class="bk-grid-wrap"
-             data-auth="{{ Auth::guard('booking_user')->check() ? '1' : '0' }}"
+           <div class="bk-grid-wrap"
+               data-auth="{{ Auth::guard('booking_user')->check() ? '1' : '0' }}"
+               data-can-book="{{ Auth::guard('booking_user')->check() && Auth::guard('booking_user')->user()->can_book ? '1' : '0' }}"
              data-bilik="{{ $bilik?->id }}">
             <div class="bk-grid">
 
+                {{-- top-left corner cell --}}
                 <div class="bk-col-header"></div>
+
+                {{-- hour headers across the top --}}
+                @foreach($hours as $hour)
+                    <div class="bk-col-header">{{ str_pad($hour, 2, '0', STR_PAD_LEFT) }}:00</div>
+                @endforeach
+
+                {{-- one row per day --}}
                 @foreach($days as $day)
-                    <div class="bk-col-header">
+                    @php
+                        $dateStr = $day->toDateString();
+                        $isPast  = \Carbon\Carbon::parse($dateStr)->lt($today);
+                    @endphp
+
+                    {{-- day label (sticky left) --}}
+                    <div class="bk-row-header">
                         <div class="dname">{{ $day->translatedFormat('l') }}</div>
                         <div class="dnum {{ $day->isToday() ? 'today' : '' }}">{{ $day->format('j') }}</div>
                     </div>
-                @endforeach
 
-                @foreach($hours as $hour)
-                    <div class="bk-time-gutter">{{ str_pad($hour, 2, '0', STR_PAD_LEFT) }}:00</div>
-                    @foreach($days as $day)
+                    {{-- one cell per hour --}}
+                    @foreach($hours as $hour)
                         @php
-                            $dateStr     = $day->toDateString();
-                            $isPast      = \Carbon\Carbon::parse($dateStr)->lt($today);
-                            $dayBookings = $bookings->filter(fn($b) =>
-                                $b->tarikh === $dateStr &&
-                                (int)substr($b->masa_mula, 0, 2) <= $hour &&
-                                (int)substr($b->masa_tamat, 0, 2) > $hour
+                            $dayItems = collect($dayColumnData[$dateStr] ?? [])->filter(fn($it) =>
+                                $it['b']->tarikh === $dateStr &&
+                                (int)substr($it['b']->masa_mula, 0, 2) <= $hour &&
+                                (int)substr($it['b']->masa_tamat, 0, 2) > $hour
                             );
                         @endphp
                         <div class="bk-cell {{ $loop->parent->index % 2 === 0 ? 'row-light' : 'row-dark' }} {{ $isPast ? 'past-cell' : '' }}"
@@ -646,28 +669,21 @@
                                 onclick="handleViewModeClick()"
                             @endif>
 
-                            @php
-                                $dayItems = collect($dayColumnData[$dateStr] ?? [])->filter(fn($it) =>
-                                    $it['b']->tarikh === $dateStr &&
-                                    (int)substr($it['b']->masa_mula, 0, 2) <= $hour &&
-                                    (int)substr($it['b']->masa_tamat, 0, 2) > $hour
-                                );
-                            @endphp
                             @foreach($dayItems as $it)
                                 @php
                                     $b = $it['b'];
                                     $startsHere = (int)substr($b->masa_mula, 0, 2) === $hour;
                                     $mins = \Carbon\Carbon::parse($b->masa_mula)->diffInMinutes(\Carbon\Carbon::parse($b->masa_tamat));
-                                    $h = ($mins / 60) * 48;
+                                    $widthPct = ($mins / 60) * 100; // spans rightward across hour columns
                                     $isOwn = Auth::guard('booking_user')->check() && Auth::guard('booking_user')->user()->id === $b->user_id;
                                     $cols = max($it['cols'], 1);
-                                    $widthPct = 100 / $cols;
-                                    $leftPct  = $it['col'] * $widthPct;
+                                    $heightPct = 100 / $cols;
+                                    $topPct    = $it['col'] * $heightPct;
                                     $bg = $viewMode ? ($roomColorMap[$b->bilik_id] ?? '#1b4332') : ($isOwn ? '#7ec0c9' : '#1b4332');
                                 @endphp
                                 @if($startsHere)
                                     <div class="bk-event {{ $viewMode ? 'bk-event-nav' : '' }}"
-                                        style="height:{{ max($h - 4, 14) }}px; left:calc({{ $leftPct }}% + 2px); width:calc({{ $widthPct }}% - 4px); background:{{ $bg }}; color:#fff;"
+                                        style="left:2px; width:calc({{ $widthPct }}% - 4px); top:calc({{ $topPct }}% + 2px); height:calc({{ $heightPct }}% - 4px); background:{{ $bg }}; color:#fff;"
                                         @if($viewMode)
                                             onclick="event.stopPropagation(); window.location='/booking/calendar?bilik={{ $b->bilik_id }}&week={{ $weekStart->toDateString() }}'"
                                         @else
@@ -679,7 +695,7 @@
                                             )'
                                         @endif
                                         title="{{ $viewMode ? ($b->bilik->nama_bilik ?? '').' — '.$b->tajuk_mesyuarat : $b->tajuk_mesyuarat.' — '.$b->user->name }}">
-                                        <span class="bk-event-title">{{ Str::limit($b->tajuk_mesyuarat, 18) }}</span>
+                                        <span class="bk-event-title">{{ Str::limit($b->tajuk_mesyuarat, 30) }}</span>
                                         @if($viewMode)
                                             <span class="bk-event-sub">{{ Str::limit($b->bilik->nama_bilik ?? '', 16) }}</span>
                                         @else
@@ -815,6 +831,28 @@
 
 <x-footer />
 
+{{-- Cannot book modal --}}
+<div class="ticket-modal-overlay" id="cannotBookModal">
+    <div class="ticket-modal" style="max-width:460px;">
+        <div class="ticket-modal-header">
+            <h3>Akses Tempahan Diperlukan</h3>
+            <button class="ticket-modal-close" onclick="closeCannotBookModal()">×</button>
+        </div>
+        <div class="ticket-modal-body">
+            <p style="font-size:13px; color:var(--text-dark); line-height:1.7; margin-bottom:1rem;">
+                Akaun anda belum dibenarkan untuk membuat tempahan bilik. Anda boleh hantar permohonan kepada admin untuk semakan.
+            </p>
+            <form method="POST" action="{{ route('booking.apply-booking-access') }}">
+                @csrf
+                <div class="form-footer" style="justify-content:flex-end;">
+                    <button type="button" class="btn-secondary" onclick="closeCannotBookModal()">Tutup</button>
+                    <button type="submit" class="btn-submit">Mohon</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 {{-- Weekly Booking Summary popup (RDD & Ibu Pejabat) --}}
 <div class="ticket-modal-overlay" id="weekSummaryModal">
     <div class="ticket-modal cal-modal-lg">
@@ -891,10 +929,16 @@ function closeBookModal() {
     setBkError(null);
     setBkSuccess(null);
 }
+function closeCannotBookModal() { closeModal('cannotBookModal'); }
 
 // ── Weekly booking summary: show only when entering the module from outside ──
 document.addEventListener('DOMContentLoaded', function() {
     const hasDaftarModal = document.getElementById('daftar-modal'); // don't stack on top of registration success
+    const shouldShowCannotBookModal = {{ session('cannot_book_modal') ? 'true' : 'false' }};
+
+    if (shouldShowCannotBookModal) {
+        setTimeout(() => openModal('cannotBookModal'), 220);
+    }
 
     let cameFromOutsideModule = true;
     try {
@@ -1016,10 +1060,12 @@ function closeLoginModal() { closeModal('loginModal'); }
 function openBookSlot(date, time) {
     const wrap    = document.querySelector('.bk-grid-wrap');
     const isAuth  = wrap?.dataset.auth === '1';
+    const canBook = wrap?.dataset.canBook === '1';
     const bilikId = wrap?.dataset.bilik;
 
     if (!bilikId) return;
     if (!isAuth) { openModal('loginModal'); return; } // ← open modal instead of redirect
+    if (!canBook) { openModal('cannotBookModal'); return; }
 
     document.getElementById('bk-tarikh').value = date;
     document.getElementById('bk-mula').value   = time;
@@ -1088,9 +1134,14 @@ function toggleWilayah(btn) {
 function handleViewModeClick() {
     const wrap   = document.querySelector('.bk-grid-wrap');
     const isAuth = wrap?.dataset.auth === '1';
+    const canBook = wrap?.dataset.canBook === '1';
 
     if (!isAuth) {
         openModal('loginModal');
+        return;
+    }
+    if (!canBook) {
+        openModal('cannotBookModal');
         return;
     }
     window.location.href = '/booking/book';

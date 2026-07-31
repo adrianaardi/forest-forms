@@ -1,3 +1,4 @@
+
 @props(['breadcrumbs' => []])
 
 <nav>  
@@ -27,7 +28,57 @@
 
     </div>
 
+    @if(session('daftar_success'))
+    <div id="daftar-modal" class="daftar-overlay">
+    <div class="daftar-card">
+        <div class="daftar-emoji">🎉</div>
+        <h3 class="daftar-title">Pendaftaran Berjaya!</h3>
+        <p class="daftar-text">
+            Akaun anda telah didaftarkan. Kami telah menghantar pautan pengesahan ke emel anda.
+            Sila sahkan emel terlebih dahulu sebelum log masuk.
+        </p>
+        <button onclick="document.getElementById('daftar-modal').remove()" class="daftar-btn">
+            Faham, Terima Kasih
+        </button>
+    </div>
+</div>
+<style>
 
+        .daftar-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.4);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+        .daftar-card {
+            background: #ffffff;
+            border-radius: 14px;
+            padding: 2rem;
+            max-width: 400px;
+            width: 90%;
+            text-align: center;
+            box-shadow: var(--shadow-lg);
+            animation: slideUp 0.3s ease;
+        }
+        .daftar-emoji { font-size: 42px; margin-bottom: 0.75rem; }
+        .daftar-title { font-size: 15px; font-weight: 600; margin-bottom: 0.5rem; color: var(--text-dark); }
+        .daftar-text { font-size: 13px; color: var(--text-muted); line-height: 1.6; margin-bottom: 1.25rem; }
+        .daftar-btn {
+            background: var(--primary);
+            color: #ffffff;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 8px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+        .daftar-btn:hover { background: var(--primary-hover); }
+</style>
+@endif
     <div>
 
         {{-- ── Web Admin ── --}}
@@ -40,7 +91,7 @@
 
             <div class="nav-dropdown-wrap">
                 <button type="button" class="nav-dropdown-trigger">
-                    👤 {{ $user->name }}
+                    {{ $user->name }}
                     <span>▾</span>
                 </button>
 
@@ -105,22 +156,30 @@
         </a>
         @endif
 
+        @if(!Auth::guard('booking_user')->check() && !Auth::guard('web')->check())
+            <button onclick="openModal('loginModal')">Log Masuk</button>
+        @endif
+
         {{-- ── Booking User ── --}}
         @auth('booking_user')
-
             <div class="nav-dropdown-wrap">
                 <button type="button" class="nav-dropdown-trigger">
-                    👤 {{ Auth::guard('booking_user')->user()->name }}
+                    {{ Auth::guard('booking_user')->user()->name }}
                     <span>▾</span>
                 </button>
 
                 <div class="nav-dropdown">
+                    <div class="nav-dropdown-section">
+                    👤 {{ Auth::guard('booking_user')->user()->name }}
+                    </div>
+                    @if(Auth::guard('booking_user')->user()->can_book)
+                        <div class="nav-dropdown-divider"></div>
 
-                    <div class="nav-dropdown-section">Tempahan Bilik</div>
-                    <a href="/booking/calendar">📅 Lihat Kalendar</a>
-                    <a href="/booking/book">➕ Buat Tempahan</a>
-                    <a href="/booking/my-bookings">📋 Tempahan Saya</a>
-
+                        <div class="nav-dropdown-section">Tempahan Bilik</div>
+                        <a href="/booking/calendar">📅 Lihat Kalendar</a>
+                        <a href="/booking/book">➕ Buat Tempahan</a>
+                        <a href="/booking/my-bookings">📋 Tempahan Saya</a>
+                    @endif
                     <div class="nav-dropdown-divider"></div>
 
                     <a href="/booking/profile">✏️ Edit Profile</a>
@@ -137,6 +196,8 @@
     </div>
 
 </nav>
+{{-- Login modal --}}
+@include('booking._login-modal')
 
 {{-- JS to handle Click Toggle and Click-Outside behavior --}}
 <script>
@@ -163,5 +224,59 @@
         document.addEventListener('click', () => {
             dropdownWraps.forEach(wrap => wrap.classList.remove('is-open'));
         });
+    });
+
+    function openModal(id) {
+        document.getElementById(id).classList.add('active');
+    }
+
+    function closeModal(id) {
+        const overlay = document.getElementById(id);
+        const modal   = overlay.querySelector('.ticket-modal');
+        modal.style.transform = 'translateY(10px) scale(0.97)';
+        modal.style.opacity   = '0';
+        setTimeout(() => {
+            overlay.classList.remove('active');
+            modal.style.transform = '';
+            modal.style.opacity   = '';
+        }, 220);
+    }
+    function closeLoginModal() { closeModal('loginModal'); }
+
+    // AJAX login form
+    document.getElementById('login-form').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        const btn = document.getElementById('login-btn');
+        btn.disabled = true;
+        btn.textContent = '...';
+
+        const errorEl = document.getElementById('login-error');
+        errorEl.classList.add('is-hidden');
+        errorEl.textContent = '';
+
+        const formData = new FormData(this);
+
+        try {
+            const res  = await fetch('{{ route("booking.login.post") }}', {
+                method:  'POST',
+                headers: { 'X-Requested-With': 'XMLHttpRequest' },
+                body:    formData,
+            });
+            const data = await res.json();
+
+            if (res.ok && data.success) {
+                window.location.reload();
+                return;
+            }
+
+            errorEl.textContent  = data.message ?? 'Ralat tidak diketahui.';
+            errorEl.classList.remove('is-hidden');
+        } catch {
+            errorEl.textContent  = 'Gagal berhubung dengan pelayan.';
+            errorEl.classList.remove('is-hidden');
+        }
+
+        btn.disabled    = false;
+        btn.textContent = 'Log Masuk';
     });
 </script>

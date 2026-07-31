@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage; // <-- was missing
 
 class BookingUserProfileController extends Controller
 {
@@ -33,17 +34,29 @@ class BookingUserProfileController extends Controller
         $user = $this->guard()->user();
 
         $request->validate([
-            'name'     => 'required|string|max:255',
-            'email'    => 'required|email|unique:booking_users,email,' . $user->id,
-            'bahagian' => 'nullable|string|max:255',
-            'phone'    => 'nullable|string|max:20',
+            'name'       => 'required|string|max:255',
+            'email'      => 'required|email|unique:booking_users,email,' . $user->id,
+            'bahagian'   => 'nullable|string|max:255',
+            'jawatan'    => 'nullable|string|max:255',
+            'phone'      => 'nullable|string|max:20',
+            'signature'  => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
             'wilayah_id' => 'required|exists:wilayahs,id',
         ]);
 
-        $user->name     = $request->name;
-        $user->email    = $request->email;
-        $user->bahagian = $request->bahagian;
-        $user->phone    = $request->phone;
+        if ($request->hasFile('signature')) {
+            // delete old signature file
+            if ($user->signature) {
+                Storage::disk('public')->delete($user->signature);
+            }
+
+            $user->signature = $request->file('signature')->store('signatures', 'public');
+        }
+
+        $user->name       = $request->name;
+        $user->email      = $request->email;
+        $user->bahagian   = $request->bahagian;
+        $user->jawatan    = $request->jawatan;
+        $user->phone      = $request->phone;
         $user->wilayah_id = $request->wilayah_id;
         $user->save();
 
@@ -66,7 +79,7 @@ class BookingUserProfileController extends Controller
 
         $request->validate([
             'current_password' => 'required',
-            'password'         => 'required|min:8|confirmed',
+            'password'          => 'required|min:8|confirmed',
         ]);
 
         if (!Hash::check($request->current_password, $user->password)) {

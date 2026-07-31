@@ -127,6 +127,7 @@ class AdminBookingController extends Controller
             'updated_password' => 'Kata Laluan Dikemaskini',
             'cross_region_booking' => 'Tempahan Luar Wilayah',
             'updated_user_status' => 'Status Pengguna Dikemaskini',
+            'updated_booking_permission' => 'Kebenaran Tempahan Dikemaskini',
             'edited_user' => 'Pengguna Dikemaskini',
             'deleted_user' => 'Pengguna Dipadam',
             'added_user' => 'Pengguna Ditambah',
@@ -144,22 +145,27 @@ class AdminBookingController extends Controller
 
     public function users(Request $request)
     {
-    $query = BookingUser::with('wilayah');
+        $applicants = BookingUser::with('wilayah')
+            ->where('status', 'pending')
+            ->where('can_book', false)
+            ->latest()
+            ->get();
 
-        if ($request->filled('status')) {
-            $query->where('status', $request->status);
-        }
+        $bookableUsers = BookingUser::with('wilayah')
+            ->where('can_book', true)
+            ->latest()
+            ->get();
 
-        $users    = $query->latest()->paginate(20)->withQueryString();
-        $wilayahs = \App\Models\Wilayah::orderBy('nama_wilayah')->get();
-
-        return view('booking.admin.users', compact('users', 'wilayahs'));
+        return view('booking.admin.users', compact('applicants', 'bookableUsers'));
     }
 
     public function updateUserStatus(Request $request, $id)
     {
         $request->validate(['status' => 'required|in:approved,rejected']);
-        BookingUser::findOrFail($id)->update(['status' => $request->status]);
+        BookingUser::findOrFail($id)->update([
+            'status' => $request->status,
+            'can_book' => $request->status === 'approved',
+        ]);
 
         $targetUser = BookingUser::findOrFail($id);
         $adminName  = Auth::guard('web')->user()->name;
@@ -179,6 +185,7 @@ class AdminBookingController extends Controller
         'name'       => 'required|string|max:255',
         'email'      => 'required|email|unique:booking_users,email,' . $id,
         'bahagian'   => 'nullable|string|max:255',
+        'jawatan'    => 'nullable|string|max:255',
         'phone'      => 'nullable|string|max:20',
         'wilayah_id' => 'nullable|exists:wilayahs,id',
     ]);
@@ -187,6 +194,7 @@ class AdminBookingController extends Controller
         'name'       => $request->name,
         'email'      => $request->email,
         'bahagian'   => $request->bahagian,
+        'jawatan'    => $request->jawatan,
         'phone'      => $request->phone,
         'wilayah_id' => $request->wilayah_id,
     ]);
@@ -223,16 +231,25 @@ class AdminBookingController extends Controller
             'email'      => 'required|email|unique:booking_users,email',
             'password'   => 'required|min:8',
             'bahagian'   => 'nullable|string|max:255',
+            'jawatan'    => 'nullable|string|max:255',
+            'signature' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
             'wilayah_id' => 'nullable|exists:wilayahs,id',
         ]);
+
+        $signaturePath = $request->file('signature')->store('signatures', 'public');
 
         BookingUser::create([
             'name'       => $request->name,
             'email'      => $request->email,
             'password'   => Hash::make($request->password),
             'bahagian'   => $request->bahagian,
+            'jawatan'    => $request->jawatan,
+            'signature'  => $signaturePath,
             'status'     => 'approved',
             'wilayah_id' => $request->wilayah_id,
+            'can_book'   => false,
+            'email_verified_at' => now(),
+            'email_verification_token' => null,
         ]);
 
         $adminName = Auth::guard('web')->user()->name;
@@ -243,6 +260,25 @@ class AdminBookingController extends Controller
         );
 
         return back()->with('success', 'Pengguna berjaya ditambah.');
+    }
+
+    public function updateUserCanBook(Request $request, $id)
+    {
+        $request->validate(['can_book' => 'required|boolean']);
+
+        $targetUser = BookingUser::findOrFail($id);
+        $targetUser->update(['can_book' => (bool) $request->can_book]);
+
+        $adminName = Auth::guard('web')->user()->name;
+        $permissionText = $targetUser->can_book ? 'membenarkan' : 'menyekat';
+        
+        \App\Models\BookingActivityLog::log(
+            'admin', $adminName,
+            'updated_booking_permission',
+            'Admin ' . $adminName . ' ' . $permissionText . ' tempahan untuk pengguna ' . $targetUser->name
+        );
+
+        return back()->with('success', 'Kebenaran tempahan pengguna berjaya dikemaskini.');
     }
 
 public function resetPassword($id)

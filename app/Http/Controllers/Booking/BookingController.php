@@ -60,6 +60,9 @@ class BookingController extends Controller
         $user      = Auth::guard('booking_user')->user();
 
         if (!$user) return redirect('/booking/login');
+        if (!$user->can_book) {
+            return redirect('/booking/calendar')->with('cannot_book_modal', true);
+        }
 
         return view('booking.book', compact('bilikList', 'bilik', 'tarikh', 'user'));
     }
@@ -78,6 +81,14 @@ class BookingController extends Controller
                 return response()->json(['message' => 'Sila log masuk untuk membuat tempahan.'], 401);
             }
             return redirect('/booking/login')->with('error', 'Sila log masuk untuk membuat tempahan.');
+        }
+
+        if (!$user->can_book) {
+            $msg = 'Akaun anda belum dibenarkan untuk membuat tempahan.';
+            if ($isAjax) {
+                return response()->json(['message' => $msg, 'needs_apply' => true], 403);
+            }
+            return redirect('/booking/calendar')->with('cannot_book_modal', true);
         }
 
         // 2. Cross-booking check 
@@ -169,6 +180,36 @@ class BookingController extends Controller
         }
 
         return redirect($redirectUrl)->with('success', $successMsg);
+    }
+
+    public function applyBookingAccess()
+    {
+        $user = Auth::guard('booking_user')->user();
+
+        if (!$user) {
+            return redirect('/booking/login')->with('error', 'Sila log masuk terlebih dahulu.');
+        }
+
+        if ($user->can_book) {
+            return redirect('/booking/calendar')->with('info', 'Akaun anda sudah dibenarkan untuk membuat tempahan.');
+        }
+
+        if ($user->status === 'pending') {
+            return redirect('/booking/calendar')->with('info', 'Permohonan anda sedang disemak oleh admin.');
+        }
+
+        $user->update([
+            'status' => 'pending',
+        ]);
+
+        \App\Models\BookingActivityLog::log(
+            'user',
+            $user->name,
+            'applied_booking_permission',
+            $user->name . ' memohon kebenaran untuk membuat tempahan bilik'
+        );
+
+        return redirect('/booking/calendar')->with('success', 'Permohonan anda telah dihantar. Sila tunggu semakan admin.');
     }
 
     public function cancelBooking($token)

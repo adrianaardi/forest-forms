@@ -1,7 +1,7 @@
 <div class="ticket-modal-overlay" id="loginModal">
     <div class="ticket-modal">
         <div class="ticket-modal-header">
-            <h3>Log Masuk — Sistem Tempahan</h3>
+            <h3>Log Masuk</h3>
             <button class="ticket-modal-close" onclick="closeLoginModal()">×</button>
         </div>
         <div class="ticket-modal-body">
@@ -27,17 +27,17 @@
                 <div class="form-section">
                     <div class="field">
                         <label>Emel</label>
-                        <input type="email" id="login-email" name="email" placeholder="emel@domain.com" required>
+                        <input type="email" id="login-email" name="email" required>
                     </div>
                     <div class="field">
                         <label>Kata Laluan</label>
-                        <input type="password" id="login-password" name="password" placeholder="••••••••" required>
+                        <input type="password" id="login-password" name="password" required>
                     </div>
                 </div>
                 <div class="form-footer">
                     <div class="login-links">
-                        <a href="{{ route('booking.daftar') }}" class="login-register-link">Daftar akaun disini</a><br>
-                        <a href="{{ route('booking.password.request') }}" class="login-forgot-link">Lupa kata laluan?</a>
+                        <a href="{{ route('booking.daftar') }}" style="color: var(--text-dark);">Daftar akaun disini</a><br>
+                        <a href="{{ route('booking.password.request') }}" style="color: var(--text-muted); font-size: 0.875rem;">Lupa kata laluan?</a>
                     </div>
                     <div class="login-actions">
                         <button type="submit" id="login-btn" class="btn-submit">Log Masuk</button>
