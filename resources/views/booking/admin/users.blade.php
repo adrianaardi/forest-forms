@@ -57,11 +57,11 @@
                                             <input type="hidden" name="status" value="approved">
                                             <button type="submit" class="table-btn table-btn-success">Lulus</button>
                                         </form>
-                                        <form method="POST" action="{{ route('booking.admin.users.status', $user->id) }}">
+                                        <!-- <form method="POST" action="{{ route('booking.admin.users.status', $user->id) }}">
                                             @csrf
                                             <input type="hidden" name="status" value="rejected">
                                             <button type="submit" class="table-btn table-btn-warning">Tolak</button>
-                                        </form>
+                                        </form> -->
                                     </div>
                                 </td>
                             </tr>
