@@ -20,10 +20,31 @@
             </div>
         @endif
 
+        {{-- Search & Add existing user --}}
         <div class="form-card">
             <div class="form-card-header">
-                <h2>Senarai Pemohon Akses Tempahan</h2>
-                <p>Semak permohonan akses tempahan dan buat keputusan lulus atau tolak.</p>
+                <h2>Tambah Kebenaran Tempahan</h2>
+                <p>Cari pengguna sedia ada mengikut emel dan berikan kebenaran tempahan terus.</p>
+            </div>
+            <div class="form-section">
+                <div class="search-add-wrap" style="position: relative; max-width: 420px;">
+                    <input
+                        type="text"
+                        id="userSearchInput"
+                        class="form-input"
+                        placeholder="Taip emel pengguna..."
+                        autocomplete="off"
+                    >
+                    <div id="userSearchResults" class="search-dropdown" style="display:none;"></div>
+                </div>
+            </div>
+        </div>
+
+        {{-- Pending requests --}}
+        <div class="form-card">
+            <div class="form-card-header">
+                <h2>Permohonan Akses Tempahan</h2>
+                <p>Pengguna yang memohon kebenaran tempahan.</p>
             </div>
             <div class="form-section">
                 <div class="table-wrap">
@@ -51,18 +72,10 @@
                                 <td>{{ $user->phone ?? '-' }}</td>
                                 <td>{{ \Carbon\Carbon::parse($user->created_at)->format('d/m/Y') }}</td>
                                 <td>
-                                    <div class="table-actions">
-                                        <form method="POST" action="{{ route('booking.admin.users.status', $user->id) }}">
-                                            @csrf
-                                            <input type="hidden" name="status" value="approved">
-                                            <button type="submit" class="table-btn table-btn-success">Lulus</button>
-                                        </form>
-                                        <!-- <form method="POST" action="{{ route('booking.admin.users.status', $user->id) }}">
-                                            @csrf
-                                            <input type="hidden" name="status" value="rejected">
-                                            <button type="submit" class="table-btn table-btn-warning">Tolak</button>
-                                        </form> -->
-                                    </div>
+                                    <form method="POST" action="{{ route('booking.admin.users.grant', $user->id) }}">
+                                        @csrf
+                                        <button type="submit" class="table-btn table-btn-success">Lulus</button>
+                                    </form>
                                 </td>
                             </tr>
                         @empty
@@ -76,6 +89,7 @@
             </div>
         </div>
 
+        {{-- Users who currently can book --}}
         <div class="form-card">
             <div class="form-card-header">
                 <h2>Pengguna Yang Boleh Membuat Tempahan</h2>
@@ -93,6 +107,7 @@
                                 <th>Wilayah</th>
                                 <th>No. Telefon</th>
                                 <th>Tarikh Daftar</th>
+                                <th>Tindakan</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -105,10 +120,17 @@
                                 <td>{{ $user->wilayah?->nama_wilayah ?? '-' }}</td>
                                 <td>{{ $user->phone ?? '-' }}</td>
                                 <td>{{ \Carbon\Carbon::parse($user->created_at)->format('d/m/Y') }}</td>
+                                <td>
+                                    <form method="POST" action="{{ route('booking.admin.users.withdraw', $user->id) }}"
+                                          onsubmit="return confirm('Tarik balik kebenaran tempahan {{ $user->name }}?');">
+                                        @csrf
+                                        <button type="submit" class="table-btn table-btn-warning">Tarik Balik</button>
+                                    </form>
+                                </td>
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="7" class="table-empty">Tiada pengguna yang mempunyai akses tempahan.</td>
+                                <td colspan="8" class="table-empty">Tiada pengguna yang mempunyai akses tempahan.</td>
                             </tr>
                         @endforelse
                         </tbody>
@@ -119,6 +141,58 @@
 
     </div>
 </div>
+
+<script>
+(function () {
+    const input   = document.getElementById('userSearchInput');
+    const results = document.getElementById('userSearchResults');
+    let debounceTimer;
+
+    input.addEventListener('input', function () {
+        clearTimeout(debounceTimer);
+        const q = input.value.trim();
+
+        if (q.length < 2) {
+            results.style.display = 'none';
+            results.innerHTML = '';
+            return;
+        }
+
+        debounceTimer = setTimeout(() => {
+            fetch(`{{ route('booking.admin.users.search') }}?q=${encodeURIComponent(q)}`, {
+                headers: { 'X-Requested-With': 'XMLHttpRequest' }
+            })
+            .then(res => res.json())
+            .then(users => {
+                if (!users.length) {
+                    results.innerHTML = '<div class="search-item search-empty">Tiada pengguna dijumpai.</div>';
+                    results.style.display = 'block';
+                    return;
+                }
+
+                results.innerHTML = users.map(u => `
+                    <form method="POST" action="/booking/admin/users/${u.id}/grant" class="search-item">
+                        <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                        <button type="submit" class="search-item-btn">
+                            <strong>${u.name}</strong> — ${u.email}
+                        </button>
+                    </form>
+                `).join('');
+                results.style.display = 'block';
+            })
+            .catch(() => {
+                results.style.display = 'none';
+            });
+        }, 250);
+    });
+
+    document.addEventListener('click', function (e) {
+        if (!results.contains(e.target) && e.target !== input) {
+            results.style.display = 'none';
+        }
+    });
+})();
+</script>
 
 <x-footer />
 

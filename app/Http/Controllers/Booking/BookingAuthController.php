@@ -162,6 +162,43 @@ class BookingAuthController extends Controller
         Auth::guard('booking_user')->logout();
         return redirect('/');
     }
+    public function deleteAccount(Request $request)
+    {
+        $request->validate([
+            'delete_password' => 'required',
+            'delete_confirm'  => 'required|in:PADAM',
+        ], [
+            'delete_confirm.in' => 'Sila taip "PADAM" untuk mengesahkan.',
+        ]);
+
+        $user = Auth::guard('booking_user')->user();
+
+        if (!Hash::check($request->delete_password, $user->password)) {
+            return back()->with('error', 'Kata laluan tidak sah. Akaun tidak dipadam.');
+        }
+
+        $name = $user->name;
+
+        // Optional: delete signature file from storage if present
+        if ($user->signature) {
+            \Illuminate\Support\Facades\Storage::delete($user->signature);
+        }
+
+        Auth::guard('booking_user')->logout();
+
+        $user->delete();
+
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        \App\Models\BookingActivityLog::log(
+            'user', $name,
+            'deleted_account',
+            $name . ' memadam akaun sendiri'
+        );
+
+        return redirect('/')->with('success', 'Akaun anda telah berjaya dipadam.');
+    }
 
     public function logoutAdmin()
     {

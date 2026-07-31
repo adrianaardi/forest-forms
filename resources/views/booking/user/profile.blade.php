@@ -153,7 +153,7 @@
     </div>
 
     {{-- Password --}}
-    <div class="form-card">
+    <div class="form-card" style="margin-bottom:1.5rem;">
         <div class="form-card-header">
             <h2>Tukar Kata Laluan</h2>
             <p>Kemaskini kata laluan akaun anda.</p>
@@ -185,6 +185,37 @@
             <div class="form-footer">
                 <span></span>
                 <button type="submit" class="btn-submit">Kemaskini Kata Laluan</button>
+            </div>
+        </form>
+    </div>
+
+    {{-- Delete account --}}
+    <div class="form-card">
+        <div class="form-card-header">
+            <h2 style="color:#a32d2d;">Padam Akaun</h2>
+            <p>Tindakan ini kekal dan tidak boleh diundur. Semua data akaun anda akan dipadam.</p>
+        </div>
+        <form method="POST" action="{{ route('booking.user.profile.delete') }}" id="delete-account-form">
+            @csrf
+            @method('DELETE')
+            <div class="form-section">
+                @if($errors->has('delete_password') || $errors->has('delete_confirm'))
+                    <div class="alert alert-error" style="margin-bottom:1rem;">
+                        @foreach($errors->all() as $e)<div>{{ $e }}</div>@endforeach
+                    </div>
+                @endif
+                <div class="field">
+                    <label>Kata Laluan Semasa <span class="required">*</span></label>
+                    <input type="password" name="delete_password" placeholder="••••••••" required>
+                </div>
+                <div class="field">
+                    <label>Taip <strong>PADAM</strong> untuk mengesahkan <span class="required">*</span></label>
+                    <input type="text" name="delete_confirm" placeholder="PADAM" required autocomplete="off">
+                </div>
+            </div>
+            <div class="form-footer">
+                <span></span>
+                <button type="submit" class="btn-submit" style="background:#a32d2d;">Padam Akaun Saya</button>
             </div>
         </form>
     </div>

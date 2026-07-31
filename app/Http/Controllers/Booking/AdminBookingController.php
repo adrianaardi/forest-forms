@@ -143,42 +143,6 @@ class AdminBookingController extends Controller
         ));
     }
 
-    public function users(Request $request)
-    {
-        $applicants = BookingUser::with('wilayah')
-            ->where('status', 'pending')
-            ->where('can_book', false)
-            ->latest()
-            ->get();
-
-        $bookableUsers = BookingUser::with('wilayah')
-            ->where('can_book', true)
-            ->latest()
-            ->get();
-
-        return view('booking.admin.users', compact('applicants', 'bookableUsers'));
-    }
-
-    public function updateUserStatus(Request $request, $id)
-    {
-        $request->validate(['status' => 'required|in:approved,rejected']);
-        BookingUser::findOrFail($id)->update([
-            'status' => $request->status,
-            'can_book' => $request->status === 'approved',
-        ]);
-
-        $targetUser = BookingUser::findOrFail($id);
-        $adminName  = Auth::guard('web')->user()->name;
-        $statusText = $request->status === 'approved' ? 'meluluskan' : 'menolak';
-        \App\Models\BookingActivityLog::log(
-            'admin', $adminName,
-            'updated_user_status',
-            'Admin ' . $adminName . ' ' . $statusText . ' akaun pengguna ' . $targetUser->name
-        );
-
-        return back()->with('success', 'Status pengguna berjaya dikemaskini.');
-    }
-
     public function editUser(Request $request, $id)
     {
         $request->validate([
@@ -262,23 +226,71 @@ class AdminBookingController extends Controller
         return back()->with('success', 'Pengguna berjaya ditambah.');
     }
 
-    public function updateUserCanBook(Request $request, $id)
+    public function users(Request $request)
     {
-        $request->validate(['can_book' => 'required|boolean']);
+        // Users who have requested access but don't have it yet
+        $applicants = BookingUser::with('wilayah')
+            ->where('status', 'pending')
+            ->where('can_book', false)
+            ->latest()
+            ->get();
 
+        // Users who currently can book
+        $bookableUsers = BookingUser::with('wilayah')
+            ->where('can_book', true)
+            ->latest()
+            ->get();
+
+        return view('booking.admin.users', compact('applicants', 'bookableUsers'));
+    }
+
+    // AJAX search for existing users (used by the "add by email" widget)
+    public function searchUsers(Request $request)
+    {
+        $request->validate(['q' => 'required|string|min:2']);
+
+        $users = BookingUser::where('can_book', false)
+            ->where('email', 'like', '%' . $request->q . '%')
+            ->orderBy('email')
+            ->limit(8)
+            ->get(['id', 'name', 'email']);
+
+        return response()->json($users);
+    }
+
+    // Grant can_book — used both for approving a pending applicant and for the search-add widget
+    public function grantCanBook(Request $request, $id)
+    {
         $targetUser = BookingUser::findOrFail($id);
-        $targetUser->update(['can_book' => (bool) $request->can_book]);
+        $targetUser->update([
+            'can_book' => true,
+            'status'   => 'approved',
+        ]);
 
         $adminName = Auth::guard('web')->user()->name;
-        $permissionText = $targetUser->can_book ? 'membenarkan' : 'menyekat';
-        
-        \App\Models\BookingActivityLog::log(
+        BookingActivityLog::log(
             'admin', $adminName,
             'updated_booking_permission',
-            'Admin ' . $adminName . ' ' . $permissionText . ' tempahan untuk pengguna ' . $targetUser->name
+            'Admin ' . $adminName . ' membenarkan tempahan untuk pengguna ' . $targetUser->name
         );
 
-        return back()->with('success', 'Kebenaran tempahan pengguna berjaya dikemaskini.');
+        return back()->with('success', 'Kebenaran tempahan berjaya diberikan kepada ' . $targetUser->name . '.');
+    }
+
+    // Withdraw can_book from a user who currently has it
+    public function withdrawCanBook(Request $request, $id)
+    {
+        $targetUser = BookingUser::findOrFail($id);
+        $targetUser->update(['can_book' => false]);
+
+        $adminName = Auth::guard('web')->user()->name;
+        BookingActivityLog::log(
+            'admin', $adminName,
+            'updated_booking_permission',
+            'Admin ' . $adminName . ' menarik balik kebenaran tempahan pengguna ' . $targetUser->name
+        );
+
+        return back()->with('success', 'Kebenaran tempahan ' . $targetUser->name . ' berjaya ditarik balik.');
     }
 
 public function resetPassword($id)

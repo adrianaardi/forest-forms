@@ -151,6 +151,7 @@ Route::prefix('booking')->name('booking.')->group(function () {
     Route::get('/profile',           [\App\Http\Controllers\Booking\BookingUserProfileController::class, 'index'])->name('user.profile');
     Route::post('/profile',          [\App\Http\Controllers\Booking\BookingUserProfileController::class, 'update'])->name('user.profile.update');
     Route::post('/profile/password', [\App\Http\Controllers\Booking\BookingUserProfileController::class, 'updatePassword'])->name('user.profile.password');
+    Route::delete('/profile/delete', [BookingAuthController::class, 'deleteAccount'])->name('user.profile.delete');
     Route::get('/my-bookings', [\App\Http\Controllers\Booking\BookingController::class, 'myBookings'])->name('my-bookings');
     
     // password reset
@@ -170,7 +171,10 @@ Route::prefix('booking')->name('booking.')->group(function () {
         Route::post('/users/{id}/edit', [AdminBookingController::class, 'editUser'])->name('users.edit');
         Route::post('/logout',            [BookingAuthController::class, 'logoutAdmin'])->name('logout');
         Route::post('/users', [AdminBookingController::class, 'storeUser'])->name('users.store');
-        Route::post('/users/{id}/reset-password', [AdminBookingController::class, 'resetPassword'])->name('users.reset_password');        
+        Route::post('/users/{id}/reset-password', [AdminBookingController::class, 'resetPassword'])->name('users.reset_password');  
+        Route::get('/users/search', [AdminBookingController::class, 'searchUsers'])->name('users.search');
+        Route::post('/users/{id}/grant', [AdminBookingController::class, 'grantCanBook'])->name('users.grant');
+        Route::post('/users/{id}/withdraw', [AdminBookingController::class, 'withdrawCanBook'])->name('users.withdraw');
     });
 
     
