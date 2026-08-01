@@ -190,7 +190,7 @@
 
         .bk-cell {
             border-right: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color);
-            height: 74px; position: relative;
+            height: 105px; position: relative;
             transition: background 0.1s;
         }
         .bk-cell:not(.past-cell) { cursor: pointer; }
