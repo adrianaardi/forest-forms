@@ -25,30 +25,19 @@ class BookingAuthController extends Controller
             'password' => 'required',
         ]);
 
-        // check booking admin
-        $admin = \App\Models\User::where('email', $request->email)->first();
-        if ($admin && Hash::check($request->password, $admin->password) && $admin->email === 'admin.booking@sarawak.gov.my') {
-            Auth::guard('web')->login($admin);
-            if ($request->ajax()) {
-                return response()->json(['success' => true, 'redirect' => '/booking/admin/dashboard']);
-            }
-            return redirect('/booking/admin/dashboard');
-        }
-
         // check booking user
         $user = BookingUser::where('email', $request->email)->first();
         if ($user && Hash::check($request->password, $user->password)) {
             if (!$user->email_verified_at) {
                 if ($request->ajax()) {
-                    return response()->json(['message' => 'Sila sahkan emel anda terlebih dahulu melalui pautan yang dihantar.'], 422);
+                    return response()->json([
+                        'message' => 'Sila sahkan emel anda terlebih dahulu melalui pautan yang dihantar.',
+                        'needs_verification' => true,
+                    ], 422);
                 }
                 return back()->with('error', 'Sila sahkan emel anda terlebih dahulu melalui pautan yang dihantar.');
             }
 
-            if ($user->status === 'rejected') {
-                if ($request->ajax()) return response()->json(['message' => 'Akaun anda telah ditolak.'], 422);
-                return back()->with('error', 'Akaun anda telah ditolak.');
-            }
             Auth::guard('booking_user')->login($user);
             if ($request->ajax()) {
                 return response()->json(['success' => true, 'redirect' => url()->current()]);
@@ -60,6 +49,52 @@ class BookingAuthController extends Controller
             return response()->json(['message' => 'Emel atau kata laluan tidak sah.'], 422);
         }
         return back()->with('error', 'Emel atau kata laluan tidak sah.')->withInput();
+    }
+
+    public function resendVerification(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email',
+        ]);
+
+        $user = BookingUser::where('email', $request->email)->first();
+
+        if (!$user) {
+            return response()->json([
+                'message' => 'Akaun tidak dijumpai untuk emel tersebut.',
+            ], 404);
+        }
+
+        if ($user->email_verified_at) {
+            return response()->json([
+                'message' => 'Emel ini telah disahkan. Anda boleh log masuk sekarang.',
+            ], 422);
+        }
+
+        $token = Str::random(64);
+        $user->update([
+            'email_verification_token' => $token,
+        ]);
+
+        $verifyUrl = url('/booking/verify-email/' . $token . '?email=' . urlencode($user->email));
+
+        $mailSent = BrevoMailer::send(
+            $user->email,
+            $user->name,
+            'Pengesahan Emel Akaun — Sistem Tempahan JHS',
+            view('emails.booking-verify-email', compact('user', 'verifyUrl'))->render()
+        );
+
+        if (!$mailSent) {
+            return response()->json([
+                'message' => 'Gagal menghantar semula pautan pengesahan. Sila cuba lagi sebentar lagi.',
+            ], 500);
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Pautan pengesahan telah dihantar semula ke emel anda.',
+        ]);
     }
 
     public function showRegister()
@@ -154,7 +189,7 @@ class BookingAuthController extends Controller
             $user->name . ' berjaya mengesahkan emel akaun tempahan'
         );
 
-        return redirect('/')->with('success', 'Emel berjaya disahkan. Anda kini boleh log masuk.');
+        return redirect('/')->with('verify_success', true);
     }
 
     public function logout()

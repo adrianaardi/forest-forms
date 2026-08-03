@@ -21,6 +21,11 @@
             @endauth
 
             <div id="login-error" class="form-error-box alert alert-error is-hidden"></div>
+            <div id="login-resend-wrap" class="is-hidden" style="margin: 0.5rem 0 0.75rem;">
+                <button type="button" id="login-resend-btn" style="background: transparent; border: 0; padding: 0; color: var(--primary); text-decoration: underline; cursor: pointer; font-size: 0.9rem;">
+                    Hantar semula pautan pengesahan emel
+                </button>
+            </div>
 
             <form id="login-form">
                 @csrf
