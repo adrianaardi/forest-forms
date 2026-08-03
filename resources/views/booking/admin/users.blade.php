@@ -21,21 +21,21 @@
         @endif
 
         {{-- Search & Add existing user --}}
-        <div class="form-card">
+        <div class="form-card search-card">
             <div class="form-card-header">
                 <h2>Tambah Kebenaran Tempahan</h2>
                 <p>Cari pengguna sedia ada mengikut emel dan berikan kebenaran tempahan terus.</p>
             </div>
             <div class="form-section">
-                <div class="search-add-wrap" style="position: relative; max-width: 420px;">
+                <div class="search-add-wrap">
                     <input
                         type="text"
                         id="userSearchInput"
-                        class="form-input"
+                        class="form-input role-search"
                         placeholder="Taip emel pengguna..."
                         autocomplete="off"
                     >
-                    <div id="userSearchResults" class="search-dropdown" style="display:none;"></div>
+                    <div id="userSearchResults" class="search-dropdown"></div>
                 </div>
             </div>
         </div>

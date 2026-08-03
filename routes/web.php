@@ -16,7 +16,9 @@ use App\Http\Controllers\Admin\AktivitiController;
 use App\Http\Controllers\Admin\NewsController;
 use App\Http\Controllers\Admin\DisplayController;
 use App\Http\Controllers\Admin\PergerakanDashboardController;
+use App\Http\Controllers\Admin\KelulusanController;
 use App\Http\Controllers\HelpController;
+use App\Http\Controllers\BorangKelulusanPerjalananController;
 use Illuminate\Support\Facades\Route;
 
 // ── Homepage ──────────────────────────────────────────────
@@ -85,6 +87,12 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
         Route::post('/news',        [NewsController::class, 'store'])->name('news.store');
         Route::delete('/news/{id}', [NewsController::class, 'destroy'])->name('news.destroy');
     });
+
+    // kelulusan perjalanan role assignment
+    Route::get('/kelulusan', [KelulusanController::class, 'index'])->name('kelulusan.index');
+    Route::get('/kelulusan/search', [KelulusanController::class, 'search'])->name('kelulusan.search');
+    Route::post('/kelulusan/assign', [KelulusanController::class, 'assign'])->name('kelulusan.assign');
+    Route::post('/kelulusan/remove', [KelulusanController::class, 'remove'])->name('kelulusan.remove');
 });
 
 // ── Public Forms ──────────────────────────────────────────
@@ -94,8 +102,13 @@ Route::post('/forms/ict-aduan',  [BorangAduanKerosakanController::class, 'store'
 Route::get('/forms/portal-upload',  [BorangMuatNaikBahanController::class, 'create'])->name('portal-upload');
 Route::post('/forms/portal-upload', [BorangMuatNaikBahanController::class, 'store']);
 
-Route::get('/forms/kelulusan-perjalanan', [\App\Http\Controllers\BorangKelulusanPerjalananController::class, 'create'])->name('kelulusan-perjalanan');
-Route::post('/forms/kelulusan-perjalanan', [\App\Http\Controllers\BorangKelulusanPerjalananController::class, 'store']);
+Route::get('/forms/kelulusan-perjalanan', [BorangKelulusanPerjalananController::class, 'create'])->name('kelulusan-perjalanan');
+Route::post('/forms/kelulusan-perjalanan', [BorangKelulusanPerjalananController::class, 'store']);
+Route::get('/kelulusan-flow/supervisor-view', [BorangKelulusanPerjalananController::class, 'supervisorIndex'])->name('kelulusan-flow.supervisor-view');
+Route::post('/kelulusan-flow/supervisor-view/{borang}', [BorangKelulusanPerjalananController::class, 'supervisorReview'])->name('kelulusan-flow.supervisor-review');
+Route::get('/kelulusan-flow/hod-view', [BorangKelulusanPerjalananController::class, 'hodIndex'])->name('kelulusan-flow.hod-view');
+Route::post('/kelulusan-flow/hod-view/{borang}', [BorangKelulusanPerjalananController::class, 'hodReview'])->name('kelulusan-flow.hod-review');
+Route::get('/kelulusan-flow/accountant-view', [BorangKelulusanPerjalananController::class, 'accountantIndex'])->name('kelulusan-flow.accountant-view');
 
 // ── Ticket Tracking ───────────────────────────────────────
 Route::get('/semak-tiket', fn() => view('track'))->name('track');
@@ -146,10 +159,14 @@ Route::prefix('booking')->name('booking.')->group(function () {
     Route::post('/login', [BookingAuthController::class, 'login'])->name('login.post');
     Route::get('/daftar', [BookingAuthController::class, 'showRegister'])->name('daftar');
     Route::post('/daftar',[BookingAuthController::class, 'register'])->name('daftar.post');
+    Route::post('/resend-verification', [BookingAuthController::class, 'resendVerification'])->name('verify.resend');
     Route::get('/verify-email/{token}', [BookingAuthController::class, 'verifyEmail'])->name('verify');
     Route::post('/logout',[BookingAuthController::class, 'logout'])->name('logout');
     Route::get('/profile',           [\App\Http\Controllers\Booking\BookingUserProfileController::class, 'index'])->name('user.profile');
     Route::post('/profile',          [\App\Http\Controllers\Booking\BookingUserProfileController::class, 'update'])->name('user.profile.update');
+    Route::get('/profile/supervisors/search', [\App\Http\Controllers\Booking\BookingUserProfileController::class, 'searchSupervisors'])->name('user.profile.supervisors.search');
+    Route::post('/profile/supervisor', [\App\Http\Controllers\Booking\BookingUserProfileController::class, 'assignSupervisor'])->name('user.profile.supervisor.assign');
+    Route::delete('/profile/supervisor', [\App\Http\Controllers\Booking\BookingUserProfileController::class, 'removeSupervisor'])->name('user.profile.supervisor.remove');
     Route::post('/profile/password', [\App\Http\Controllers\Booking\BookingUserProfileController::class, 'updatePassword'])->name('user.profile.password');
     Route::delete('/profile/delete', [BookingAuthController::class, 'deleteAccount'])->name('user.profile.delete');
     Route::get('/my-bookings', [\App\Http\Controllers\Booking\BookingController::class, 'myBookings'])->name('my-bookings');

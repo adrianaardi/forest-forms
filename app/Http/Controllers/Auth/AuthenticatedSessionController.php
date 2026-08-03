@@ -56,6 +56,11 @@ class AuthenticatedSessionController extends Controller
             return redirect()->route('admin.pergerakan.index');
         }
 
+        // Kelulusan perjalanan admin
+        if ($user->email === 'admin.kelulusanperjalanan@sarawak.gov.my') {
+            return redirect()->route('admin.kelulusan.index');
+        }
+
         return redirect('/');
     }
     /**

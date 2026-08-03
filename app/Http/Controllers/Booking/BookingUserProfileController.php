@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Booking;
 
 use App\Http\Controllers\Controller;
+use App\Models\BookingUser;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -20,9 +21,92 @@ class BookingUserProfileController extends Controller
         if (!$this->guard()->check()) {
             return redirect('/booking/login');
         }
-        $user = $this->guard()->user();
+        $user = $this->guard()->user()->load(['supervisor', 'supervisees']);
         $wilayahs = \App\Models\Wilayah::orderBy('nama_wilayah')->get();
         return view('booking.user.profile', compact('user', 'wilayahs'));
+    }
+
+    public function searchSupervisors(Request $request)
+    {
+        if (!$this->guard()->check()) {
+            return response()->json([], 401);
+        }
+
+        $request->validate([
+            'q' => 'required|string|min:2',
+        ]);
+
+        $currentUser = $this->guard()->user();
+
+        $users = BookingUser::query()
+            ->where('id', '!=', $currentUser->id)
+            ->where('email', 'like', '%' . $request->q . '%')
+            ->orderBy('email')
+            ->limit(8)
+            ->get(['id', 'name', 'email', 'bahagian', 'jawatan']);
+
+        return response()->json($users);
+    }
+
+    public function assignSupervisor(Request $request)
+    {
+        if (!$this->guard()->check()) {
+            return redirect('/booking/login');
+        }
+
+        $request->validate([
+            'supervisor_id' => 'required|exists:booking_users,id',
+        ]);
+
+        $user = $this->guard()->user();
+        $supervisor = BookingUser::find($request->supervisor_id);
+
+        if (!$supervisor) {
+            return back()->withErrors(['supervisor' => 'Pengguna dipilih tidak dijumpai.']);
+        }
+
+        if ((int) $supervisor->id === (int) $user->id) {
+            return back()->withErrors(['supervisor' => 'Anda tidak boleh menetapkan diri sendiri sebagai supervisor.']);
+        }
+
+        $supervisor->is_supervisor = true;
+        $supervisor->save();
+
+        $user->supervisor_id = $supervisor->id;
+        $user->save();
+
+        \App\Models\BookingActivityLog::log(
+            'user',
+            $user->name,
+            'assigned_supervisor',
+            $user->name . ' menetapkan supervisor: ' . $supervisor->email
+        );
+
+        return back()->with('success', 'Supervisor berjaya ditetapkan: ' . $supervisor->email);
+    }
+
+    public function removeSupervisor()
+    {
+        if (!$this->guard()->check()) {
+            return redirect('/booking/login');
+        }
+
+        $user = $this->guard()->user();
+
+        if ($user->supervisor_id) {
+            $oldSupervisor = $user->supervisor;
+            $user->supervisor_id = null;
+            $user->save();
+
+            \App\Models\BookingActivityLog::log(
+                'user',
+                $user->name,
+                'removed_supervisor',
+                $user->name . ' membuang supervisor: ' . ($oldSupervisor->email ?? '-')
+            );
+        }
+
+        return back()->with('success', 'Supervisor berjaya dibuang.');
     }
 
     public function update(Request $request)

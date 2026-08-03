@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body {font-family: "Google Sans Flex", sans-serif; background: #f4f4f4; margin: 0; padding: 20px; }
+        .container { max-width: 620px; margin: auto; background:#f7f4f4; border-radius: 10px; overflow: hidden; border: 1px solid #dde8e1; }
+        .header { background: #1a4731; padding: 1.25rem 1.5rem; }
+        .header h1 { color:#f7f4f4; font-size: 16px; margin: 0; }
+        .header p { color: rgba(255,255,255,0.65); font-size: 12px; margin: 4px 0 0; }
+        .body { padding: 1.5rem; }
+        .body p { font-size: 14px; color: #333; line-height: 1.6; margin-bottom: 0.75rem; }
+        .detail-row { display: flex; gap: 10px; margin-bottom: 0.5rem; }
+        .detail-label { font-size: 12px; color: #777; width: 170px; flex-shrink: 0; }
+        .detail-value { font-size: 13px; color: #1a1a1a; }
+        .btn { display: inline-block; margin-top: 1.25rem; padding: 10px 24px; background: #1a4731; color:#f7f4f4; text-decoration: none; border-radius: 8px; font-size: 13px; }
+        .footer { background: #f9fafb; padding: 1rem 1.5rem; font-size: 11px; color: #999; border-top: 1px solid #eee; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <a href="/" style="color: white; text-decoration: none;"><h1>Jabatan Hutan Sarawak</h1></a>
+        <p>Hub Aplikasi Perkhidmatan Atas Talian</p>
+    </div>
+    <div class="body">
+        <p>Salam hormat,</p>
+        <p>Borang kelulusan perjalanan berikut telah disokong oleh penyelia dan kini menunggu semakan HOD.</p>
+
+        <div class="detail-row">
+            <span class="detail-label">No. Rujukan</span>
+            <span class="detail-value">{{ $borang->no_tiket }}</span>
+        </div>
+        <div class="detail-row">
+            <span class="detail-label">Nama Pemohon</span>
+            <span class="detail-value">{{ $borang->nama }}</span>
+        </div>
+        <div class="detail-row">
+            <span class="detail-label">Bahagian / Unit</span>
+            <span class="detail-value">{{ $borang->bahagian }}</span>
+        </div>
+        <div class="detail-row">
+            <span class="detail-label">Destinasi</span>
+            <span class="detail-value">{{ $borang->destinasi_perjalanan }}</span>
+        </div>
+        <div class="detail-row">
+            <span class="detail-label">Status Semasa</span>
+            <span class="detail-value">Menunggu Semakan HOD</span>
+        </div>
+
+        <a href="{{ $reviewUrl }}" class="btn">Buka Senarai Semakan HOD</a>
+    </div>
+    <div class="footer">
+        Emel ini dihantar secara automatik oleh Hub Aplikasi Perkhidmatan Atas Talian Jabatan Hutan Sarawak. Sila jangan balas emel ini.
+    </div>
+</div>
+</body>
+</html>

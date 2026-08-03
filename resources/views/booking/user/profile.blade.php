@@ -13,7 +13,7 @@
 <x-header />
 <x-navbar :breadcrumbs="[['label' => 'Tempah Bilik Mesyuarat', 'url' => '/booking/calendar'], ['label' => 'Profile Saya']]" />
 
-<div class="pg-body" style="max-width:560px;">
+<div class="pg-body">
 
     @if(session('success'))
         <div class="alert alert-success" style="margin-bottom:1rem;">
@@ -152,6 +152,86 @@
         </div>
     </div>
 
+    <div class="form-card search-card" style="margin-bottom:1.5rem;" data-role="booking-supervisor">
+        <div class="form-card-header">
+            <h2>Supervisor Saya</h2>
+            <p>Pilih supervisor anda menggunakan carian emel. Seorang supervisor boleh mengurus ramai pengguna.</p>
+        </div>
+        <div class="form-section">
+            @error('supervisor')
+                <div class="alert alert-error" style="margin-bottom:1rem;">
+                    {{ $message }}
+                </div>
+            @enderror
+
+            @if($user->supervisor)
+                <div class="table-wrap" style="margin-bottom:1rem;">
+                    <table class="app-table">
+                        <thead>
+                            <tr>
+                                <th>Nama</th>
+                                <th>Emel</th>
+                                <th>Bahagian</th>
+                                <th>Jawatan</th>
+                                <th>Tindakan</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>{{ $user->supervisor->name }}</td>
+                                <td>{{ $user->supervisor->email }}</td>
+                                <td>{{ $user->supervisor->bahagian ?? '-' }}</td>
+                                <td>{{ $user->supervisor->jawatan ?? '-' }}</td>
+                                <td>
+                                    <form method="POST" action="{{ route('booking.user.profile.supervisor.remove') }}" onsubmit="return confirm('Buang supervisor semasa?');">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="table-btn table-btn-danger">Buang</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            @else
+                <div class="alert" style="margin-bottom:1rem;">Belum ada supervisor ditetapkan.</div>
+            @endif
+
+            <div class="search-add-wrap" id="booking-supervisor-search-wrap">
+                <input type="text" class="form-input role-search" id="booking-supervisor-search" placeholder="Cari emel supervisor..." autocomplete="off">
+                <div class="search-dropdown" id="booking-supervisor-dropdown" style="display:none;"></div>
+            </div>
+
+            @if($user->supervisees->count() > 0)
+                <div class="table-wrap" style="margin-top:1rem;">
+                    <table class="app-table">
+                        <thead>
+                            <tr>
+                                <th colspan="4">Pengguna Di Bawah Seliaan Anda</th>
+                            </tr>
+                            <tr>
+                                <th>Nama</th>
+                                <th>Emel</th>
+                                <th>Bahagian</th>
+                                <th>Jawatan</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($user->supervisees as $supervisee)
+                                <tr>
+                                    <td>{{ $supervisee->name }}</td>
+                                    <td>{{ $supervisee->email }}</td>
+                                    <td>{{ $supervisee->bahagian ?? '-' }}</td>
+                                    <td>{{ $supervisee->jawatan ?? '-' }}</td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            @endif
+        </div>
+    </div>
+
     {{-- Password --}}
     <div class="form-card" style="margin-bottom:1.5rem;">
         <div class="form-card-header">
@@ -241,6 +321,9 @@ document.addEventListener('DOMContentLoaded', function () {
     const finalInput = document.getElementById('signature-final-input');
     const clearBtn = document.getElementById('clear-signature');
     const form = finalInput.closest('form');
+    const supervisorSearch = document.getElementById('booking-supervisor-search');
+    const supervisorDropdown = document.getElementById('booking-supervisor-dropdown');
+    let supervisorTimer;
 
     // Toggle modes
     modeDrawBtn.addEventListener('click', () => {
@@ -299,6 +382,60 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         }
     });
+
+    if (supervisorSearch && supervisorDropdown) {
+        supervisorSearch.addEventListener('input', function () {
+            clearTimeout(supervisorTimer);
+            const q = supervisorSearch.value.trim();
+
+            if (q.length < 2) {
+                supervisorDropdown.style.display = 'none';
+                supervisorDropdown.innerHTML = '';
+                return;
+            }
+
+            supervisorTimer = setTimeout(() => {
+                fetch(`{{ route('booking.user.profile.supervisors.search') }}?q=${encodeURIComponent(q)}`, {
+                    headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                })
+                .then(res => {
+                    if (!res.ok) {
+                        throw new Error('Carian gagal.');
+                    }
+                    return res.json();
+                })
+                .then(users => {
+                    if (!Array.isArray(users) || !users.length) {
+                        supervisorDropdown.innerHTML = '<div class="search-empty">Tiada supervisor dijumpai.</div>';
+                        supervisorDropdown.style.display = 'block';
+                        return;
+                    }
+
+                    supervisorDropdown.innerHTML = users.map(u => `
+                        <form method="POST" action="{{ route('booking.user.profile.supervisor.assign') }}" class="search-item">
+                            <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                            <input type="hidden" name="supervisor_id" value="${u.id}">
+                            <button type="submit" class="search-item-btn">
+                                <strong>${u.name}</strong> - ${u.email}
+                            </button>
+                        </form>
+                    `).join('');
+
+                    supervisorDropdown.style.display = 'block';
+                })
+                .catch(() => {
+                    supervisorDropdown.style.display = 'none';
+                });
+            }, 250);
+        });
+
+        document.addEventListener('click', function (e) {
+            if (!e.target.closest('#booking-supervisor-search-wrap')) {
+                supervisorDropdown.style.display = 'none';
+                supervisorDropdown.innerHTML = '';
+            }
+        });
+    }
 });
 </script>
 </html>

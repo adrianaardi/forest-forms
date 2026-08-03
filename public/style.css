@@ -471,6 +471,10 @@ footer {
   overflow-y: auto;
 }
 
+.ticket-modal-wide {
+  max-width: 980px;
+}
+
 .ticket-modal-overlay.active .ticket-modal {
   transform: translateY(0);
 }
@@ -711,6 +715,17 @@ footer {
   box-shadow: 0 0 0 3px rgba(27, 67, 50, 0.12);
 }
 
+.field .is-readonly-field {
+  background: #f6faf7;
+  color: #2f3d35;
+  border-color: #d8e5dc;
+}
+
+.field .is-readonly-field:focus {
+  box-shadow: none;
+  border-color: #d8e5dc;
+}
+
 .form-footer {
   display: flex;
   justify-content: space-between;
@@ -806,6 +821,177 @@ footer {
 .help-text-muted {
   color: gray;
   font-size: 0.78rem;
+}
+
+.repeatable-list {
+  display: grid;
+  gap: 0.6rem;
+}
+
+.repeatable-row {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+}
+
+.repeatable-row input {
+  flex: 1;
+}
+
+.repeatable-btn {
+  border: 1px solid #d7dde3;
+  background: #ffffff;
+  color: var(--text-dark);
+  border-radius: 8px;
+  height: 38px;
+  padding: 0 0.85rem;
+  cursor: pointer;
+  font-weight: 600;
+  transition: var(--transition);
+}
+
+.repeatable-btn:hover {
+  border-color: #b8c4be;
+  background: #f6faf7;
+}
+
+.repeatable-add {
+  margin-top: 0.65rem;
+}
+
+.repeatable-remove {
+  min-width: 40px;
+}
+
+.choice-list {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.choice-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  color: var(--text-dark);
+}
+
+.choice-item input {
+  margin-top: 0.25rem;
+}
+
+.jenis-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+.jenis-table td {
+  border: none;
+  vertical-align: top;
+  padding: 0.45rem 0;
+}
+
+.jenis-main-cell {
+  width: 38%;
+  padding-right: 1rem;
+}
+
+.jenis-reason-cell {
+  width: 62%;
+}
+
+.jenis-main-label {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  font-weight: 500;
+  color: var(--text-dark);
+  line-height: 1.45;
+}
+
+.jenis-main-label small {
+  display: block;
+  color: var(--text-muted);
+  font-weight: 400;
+  font-size: 0.82rem;
+}
+
+.jenis-main-label input[type="radio"] {
+  width: auto;
+  flex: 0 0 auto;
+  margin-top: 0.2rem;
+}
+
+.sub-options {
+  background: #fbfdfb;
+  border: 1px solid #e5eee8;
+  border-radius: 8px;
+  padding: 0.65rem 0.8rem;
+}
+
+.sub-options p {
+  margin-bottom: 0.45rem;
+  font-size: 0.84rem;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.checkbox-option {
+  margin-bottom: 0.45rem;
+}
+
+.checkbox-option > label {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  margin: 0;
+}
+
+.checkbox-option input[type="checkbox"] {
+  width: auto;
+  flex: 0 0 auto;
+  margin-top: 0.2rem;
+}
+
+.checkbox-option:last-child {
+  margin-bottom: 0;
+}
+
+.nyatakan-input {
+  margin-top: 0.4rem;
+}
+
+.digital-cert-box {
+  border: 1px solid #d9e3dd;
+  border-radius: 10px;
+  background: #fbfdfb;
+  padding: 0.8rem;
+  display: inline-block;
+  max-width: 100%;
+}
+
+.digital-cert-image {
+  display: block;
+  max-width: 100%;
+  width: 340px;
+  height: auto;
+  border-radius: 6px;
+}
+
+@media (max-width: 900px) {
+  .jenis-table,
+  .jenis-table tbody,
+  .jenis-table tr,
+  .jenis-table td {
+    display: block;
+    width: 100%;
+  }
+
+  .jenis-main-cell {
+    padding-right: 0;
+    margin-bottom: 0.45rem;
+  }
 }
 
 .field-error {
@@ -1279,4 +1465,75 @@ footer {
 
 .table-card .app-table {
   margin: 0;
+}
+.search-card {
+  overflow: visible;
+}
+
+.search-add-wrap {
+  position: relative;
+  max-width: 520px;
+  width: 100%;
+}
+
+.role-search {
+  width: 100%;
+  height: 42px;
+  border: 1px solid #cfdcd3;
+  border-radius: 10px;
+  background: #ffffff;
+  color: var(--text-dark);
+  font-size: 14px;
+  padding: 0 12px;
+  outline: none;
+  transition: border-color 0.16s, box-shadow 0.16s;
+}
+
+.role-search:focus {
+  border-color: #7ea890;
+  box-shadow: 0 0 0 3px rgba(126, 168, 144, 0.16);
+}
+
+.search-dropdown {
+  display: none;
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  width: 100%;
+  background: #fff;
+  border: 1px solid #d8e4db;
+  border-radius: 10px;
+  box-shadow: 0 8px 24px rgba(20, 34, 27, 0.14);
+  z-index: 1200;
+  max-height: 280px;
+  overflow: auto;
+}
+
+.search-item {
+  border-bottom: 1px solid #eef2ef;
+}
+
+.search-item:last-child {
+  border-bottom: 0;
+}
+
+.search-item-btn {
+  width: 100%;
+  text-align: left;
+  padding: 10px 12px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 13px;
+  color: var(--text-dark);
+}
+
+.search-item-btn:hover {
+  background: #f5faf7;
+}
+
+.search-empty {
+  padding: 10px 12px;
+  font-size: 12px;
+  color: #6f7d74;
 }
