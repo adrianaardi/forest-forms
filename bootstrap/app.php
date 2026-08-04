@@ -13,6 +13,7 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->alias([
             'booking.admin' => \App\Http\Middleware\BookingAdminAuth::class,
+            'booking.verified' => \App\Http\Middleware\EnsureBookingUserEmailIsVerified::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

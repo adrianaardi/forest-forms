@@ -150,9 +150,6 @@ Route::prefix('booking')->name('booking.')->group(function () {
     Route::get('/',               [BookingController::class, 'index'])->name('home');
     Route::get('/calendar',       [BookingController::class, 'calendar'])->name('calendar');
     Route::post('/cancel/{token}', [BookingController::class, 'cancelBooking'])->name('cancel');    
-    Route::get('/book/{bilik?}', [BookingController::class, 'showBook'])->name('book');
-    Route::post('/book', [BookingController::class, 'storeBook'])->name('book.store');
-    Route::post('/apply-booking-access', [BookingController::class, 'applyBookingAccess'])->name('apply-booking-access');
 
     // auth
     Route::get('/login', fn() => redirect('/booking/calendar'))->name('login');
@@ -162,14 +159,20 @@ Route::prefix('booking')->name('booking.')->group(function () {
     Route::post('/resend-verification', [BookingAuthController::class, 'resendVerification'])->name('verify.resend');
     Route::get('/verify-email/{token}', [BookingAuthController::class, 'verifyEmail'])->name('verify');
     Route::post('/logout',[BookingAuthController::class, 'logout'])->name('logout');
-    Route::get('/profile',           [\App\Http\Controllers\Booking\BookingUserProfileController::class, 'index'])->name('user.profile');
-    Route::post('/profile',          [\App\Http\Controllers\Booking\BookingUserProfileController::class, 'update'])->name('user.profile.update');
-    Route::get('/profile/supervisors/search', [\App\Http\Controllers\Booking\BookingUserProfileController::class, 'searchSupervisors'])->name('user.profile.supervisors.search');
-    Route::post('/profile/supervisor', [\App\Http\Controllers\Booking\BookingUserProfileController::class, 'assignSupervisor'])->name('user.profile.supervisor.assign');
-    Route::delete('/profile/supervisor', [\App\Http\Controllers\Booking\BookingUserProfileController::class, 'removeSupervisor'])->name('user.profile.supervisor.remove');
-    Route::post('/profile/password', [\App\Http\Controllers\Booking\BookingUserProfileController::class, 'updatePassword'])->name('user.profile.password');
-    Route::delete('/profile/delete', [BookingAuthController::class, 'deleteAccount'])->name('user.profile.delete');
-    Route::get('/my-bookings', [\App\Http\Controllers\Booking\BookingController::class, 'myBookings'])->name('my-bookings');
+
+    Route::middleware('booking.verified')->group(function () {
+        Route::get('/book/{bilik?}', [BookingController::class, 'showBook'])->name('book');
+        Route::post('/book', [BookingController::class, 'storeBook'])->name('book.store');
+        Route::post('/apply-booking-access', [BookingController::class, 'applyBookingAccess'])->name('apply-booking-access');
+        Route::get('/profile',           [\App\Http\Controllers\Booking\BookingUserProfileController::class, 'index'])->name('user.profile');
+        Route::post('/profile',          [\App\Http\Controllers\Booking\BookingUserProfileController::class, 'update'])->name('user.profile.update');
+        Route::get('/profile/supervisors/search', [\App\Http\Controllers\Booking\BookingUserProfileController::class, 'searchSupervisors'])->name('user.profile.supervisors.search');
+        Route::post('/profile/supervisor', [\App\Http\Controllers\Booking\BookingUserProfileController::class, 'assignSupervisor'])->name('user.profile.supervisor.assign');
+        Route::delete('/profile/supervisor', [\App\Http\Controllers\Booking\BookingUserProfileController::class, 'removeSupervisor'])->name('user.profile.supervisor.remove');
+        Route::post('/profile/password', [\App\Http\Controllers\Booking\BookingUserProfileController::class, 'updatePassword'])->name('user.profile.password');
+        Route::delete('/profile/delete', [BookingAuthController::class, 'deleteAccount'])->name('user.profile.delete');
+        Route::get('/my-bookings', [\App\Http\Controllers\Booking\BookingController::class, 'myBookings'])->name('my-bookings');
+    });
     
     // password reset
     Route::get('/forgot-password',        [\App\Http\Controllers\Booking\BookingPasswordController::class, 'showForgot'])->name('password.request');

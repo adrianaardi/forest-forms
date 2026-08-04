@@ -25,11 +25,13 @@ class BookingAuthController extends Controller
             'password' => 'required',
         ]);
 
+        $isAjax = $request->ajax() || $request->wantsJson();
+
         // check booking user
         $user = BookingUser::where('email', $request->email)->first();
         if ($user && Hash::check($request->password, $user->password)) {
             if (!$user->email_verified_at) {
-                if ($request->ajax()) {
+                if ($isAjax) {
                     return response()->json([
                         'message' => 'Sila sahkan emel anda terlebih dahulu melalui pautan yang dihantar.',
                         'needs_verification' => true,
@@ -39,13 +41,15 @@ class BookingAuthController extends Controller
             }
 
             Auth::guard('booking_user')->login($user);
-            if ($request->ajax()) {
+            $request->session()->regenerate();
+
+            if ($isAjax) {
                 return response()->json(['success' => true, 'redirect' => url()->current()]);
             }
             return redirect()->intended('/');
         }
 
-        if ($request->ajax()) {
+        if ($isAjax) {
             return response()->json(['message' => 'Emel atau kata laluan tidak sah.'], 422);
         }
         return back()->with('error', 'Emel atau kata laluan tidak sah.')->withInput();
