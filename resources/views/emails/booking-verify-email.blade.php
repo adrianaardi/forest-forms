@@ -18,7 +18,7 @@
 <body>
 <div class="container">
     <div class="header">
-        <a href="/" style="color: white; text-decoration: none;"><h1>Jabatan Hutan Sarawak</h1></a>
+        <a href="http://i-fds.net" style="color: white; text-decoration: none;"><h1>Jabatan Hutan Sarawak</h1></a>
         <p>Sistem Tempahan Bilik Mesyuarat - Pengesahan Emel</p>
     </div>
     <div class="body">
