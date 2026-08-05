@@ -58,4 +58,14 @@ class BookingUser extends Authenticatable
     {
         return $this->hasMany(BookingRequest::class, 'user_id');
     }
+
+    public function kursusDicipta(): HasMany
+    {
+        return $this->hasMany(BookingKursus::class, 'created_by');
+    }
+
+    public function permohonanKursus(): HasMany
+    {
+        return $this->hasMany(BookingKursusApplication::class, 'booking_user_id');
+    }
 }

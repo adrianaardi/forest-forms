@@ -195,6 +195,11 @@
                     <div class="nav-dropdown-section">
                     👤 {{ $bookingUser->name }}
                     </div>
+                    <div class="nav-dropdown-divider"></div>
+
+                    <div class="nav-dropdown-section">Kursus</div>
+                    <a href="{{ route('booking.kursus.index') }}">📚 Katalog Kursus</a>
+
                     @if($bookingUser->can_book)
                         <div class="nav-dropdown-divider"></div>
 

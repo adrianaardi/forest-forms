@@ -76,9 +76,9 @@
             <span class="card-link">Hantar Permohonan →</span>
         </a>
 
-        <a href="" class="card disabled">
+        <a href="{{ route('booking.kursus.index') }}" class="card disabled">
             <div class="card-icon icon-track">📚</div>
-            <h3>Katalog Khursus di Jabatan Hutan Sarawak</h3>
+            <h3>Katalog Kursus di Jabatan Hutan Sarawak</h3>
             <p>Senarai kursus yang ditawarkan oleh Jabatan Hutan Sarawak untuk pembangunan profesional pegawai jabatan.</p>
             <span class="card-link">Lihat Katalog →</span>
         </a>

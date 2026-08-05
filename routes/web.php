@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\BahagianController;
 use App\Http\Controllers\Booking\BookingController;
 use App\Http\Controllers\Booking\BookingAuthController;
 use App\Http\Controllers\Booking\AdminBookingController;
+use App\Http\Controllers\Booking\KursusController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\Admin\PegawaiController;
@@ -149,6 +150,7 @@ Route::prefix('booking')->name('booking.')->group(function () {
     // public
     Route::get('/',               [BookingController::class, 'index'])->name('home');
     Route::get('/calendar',       [BookingController::class, 'calendar'])->name('calendar');
+    Route::get('/katalog-kursus', [KursusController::class, 'index'])->name('kursus.index');
     Route::post('/cancel/{token}', [BookingController::class, 'cancelBooking'])->name('cancel');    
 
     // auth
@@ -164,6 +166,9 @@ Route::prefix('booking')->name('booking.')->group(function () {
         Route::get('/book/{bilik?}', [BookingController::class, 'showBook'])->name('book');
         Route::post('/book', [BookingController::class, 'storeBook'])->name('book.store');
         Route::post('/apply-booking-access', [BookingController::class, 'applyBookingAccess'])->name('apply-booking-access');
+        Route::get('/katalog-kursus/tambah', [KursusController::class, 'create'])->name('kursus.create');
+        Route::post('/katalog-kursus', [KursusController::class, 'store'])->name('kursus.store');
+        Route::post('/katalog-kursus/{kursus}/mohon', [KursusController::class, 'apply'])->name('kursus.apply');
         Route::get('/profile',           [\App\Http\Controllers\Booking\BookingUserProfileController::class, 'index'])->name('user.profile');
         Route::post('/profile',          [\App\Http\Controllers\Booking\BookingUserProfileController::class, 'update'])->name('user.profile.update');
         Route::get('/profile/supervisors/search', [\App\Http\Controllers\Booking\BookingUserProfileController::class, 'searchSupervisors'])->name('user.profile.supervisors.search');
